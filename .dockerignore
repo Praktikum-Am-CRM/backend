@@ -1,0 +1,14 @@
+Dockerfile
+db.sqlite3
+venv
+.venv
+.env
+media
+infra
+Makefile
+setup.cfg
+.gitignore
+.git
+.idea
+.dockerignore
+requirements_style.txt
