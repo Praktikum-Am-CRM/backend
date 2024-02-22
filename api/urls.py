@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 
-app_name = 'docs'
+app_name = 'api'
 
 router = DefaultRouter()
 # router.register('my_data', GetMethod, basename='my_data')

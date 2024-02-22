@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'api.apps.ApiConfig',
     'rest_framework',
-    'drf_yasg'
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -83,9 +84,11 @@ if db_postgres == 'True':
             'NAME': os.getenv('POSTGRES_DB'),
             'USER': os.getenv('POSTGRES_USER'),
             'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-            'HOST': os.getenv('POSTGRES_HOST')
-            if RUNNING_IN_DOCKER
-            else 'localhost',
+            'HOST': (
+                os.getenv('POSTGRES_HOST')
+                if RUNNING_IN_DOCKER
+                else 'localhost'
+            ),
             'PORT': os.getenv('POSTGRES_PORT'),
         }
     }
@@ -127,3 +130,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {'type': 'apiKey', 'name': 'Authorization', 'in': 'header'}
+    },
+}
