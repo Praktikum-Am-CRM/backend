@@ -39,9 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api.apps.ApiConfig',
     'rest_framework',
     'drf_yasg',
+    'djoser',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
@@ -136,4 +137,9 @@ SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Bearer': {'type': 'apiKey', 'name': 'Authorization', 'in': 'header'}
     },
+}
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'SET_PASSWORD_RETYPE': False,
 }

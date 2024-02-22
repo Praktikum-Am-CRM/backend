@@ -1,5 +1,6 @@
 django==4.2.7
 djangorestframework==3.14.0
+djoser==2.2.2
 drf-yasg==1.21.7
 psycopg2-binary==2.9.9
 gunicorn==21.2.0
