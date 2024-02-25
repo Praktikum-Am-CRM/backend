@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'djoser',
     'drf_yasg',
     'api.apps.ApiConfig',
+    'backend.reports.apps.ReportsConfig'
 ]
 
 MIDDLEWARE = [

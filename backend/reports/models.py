@@ -72,7 +72,7 @@ class Report(models.Model):
         on_delete=models.CASCADE
     )
     report_date = models.DateField(
-        autonow=True,
+        auto_now=True,
         verbose_name='Дата отчета'
     )
     content_link = models.URLField(
