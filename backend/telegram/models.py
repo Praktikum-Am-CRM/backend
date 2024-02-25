@@ -24,6 +24,10 @@ class TelegramBot(models.Model):
         max_length=100,
         verbose_name='Telegram Username'
     )
+    telegram_chat_id = models.CharField(
+        max_length=100,
+        verbose_name='Telegram chat ID'
+    )
     active = models.BooleanField(default=False)
     registration_time = models.DateTimeField(
         auto_now_add=True,
