@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'djoser',
     'drf_yasg',
     'api.apps.ApiConfig',
+    'ambassador.apps.AmbassadorConfig',
+    'messages.apps.MessagesConfig'
 ]
 
 MIDDLEWARE = [
