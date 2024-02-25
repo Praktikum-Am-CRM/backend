@@ -12,3 +12,5 @@ setup.cfg
 .idea
 .dockerignore
 requirements_style.txt
+infra/example.env
+infra/.env
