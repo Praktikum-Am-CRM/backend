@@ -69,7 +69,7 @@ class Report(models.Model):
     )
     id_ambassador = models.ForeignKey(
         to=Ambassador,
-        on_delete=models.CASCADE
+        on_delete=models.PROTECT
     )
     report_date = models.DateField(
         auto_now=True,
@@ -88,12 +88,12 @@ class Report(models.Model):
     )
     placement = models.ForeignKey(
         to=Placement,
-        on_delete=models.CASCADE
+        on_delete=models.PROTECT
     )
     sign_junior = models.BooleanField()
     id_run_status = models.ForeignKey(
         to=RunStatus,
-        on_delete=models.CASCADE
+        on_delete=models.PROTECT
     )
     grade = models.PositiveSmallIntegerField(
         validators=[validate_one_to_ten]
