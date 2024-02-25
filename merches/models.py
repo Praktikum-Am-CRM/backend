@@ -1,5 +1,10 @@
 import uuid
+
 from django.db import models
+
+
+class Ambassador(models.Model):
+    pass
 
 
 class Status(models.TextChoices):
@@ -10,7 +15,7 @@ class Status(models.TextChoices):
 
 class RequestAmbassador(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    ambassador = models.ForeignKey(Ambassador, on_delete=models.CASCADE)
+    ambassador = models.ForeignKey(Ambassador, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = "Заявки амбассадоров"
@@ -96,11 +101,11 @@ class Request(models.Model):
         default=Status.PENDING,
         verbose_name="Статус выполнения",
     )
-    merchandise = models.ForeignKey(Merch, on_delete=models.CASCADE)
+    merchandise = models.ForeignKey(Merch, on_delete=models.PROTECT)
     delivery_address = models.ForeignKey(
-        DeliveryAddress, on_delete=models.CASCADE
+        DeliveryAddress, on_delete=models.PROTECT
     )
-    ambassador = models.ForeignKey(RequestAmbassador, on_delete=models.CASCADE)
+    ambassador = models.ForeignKey(RequestAmbassador, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = "Заявки на мерчи"

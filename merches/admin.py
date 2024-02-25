@@ -2,10 +2,10 @@ from django.contrib import admin
 
 from .models import (
     Ambassador,
-    RequestAmbassador,
-    Merch,
     DeliveryAddress,
+    Merch,
     Request,
+    RequestAmbassador,
 )
 
 admin.site.register(Ambassador)

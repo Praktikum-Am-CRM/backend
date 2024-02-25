@@ -1,5 +1,6 @@
-from django.db import models
 import uuid
+
+from django.db import models
 
 from merches.models import Ambassador
 
@@ -20,8 +21,8 @@ class Achieve(models.Model):
 
 class AchieveAmbassador(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    id_ambassador = models.ForeignKey(Ambassador, on_delete=models.CASCADE)
-    id_achieve = models.ForeignKey(Achieve, on_delete=models.CASCADE)
+    id_ambassador = models.ForeignKey(Ambassador, on_delete=models.PROTECT)
+    id_achieve = models.ForeignKey(Achieve, on_delete=models.PROTECT)
     assignment_date_achieve = models.DateTimeField(
         auto_now_add=True, verbose_name="Дата получения ачивки"
     )
