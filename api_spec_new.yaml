@@ -1,0 +1,1075 @@
+openapi: 3.0.3
+info:
+  title: Yandex Ambassador CRM API
+  description: Описание API для CRM системы проекта Yandex Ambassador
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/
+    description: Локальный сервер джанги
+
+paths:
+  # Авторизация
+  /api/v1/auth/token/login/:
+    post:
+      tags:
+        - Авторизация
+      description: Получение токена аутентификации пользователя.
+      parameters: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenCreate'
+      responses:
+        201:
+          description: Успешная авторизация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenGetResponse'
+        400:
+          $ref: '#/components/responses/AuthorizationError'
+  /api/v1/auth/token/logout/:
+    post:
+      security:
+        - Token: [ ]
+      tags:
+        - Авторизация
+      description: Удалить токена аутентификации пользователя.
+      parameters: [ ]
+      responses:
+        204:
+          description: 'Токен удален'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+
+  # Амбассадор
+  /api/v1/ambassador/:
+    get:
+      security:
+        - Token: [ ]
+      tags:
+        - Амбассадор
+      description: Получить список амбассадоров/кандидатов
+      parameters:
+        - name: status
+          required: false
+          in: query
+          description: Статус амбассадора/кадидата
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+        - name: sex
+          required: false
+          in: query
+          description: Пол (0 - Мужчины, 1 - Женщины)
+          schema:
+            type: integer
+            enum: [ 0, 1 ]
+        - name: programs
+          required: false
+          in: query
+          description: Программы обучения
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+        - name: search
+          required: false
+          in: query
+          description: Поиск по имени, программе
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: Номер страницы
+          schema:
+            type: integer
+        - name: limit
+          required: false
+          in: query
+          description: Количество объектов на странице
+          schema:
+            type: integer
+      responses:
+        200:
+          $ref: '#/components/responses/AmbassadorsList'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+  /api/v1/ambassador/{ambassador_id}/:
+    get:
+      security:
+        - Token: [ ]
+      tags:
+        - Амбассадор
+      parameters:
+        - name: ambassador_id
+          required: true
+          in: path
+          description: ID амбассадора/кандидата
+          schema:
+            type: string
+            format: uuid
+      description: Получить данные амбассадора/кандидата
+      responses:
+        200:
+          $ref: '#/components/responses/Ambassador'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+        404:
+          $ref: '#/components/responses/NotFound'
+    patch:
+      security:
+        - Token: [ ]
+      tags:
+        - Амбассадор
+      parameters:
+        - name: ambassador_id
+          required: true
+          in: path
+          description: ID амбассадора/кандидата
+          schema:
+            type: string
+            format: uuid
+      description: 'Обновить данные амбассадора/кандидата.'
+      requestBody:
+        description: 'Все поля являются не обязательными. Обновляются только заданные поля.<br><b>Для активностей и ачивок передается полный список установленных для амбассадора значений</b>'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmbassadorUpdate'
+      responses:
+        200:
+          $ref: '#/components/responses/Ambassador'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+        404:
+          $ref: '#/components/responses/NotFound'
+  # Статусы амбассадоров/кандидатов
+  /api/v1/ambassador/statuses:
+    get:
+      tags:
+        - Амбассадор
+      description: Получение списка возможных статусов
+      parameters: []
+      responses:
+        200:
+          $ref: '#/components/responses/AmbassadorStatusesList'
+  # Программы обучения
+  /api/v1/ambassador/programs:
+    get:
+      tags:
+        - Амбассадор
+      description: Получение списка возможных программ обучения
+      parameters: []
+      responses:
+        200:
+          $ref: '#/components/responses/ProgramList'
+  # Цели обучения
+  /api/v1/ambassador/goals:
+    get:
+      tags:
+        - Амбассадор
+      description: Получение списка возможных целей обучения
+      parameters: []
+      responses:
+        200:
+          $ref: '#/components/responses/GoalsList'
+  # Активности
+  /api/v1/ambassador/activities:
+    get:
+      tags:
+        - Амбассадор
+      description: Получение списка возможных целей обучения
+      parameters: []
+      responses:
+        200:
+          $ref: '#/components/responses/ActivitiesList'
+  # Активности
+  /api/v1/ambassador/achivies:
+    get:
+      tags:
+        - Амбассадор
+      description: Получение списка ачивок
+      parameters: []
+      responses:
+        200:
+          $ref: '#/components/responses/AchiviesList'
+
+  # Деятельность (report)
+  /api/v1/ambassador/{ambassador_id}/reports/:
+    get:
+      tags:
+        - Деятельность
+      security:
+        - Token: [ ]
+      description: Получение списка заданий амбассадора
+      parameters:
+        - name: ambassador_id
+          required: true
+          in: path
+          description: ID амбассадора/кандидата
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          $ref: '#/components/responses/ReportsList'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+        404:
+          $ref: '#/components/responses/NotFound'
+  /api/v1/report/{report_id}:
+    patch:
+      tags:
+        - Деятельность
+      security:
+        - Token: [ ]
+      description: 'Обновлене задания для амбассадора.'
+      parameters:
+        - name: report_id
+          required: true
+          in: path
+          description: ID задания
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: 'Все поля являются не обязательными. Обновляются только заданные поля.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportUpdate'
+      responses:
+        200:
+          $ref: '#/components/responses/Report'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+        404:
+          $ref: '#/components/responses/NotFound'
+  /api/v1/ambassador/{ambassador_id}/report/:
+    post:
+      tags:
+        - Деятельность
+      security:
+        - Token: [ ]
+      description: Создание отчета о выполнении задания амбассадором (через Yandex.Forms)
+      parameters:
+        - name: ambassador_id
+          required: true
+          in: path
+          description: ID амбассадора/кандидата
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportCreate'
+      responses:
+        200:
+          $ref: '#/components/responses/Report'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+        404:
+          $ref: '#/components/responses/NotFound'
+
+components:
+  schemas:
+    TokenCreate:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - password
+        - email
+    TokenGetResponse:
+      type: object
+      properties:
+        auth_token:
+          type: string
+    AuthorizationError:
+      description: Ошибка аутентификации
+      type: object
+      properties:
+        non_field_errors:
+          description: 'Описание ошибки'
+          example: "Невозможно войти с предоставленными учетными данными."
+          type: string
+    AuthenticationError:
+      description: Ошибка авторизации
+      type: object
+      properties:
+        detail:
+          description: 'Описание ошибки'
+          example: "Учетные данные не были предоставлены."
+          type: string
+    AmbassadorShortInfo:
+      description: Амбасадор Яндекса (кратко)
+      type: object
+      properties:
+        id:
+          description: ID амбасадора
+          type: string
+          format: uuid
+          example: '54271b16-1ef0-489c-9d6f-421aa87fbf32'
+        first_name:
+          description: Имя амбасадора
+          type: string
+          example: Иван
+        last_name:
+          description: Фамилия амбасадора
+          type: string
+          example: Иванов
+        middle_name:
+          description: Отчество амбасадора
+          type: string
+          example: Иванович
+        status:
+          $ref: '#/components/schemas/AmbassadorStatus'
+        promocode:
+          description: Промокод
+          type: string
+          example: '123456'
+        telegram:
+          $ref: '#/components/schemas/Telegram'
+        date:
+          description: Дата регистрации как амбассадора (для кандидата - пустое поле)
+          type: string
+          format: date
+        sex:
+          description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
+          type: integer
+          enum: [ 0, 1]
+          example: 0
+        address:
+          $ref: "#/components/schemas/Address"
+    AmbassadorFullInfo:
+      description: Амбассадор Яндекса
+      type: object
+      properties:
+        id:
+          description: ID амбасадора
+          type: string
+          format: uuid
+          example: '54271b16-1ef0-489c-9d6f-421aa87fbf32'
+        first_name:
+          description: Имя амбасадора
+          type: string
+          example: Иван
+        last_name:
+          description: Фамилия амбасадора
+          type: string
+          example: Иванов
+        middle_name:
+          description: Отчество амбасадора
+          type: string
+          example: Иванович
+        status:
+          $ref: '#/components/schemas/AmbassadorStatus'
+        promocode:
+          description: Промокод
+          type: string
+          example: '123456'
+        telegram:
+          $ref: '#/components/schemas/Telegram'
+        date:
+          description: Дата регистрации как амбассадора (для кандидата - пустое поле)
+          type: string
+          format: date
+        sex:
+          description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
+          type: integer
+          enum: [ 0, 1]
+          example: 0
+        address:
+          $ref: "#/components/schemas/Address"
+        birthday:
+          description: Дата рождения
+          type: string
+          format: date
+        program:
+          $ref: '#/components/schemas/Program'
+        goal:
+          $ref: '#/components/schemas/Goal'
+        activities:
+          description: Активности
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+        size:
+          $ref: '#/components/schemas/Size'
+        contact:
+          $ref: '#/components/schemas/Contact'
+        addendum:
+          $ref: '#/components/schemas/Addendum'
+        achivies:
+          description: Ачивки амбассадора
+          type: array
+          items:
+            $ref: '#/components/schemas/AmbassadorAchivies'
+    AmbassadorAchivies:
+      description: Ачивка амбассадора
+      type: object
+      properties:
+        achive:
+          $ref: '#/components/schemas/Achive'
+        assignment_date:
+          type: string
+          format: date
+          description: Дата присвоения ачивки
+    AmbassadorUpdate:
+      description: 'Обновление данных амбасадора.'
+      type: object
+      properties:
+        first_name:
+          description: Имя амбасадора
+          type: string
+          example: Иван
+        last_name:
+          description: Фамилия амбасадора
+          type: string
+          example: Иванов
+        middle_name:
+          description: Отчество амбасадора
+          type: string
+          example: Иванович
+        status:
+          type: string
+          format: uuid
+          description: ID нового статуса
+        promocode:
+          description: Промокод
+          type: string
+          example: '123456'
+        date:
+          description: Дата регистрации как амбассадора (для кандидата - пустое поле)
+          type: string
+          format: date
+        sex:
+          description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
+          type: integer
+          enum: [ 0, 1]
+          example: 0
+        address:
+          $ref: '#/components/schemas/AddressUpdate'
+        birthday:
+          description: Дата рождения
+          type: string
+          format: date
+        program:
+          type: string
+          format: uuid
+          description: ID новой программы
+        goal:
+          type: string
+          format: uuid
+          description: ID новой цели
+        activities:
+          description: Активности
+          type: array
+          items:
+            type: string
+            format: uuid
+            description: ID новой активити
+        size:
+          $ref: '#/components/schemas/SizeUpdate'
+        contact:
+          $ref: '#/components/schemas/ContactUpdate'
+        addendum:
+          $ref: '#/components/schemas/AddendumUpdate'
+        achivies:
+          description: Ачивки амбассадора
+          type: array
+          items:
+            type: string
+            format: uuid
+            description: ID новой ачивки
+    AmbassadorStatus:
+      description: Статус амбассадора
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID статуса
+          example: '389e39db-d015-4f3e-9550-18aa4db9525d'
+        name:
+          type: string
+          description: Название статуса
+          example: 'Активен'
+        sort_order:
+          type: integer
+          description: Уровень сортировки
+          example: 1
+    Program:
+      description: Программы обучения
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID программы
+          example: 'f016b680-d30d-11ee-9d87-e3f112eaab1e'
+        name:
+          type: string
+          description: Название программы
+          example: 'Web-design'
+    Goal:
+      description: Цель обучения
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID цели
+          example: '8440ce07-e1ce-4914-a1d0-d25b5ad9f161'
+        name:
+          type: string
+          description: Название цели
+          example: 'Получение новой профессии'
+    Activity:
+      description: Активность
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID активности
+          example: 'b82cf71a-81b9-4bbc-a2bd-77317f704330'
+        name:
+          type: string
+          description: Название активности
+          example: 'Вести блог'
+    Address:
+      description: Адрес амбассадора/кандидата
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID активности
+          example: '7fa3e6c9-1934-4a60-aedc-6041e47e6acb'
+        country:
+          type: string
+          description: Страна проживания
+          example: 'Россия'
+        index:
+          type: string
+          description: Почтовый индекс
+          example: '123423'
+        region:
+          type: string
+          description: Регион/область
+          example: 'Москва'
+        district:
+          type: string
+          description: Район
+          example: 'Хорошёво-Мнёвники'
+        settlement:
+          type: string
+          description: Город
+          example: 'Москва'
+        street:
+          type: string
+          description: Улица
+          example: 'проспект Маршала Жукова'
+        house:
+          type: integer
+          description: Дом
+          example: 45
+        building:
+          type: string
+          description: Корпус
+          example: '1'
+        apartment:
+          type: string
+          description: Квартира
+          example: '12'
+    AddressUpdate:
+      description: Адрес амбассадора/кандидата
+      type: object
+      properties:
+        country:
+          type: string
+          description: Страна проживания
+          example: 'Россия'
+        index:
+          type: string
+          description: Почтовый индекс
+          example: '123423'
+        region:
+          type: string
+          description: Регион/область
+          example: 'Москва'
+        district:
+          type: string
+          description: Район
+          example: 'Хорошёво-Мнёвники'
+        settlement:
+          type: string
+          description: Город
+          example: 'Москва'
+        street:
+          type: string
+          description: Улица
+          example: 'проспект Маршала Жукова'
+        house:
+          type: integer
+          description: Дом
+          example: 45
+        building:
+          type: string
+          description: Корпус
+          example: '1'
+        apartment:
+          type: string
+          description: Квартира
+          example: '12'
+    Size:
+      description: Размеры
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID активности
+          example: '19c0724a-a0fa-4d89-943e-eab8179489f6'
+        clothing_size:
+          type: string
+          description: Размер одежды
+          example: 'М'
+        shoe_size:
+          type: string
+          description: Размер обуви
+          example: '43'
+    SizeUpdate:
+      description: Размеры
+      type: object
+      properties:
+        clothing_size:
+          type: string
+          description: Размер одежды
+          example: 'М'
+        shoe_size:
+          type: string
+          description: Размер обуви
+          example: '43'
+    Contact:
+      description: Размеры
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID активности
+          example: '97c9f360-4042-432a-bf4a-19e04e20711a'
+        phone_number:
+          type: string
+          pattern: \+7[0-9]{3}[0-9]{3}[0-9]{2}[0-9]{2}
+          description: Номер телефона
+          example: '+79999999999'
+        email:
+          type: string
+          format: email
+          description: E-mail
+          example: 'super@user.ru'
+    ContactUpdate:
+      description: Размеры
+      type: object
+      properties:
+        phone_number:
+          type: string
+          pattern: \+7[0-9]{3}[0-9]{3}[0-9]{2}[0-9]{2}
+          description: Номер телефона
+          example: '+79999999999'
+        email:
+          type: string
+          format: email
+          description: E-mail
+          example: 'super@user.ru'
+    Addendum:
+      description: Дополнения
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID активности
+          example: '069f7931-a037-40ef-8423-657de1189496'
+        note:
+          type: string
+          description: Заметка
+          example: 'Очень активен'
+        blog_link:
+          type: string
+          format: uri
+          description: Ссылка на блог
+          example: 'https://myblog.ru'
+        place_work:
+          type: string
+          description: Место работы
+          example: 'Частная контора'
+        specialty_work:
+          type: string
+          description: Должность (кем работаешь)
+          example: 'Заместитель по качеству'
+        educational_institution:
+          type: string
+          description: Учебное заведение
+          example: 'МГУ'
+    AddendumUpdate:
+      description: Дополнения
+      type: object
+      properties:
+        note:
+          type: string
+          description: Заметка
+          example: 'Очень активен'
+        blog_link:
+          type: string
+          format: uri
+          description: Ссылка на блог
+          example: 'https://myblog.ru'
+        place_work:
+          type: string
+          description: Место работы
+          example: 'Частная контора'
+        specialty_work:
+          type: string
+          description: Должность (кем работаешь)
+          example: 'Заместитель по качеству'
+        educational_institution:
+          type: string
+          description: Учебное заведение
+          example: 'МГУ'
+    Telegram:
+      description: Данные телеграм
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID активности
+          example: 'be762a32-b749-4ae5-a3fd-4d06973c1a1c'
+        telegram_id:
+          type: string
+          description: Телеграм ID амбассадора
+          example: '12345678'
+        nikname:
+          type: string
+          description: Имя пользователя в Телеграм
+          example: 'superuser'
+        active:
+          type: boolean
+          description: Активен (запущен) в боте
+          example: 'True'
+        registration_date:
+          type: string
+          format: date
+          description: Дата регистрации в боте
+    Achive:
+      description: Ачивка
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID активности
+          example: 'be762a32-b749-4ae5-a3fd-4d06973c1a1c'
+        name:
+          type: string
+          description: Название ачивки
+          example: 'Друг'
+    Report:
+      description: Задание амбассадора
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID задания/отчета
+          example: '39d02785-bcc1-43c7-9c46-4e1982dfc2b5'
+        report_date:
+          type: string
+          format: date
+          description: Дата выполнения
+        content_link:
+          type: string
+          format: uri
+          example: 'http://myblog.ru/message/14589/'
+          description: Ссылка на контент
+        screen:
+          type: string
+          format: uri
+          example: 'http://yaambcrm.ru/media/screen1.jpg'
+          description: Ссылка на скрин
+        placement:
+          $ref: '#/components/schemas/Placement'
+        sign_junior:
+          type: boolean
+          description: Признак начинающего амбассадора
+        run_status:
+          $ref: '#/components/schemas/ReportRunStatus'
+        report_type:
+          $ref: '#/components/schemas/ReportType'
+        grade:
+          type: integer
+          minimum: 1
+          example: 5
+          description: Оценка выполнения задания
+    ReportUpdate:
+      description: Обновление задания амбассадора
+      type: object
+      properties:
+        report_date:
+          type: string
+          format: date
+          description: Дата выполнения
+        content_link:
+          type: string
+          format: uri
+          example: 'http://myblog.ru/message/14589/'
+          description: Ссылка на контент
+        screen:
+          description: 'Картинка, закодированная в Base64'
+          example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=='
+          type: string
+          format: binary
+        placement:
+          type: string
+          format: uuid
+          description: ID площадки
+          example: '39d02785-bcc1-43c7-9c46-4e1982dfc2b5'
+        sign_junior:
+          type: boolean
+          description: Признак начинающего амбассадора
+        run_status:
+          type: string
+          format: uuid
+          description: ID статуса
+          example: '39d02785-bcc1-43c7-9c46-4e1982dfc2b5'
+        report_type:
+          type: string
+          format: uuid
+          description: ID типа задания
+          example: '39d02785-bcc1-43c7-9c46-4e1982dfc2b5'
+        grade:
+          type: integer
+          minimum: 1
+          example: 5
+          description: Оценка выполнения задания
+    ReportCreate:
+      description: Создание задания для амбассадора
+      type: object
+      properties:
+        fio:
+          type: string
+          description: Имя и Фамилия
+        telegram_nickname:
+          type: string
+          description: Ник в телеграм
+        sign_junior:
+          type: boolean
+          description: Признак начинающего амбассадора
+        content_link:
+          type: string
+          format: uri
+          example: 'http://myblog.ru/message/14589/'
+          description: Ссылка на контент
+        screen:
+          description: 'Картинка, закодированная в Base64'
+          example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=='
+          type: string
+          format: binary
+      required:
+        - fio
+        - telegram_nickname
+        - content_link
+    Placement:
+      description: Площадка размещения задания
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID площадки
+          example: 'c72e238b-1e47-4795-80cc-edc4c5bad5e2'
+        site:
+          type: string
+          description: Площадка
+    ReportRunStatus:
+      description: Статус выполнения задания
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID статуса
+          example: '603831f0-8f71-48f8-b816-55969038e306'
+        status:
+          type: string
+          description: Статус задания
+          example: 'На рассмотрении'
+    ReportType:
+      description: Тип задания
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID типа
+          example: '385eb328-923a-417a-8a66-a1c7da5f7efb'
+        report_type:
+          type: string
+          description: Тип задания
+          example: 'Написать отзыв'
+    NotFound:
+      description: Объект не найден
+      type: object
+      properties:
+        detail:
+          description: 'Описание ошибки'
+          example: "Страница не найдена."
+          type: string
+    ValidationError:
+      description: Стандартные ошибки валидации DRF
+      type: object
+      properties:
+        field_name:
+          description: 'Название поля, в котором произошли ошибки. Таких полей может быть несколько'
+          example: [ 'Обязательное поле.' ]
+          type: array
+          items:
+            type: string
+
+  responses:
+    AuthorizationError:
+      description: Ошибка авторизации
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthorizationError'
+    AuthenticationError:
+      description: Ошибка аутентификации
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthenticationError'
+    AmbassadorsList:
+      description: Список амбассадоров
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+                description: Общее количество объектов
+                example: 123
+              next:
+                type: string
+                nullable: true
+                format: uri
+                description: Ссылка на следующую страницу
+                example: http://yaambcrm.ru/api/v1/ambassador/?page=4
+              previous:
+                type: string
+                nullable: true
+                format: uri
+                description: Ссылка на предыдущую страницу
+                example: http://yaambcrm.ru/api/v1/ambassador/?page=2
+              results:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AmbassadorShortInfo'
+                description: 'Список объектов текущей страницы'
+    Ambassador:
+      description: Полная информация об амбассадоре
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AmbassadorFullInfo'
+    AmbassadorStatusesList:
+      description: Список возможных статусов
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/AmbassadorStatus'
+    ProgramList:
+      description: Список программ обучения
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Program'
+    GoalsList:
+      description: Список целей обучения
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Goal'
+    ActivitiesList:
+      description: Список целей обучения
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Activity'
+    AchiviesList:
+      description: Список ачивок
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Achive'
+    ReportsList:
+      description: Список заданий амбассадора
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Report'
+    Report:
+      description: Задание для амбассадора
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Report'
+    NotFound:
+      description: Объект не найден
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+    ValidationError:
+      description: 'Ошибки валидации в стандартном формате DRF'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+
+  securitySchemes:
+    Token:
+      description: 'Авторизация по токену.<br> Все запросы от имени пользователя должны выполняться с заголовком "Authorization: Token TOKENVALUE"'
+      type: http
+      scheme: bearer
+      bearerFormat: Token
