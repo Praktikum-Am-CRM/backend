@@ -5,10 +5,10 @@ from merches.models import Ambassador
 
 
 class Achieve(models.Model):
-    id = models.UUIDField(primary_key=True,
-                          default=uuid.uuid4, editable=False)
-    achieve_name = models.CharField(max_length=255,
-                                    verbose_name='Название ачивки')
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    achieve_name = models.CharField(
+        max_length=255, verbose_name="Название ачивки"
+    )
 
     class Meta:
         verbose_name = "Ачивки"
@@ -19,13 +19,11 @@ class Achieve(models.Model):
 
 
 class AchieveAmbassador(models.Model):
-    id = models.UUIDField(primary_key=True,
-                          default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     id_ambassador = models.ForeignKey(Ambassador, on_delete=models.CASCADE)
     id_achieve = models.ForeignKey(Achieve, on_delete=models.CASCADE)
     assignment_date_achieve = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата получения ачивки'
+        auto_now_add=True, verbose_name="Дата получения ачивки"
     )
 
     class Meta:

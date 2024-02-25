@@ -29,25 +29,3 @@ extend-exclude = '''
     | ^__init__\.py
 )
 '''
-
-[tool.isort]
-include_trailing_comma = true
-profile = "black"
-py_version = 312
-skip = [".gitignore", ".dockerignore", "__init__.py"]
-line_length = 79
-skip_glob = [
-    "docs/*",
-    "**/migrations/*.py",
-    "tests/",
-    "*/migrations/",
-    "venv/",
-    "venv/*",
-    "*/venv/",
-    "env/",
-    "static/*",
-    "templates/*",
-    ".venv",
-    ".venv/",
-    ".venv/*",
-]

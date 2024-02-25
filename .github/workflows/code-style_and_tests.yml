@@ -24,14 +24,14 @@ jobs:
         pip install -r ./requirements.txt
         pip install -r ./requirements_style.txt
 
-    - name: Run Black formatter
-      run: black --check --diff --config ./pyproject.toml .
-
     - name: Run isort
       run: isort  --check --diff --settings-file ./setup.cfg .
 
     - name: Run flake8
       run: flake8 --verbose --config ./setup.cfg .
+
+    - name: Run Black formatter
+      run: black --check --diff --config ./pyproject.toml .
 
     - name: Run Django tests
       run: |
