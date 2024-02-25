@@ -7,15 +7,15 @@ repos:
         language: system
         types: [ python ]
         pass_filenames: false
-        args: ["--verbose"]
+        args: ['--verbose']
 
       - id: black
         name: black
-        entry: black --config ./pyproject.toml .
+        entry: black --skip-string-normalization --config ./pyproject.toml .
         language: system
         types: [ python ]
         pass_filenames: false
-        args: ["--verbose"]
+        args: ['--verbose']
 
       - id: flake8
         name: flake8
@@ -23,7 +23,7 @@ repos:
         language: system
         types: [ python ]
         pass_filenames: false
-        args: ["--verbose"]
+        args: ['--verbose']
 
       - id: django-test
         name: django-test

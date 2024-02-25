@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10",]
+        python-version: ['3.10',]
 
     steps:
     - name: Checkout code
@@ -31,7 +31,7 @@ jobs:
       run: flake8 --verbose --config ./setup.cfg .
 
     - name: Run Black formatter
-      run: black --check --diff --config ./pyproject.toml .
+      run: black --check --diff --skip-string-normalization --config ./pyproject.toml .
 
     - name: Run Django tests
       run: |

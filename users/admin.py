@@ -6,40 +6,40 @@ from .models import Manager
 
 class ManagerAdmin(UserAdmin):
     list_display = [
-        "username",
-        "email",
-        "first_name",
-        "last_name",
-        "profession",
-        "middle_name",
+        'username',
+        'email',
+        'first_name',
+        'last_name',
+        'profession',
+        'middle_name',
     ]
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
+        (None, {'fields': ('username', 'password')}),
         (
-            "Personal info",
+            'Personal info',
             {
-                "fields": (
-                    "first_name",
-                    "last_name",
-                    "email",
-                    "profession",
-                    "middle_name",
+                'fields': (
+                    'first_name',
+                    'last_name',
+                    'email',
+                    'profession',
+                    'middle_name',
                 )
             },
         ),
         (
-            "Permissions",
+            'Permissions',
             {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "groups",
-                    "user_permissions",
+                'fields': (
+                    'is_active',
+                    'is_staff',
+                    'is_superuser',
+                    'groups',
+                    'user_permissions',
                 )
             },
         ),
-        ("Important dates", {"fields": ("last_login", "date_joined")}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 
 

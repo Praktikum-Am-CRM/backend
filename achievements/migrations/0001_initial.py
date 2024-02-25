@@ -11,15 +11,15 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("merches", "0001_initial"),
+        ('merches', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="Achieve",
+            name='Achieve',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.UUIDField(
                         default=uuid.uuid4,
                         editable=False,
@@ -28,20 +28,20 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "achieve_name",
-                    models.CharField(max_length=255, verbose_name="Название ачивки"),
+                    'achieve_name',
+                    models.CharField(max_length=255, verbose_name='Название ачивки'),
                 ),
             ],
             options={
-                "verbose_name": "Ачивки",
-                "verbose_name_plural": "Ачивки",
+                'verbose_name': 'Ачивки',
+                'verbose_name_plural': 'Ачивки',
             },
         ),
         migrations.CreateModel(
-            name="AchieveAmbassador",
+            name='AchieveAmbassador',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.UUIDField(
                         default=uuid.uuid4,
                         editable=False,
@@ -50,29 +50,29 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "assignment_date_achieve",
+                    'assignment_date_achieve',
                     models.DateTimeField(
-                        auto_now_add=True, verbose_name="Дата получения ачивки"
+                        auto_now_add=True, verbose_name='Дата получения ачивки'
                     ),
                 ),
                 (
-                    "id_achieve",
+                    'id_achieve',
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="achievements.achieve",
+                        to='achievements.achieve',
                     ),
                 ),
                 (
-                    "id_ambassador",
+                    'id_ambassador',
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="merches.ambassador",
+                        to='merches.ambassador',
                     ),
                 ),
             ],
             options={
-                "verbose_name": "Ачивки амбассадоров",
-                "verbose_name_plural": "Ачивки амбассадоров",
+                'verbose_name': 'Ачивки амбассадоров',
+                'verbose_name_plural': 'Ачивки амбассадоров',
             },
         ),
     ]

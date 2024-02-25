@@ -14,24 +14,24 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Ambassador",
+            name='Ambassador',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
             ],
         ),
         migrations.CreateModel(
-            name="DeliveryAddress",
+            name='DeliveryAddress',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.UUIDField(
                         default=uuid.uuid4,
                         editable=False,
@@ -40,104 +40,104 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "index",
+                    'index',
                     models.CharField(
-                        help_text="Укажите шестизначный почтовый индекс.",
+                        help_text='Укажите шестизначный почтовый индекс.',
                         max_length=255,
-                        verbose_name="Почтовый индекс",
+                        verbose_name='Почтовый индекс',
                     ),
                 ),
                 (
-                    "region",
+                    'region',
                     models.CharField(
-                        help_text="Введите название области или края.",
+                        help_text='Введите название области или края.',
                         max_length=255,
-                        verbose_name="Область",
+                        verbose_name='Область',
                     ),
                 ),
                 (
-                    "area",
+                    'area',
                     models.CharField(
-                        help_text="Заполните название района, округа или города.",
+                        help_text='Заполните название района, округа или города.',
                         max_length=255,
-                        verbose_name="Район",
+                        verbose_name='Район',
                     ),
                 ),
                 (
-                    "locality",
+                    'locality',
                     models.CharField(
-                        help_text="Укажите название поселка, села, деревни или города.",
+                        help_text='Укажите название поселка, села, деревни или города.',
                         max_length=255,
-                        verbose_name="Населенный пункт",
+                        verbose_name='Населенный пункт',
                     ),
                 ),
                 (
-                    "street",
+                    'street',
                     models.CharField(
-                        help_text="Введите название улицы или проспекта.",
+                        help_text='Введите название улицы или проспекта.',
                         max_length=255,
-                        verbose_name="Улица",
+                        verbose_name='Улица',
                     ),
                 ),
                 (
-                    "house",
+                    'house',
                     models.CharField(
-                        help_text="Заполните номер дома.",
+                        help_text='Заполните номер дома.',
                         max_length=255,
-                        verbose_name="Дом",
+                        verbose_name='Дом',
                     ),
                 ),
                 (
-                    "building",
-                    models.CharField(
-                        blank=True,
-                        help_text="Укажите номер корпуса (если есть).",
-                        max_length=255,
-                        verbose_name="Корпус",
-                    ),
-                ),
-                (
-                    "structure",
+                    'building',
                     models.CharField(
                         blank=True,
-                        help_text="Введите номер строения (если есть).",
+                        help_text='Укажите номер корпуса (если есть).',
                         max_length=255,
-                        verbose_name="Строение",
+                        verbose_name='Корпус',
                     ),
                 ),
                 (
-                    "apartment",
+                    'structure',
                     models.CharField(
                         blank=True,
-                        help_text="Заполните номер квартиры (если есть).",
+                        help_text='Введите номер строения (если есть).',
                         max_length=255,
-                        verbose_name="Квартира",
+                        verbose_name='Строение',
                     ),
                 ),
                 (
-                    "address_confirmation_status",
+                    'apartment',
+                    models.CharField(
+                        blank=True,
+                        help_text='Заполните номер квартиры (если есть).',
+                        max_length=255,
+                        verbose_name='Квартира',
+                    ),
+                ),
+                (
+                    'address_confirmation_status',
                     models.CharField(
                         choices=[
-                            ("pending", "Ожидание подтверждения"),
-                            ("confirmed", "Подтвержден"),
-                            ("cancel", "Отклонен"),
+                            ('pending', 'Ожидание подтверждения'),
+                            ('confirmed', 'Подтвержден'),
+                            ('cancel', 'Отклонен'),
                         ],
-                        default="pending",
+                        default='pending',
                         max_length=255,
-                        verbose_name="Статус подтверждения адреса",
+                        verbose_name='Статус подтверждения адреса',
                     ),
                 ),
             ],
             options={
-                "verbose_name": "Адрес доставки",
-                "verbose_name_plural": "Адрес доставки",
+                'verbose_name': 'Адрес доставки',
+                'verbose_name_plural': 'Адрес доставки',
             },
         ),
         migrations.CreateModel(
-            name="Merch",
+            name='Merch',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.UUIDField(
                         default=uuid.uuid4,
                         editable=False,
@@ -146,30 +146,30 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "merchandise_name",
-                    models.CharField(max_length=255, verbose_name="Название мерча"),
+                    'merchandise_name',
+                    models.CharField(max_length=255, verbose_name='Название мерча'),
                 ),
                 (
-                    "price",
+                    'price',
                     models.DecimalField(
-                        decimal_places=2, max_digits=10, verbose_name="Цена"
+                        decimal_places=2, max_digits=10, verbose_name='Цена'
                     ),
                 ),
                 (
-                    "intangible_attribute",
-                    models.BooleanField(verbose_name="Признак нематериального мерча"),
+                    'intangible_attribute',
+                    models.BooleanField(verbose_name='Признак нематериального мерча'),
                 ),
             ],
             options={
-                "verbose_name": "Мерч",
-                "verbose_name_plural": "Мерч",
+                'verbose_name': 'Мерч',
+                'verbose_name_plural': 'Мерч',
             },
         ),
         migrations.CreateModel(
-            name="RequestAmbassador",
+            name='RequestAmbassador',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.UUIDField(
                         default=uuid.uuid4,
                         editable=False,
@@ -178,23 +178,23 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "ambassador",
+                    'ambassador',
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="merches.ambassador",
+                        to='merches.ambassador',
                     ),
                 ),
             ],
             options={
-                "verbose_name": "Заявки амбассадоров",
-                "verbose_name_plural": "Заявки амбассадоров",
+                'verbose_name': 'Заявки амбассадоров',
+                'verbose_name_plural': 'Заявки амбассадоров',
             },
         ),
         migrations.CreateModel(
-            name="Request",
+            name='Request',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.UUIDField(
                         default=uuid.uuid4,
                         editable=False,
@@ -202,50 +202,50 @@ class Migration(migrations.Migration):
                         serialize=False,
                     ),
                 ),
-                ("request_date", models.DateTimeField(verbose_name="Дата отправки")),
+                ('request_date', models.DateTimeField(verbose_name='Дата отправки')),
                 (
-                    "date_transfer_to_logist",
+                    'date_transfer_to_logist',
                     models.DateTimeField(
-                        blank=True, null=True, verbose_name="Дата передачи логистам"
+                        blank=True, null=True, verbose_name='Дата передачи логистам'
                     ),
                 ),
                 (
-                    "request_status",
+                    'request_status',
                     models.CharField(
                         choices=[
-                            ("pending", "Ожидание подтверждения"),
-                            ("confirmed", "Подтвержден"),
-                            ("cancel", "Отклонен"),
+                            ('pending', 'Ожидание подтверждения'),
+                            ('confirmed', 'Подтвержден'),
+                            ('cancel', 'Отклонен'),
                         ],
-                        default="pending",
+                        default='pending',
                         max_length=255,
-                        verbose_name="Статус выполнения",
+                        verbose_name='Статус выполнения',
                     ),
                 ),
                 (
-                    "ambassador",
+                    'ambassador',
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="merches.requestambassador",
+                        to='merches.requestambassador',
                     ),
                 ),
                 (
-                    "delivery_address",
+                    'delivery_address',
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="merches.deliveryaddress",
+                        to='merches.deliveryaddress',
                     ),
                 ),
                 (
-                    "imerchandise",
+                    'imerchandise',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="merches.merch"
+                        on_delete=django.db.models.deletion.CASCADE, to='merches.merch'
                     ),
                 ),
             ],
             options={
-                "verbose_name": "Заявки на мерчи",
-                "verbose_name_plural": "Заявки на мерч",
+                'verbose_name': 'Заявки на мерчи',
+                'verbose_name_plural': 'Заявки на мерч',
             },
         ),
     ]
