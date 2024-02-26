@@ -1,88 +1,73 @@
 from django.db import models
 
 
-class Answer(models.Model):
-    id = models.UUIDField(primary_key=True)
-    ambassador = models.ForeignKey(
-        "Ambassador",
-        verbose_name="Амбассадо",
+class BotMessages(models.Model):
+    message_id = models.ForeignKey(
+        "Message",
+        verbose_name="Сообщение",
         on_delete=models.CASCADE
     )
-    message = models.ForeignKey(
-        "Messages",
-        verbose_name="Сообщение",
+    from_bot = models.BooleanField()
+    manager_id = models.ForeignKey(
+        "Manager",
+        verbose_name="Менеджер",
         on_delete=models.PROTECT
     )
-    answer_text = models.TextField(verbose_name="Текст ответа")
-    answer_dispath_time = models.DateTimeField(
-        verbose_name="Дата и время сообщения",
+    ambassador_id = models.ForeignKey(
+        "Ambassador",
+        verbose_name="Амбасадор",
+        on_delete=models.CASCADE
+    )
+    sign_AI = models.BooleanField(
+        verbose_name="Искусственный интеллект"
+    )
+
+
+class MessageType(models.Model):
+    message_type = models.TextField()
+    available = models.BooleanField()
+
+
+class Message(models.Model):
+    message_text = models.TextField(
+        verbose_name="Текст сообщения"
+    )
+    media_link = models.URLField()
+    date = models.DateTimeField(
+        verbose_name="Дата сообщения",
         auto_now_add=True
     )
-    reaction = models.CharField(verbose_name="Реакция")
-    sign_artificial_intelligence = models.BooleanField(default=False)
+    message_type_id = models.ForeignKey(
+        "MessageType",
+        on_delete=models.PROTECT
+    )
+    message_telegram_id = models.ForeignKey(
+        "BotMessages",
+        verbose_name="Бот",
+        on_delete=models.PROTECT
+    )
+    reaction = models.IntegerField()
 
 
-class ReplyMessage(models.Model):
-    message = models.ForeignKey(
-        "Messages",
+class MessagePool(models.Model):
+    message_id = models.ForeignKey(
+        "Message",
         verbose_name="Сообщение",
-        on_delete=models.PROTECT
-    )
-    answer = models.ForeignKey(
-        "Anaswer",
-        verbose_name="Ответ",
-        on_delete=models.PROTECT
-    )
-
-
-class Messages(models.Model):
-    id = models.UUIDField(primary_key=True)
-    message_text = models.TextField(verbose_name="Текст сообщения")
-    message_dispath_time = models.DateField(auto_now_add=True)
-    answer = models.ForeignKey(
-        "Anaswer",
-        verbose_name="Ответ",
-        blank=True,
-        on_delete=models.PROTECT
-    )
-
-
-class MessagesAmbassador(models.Model):
-    message = models.ForeignKey(
-        "Messages",
-        verbose_name="Сообщение",
-        on_delete=models.PROTECT
-    )
-    ambassador = models.ForeignKey(
-        "Ambassador",
-        verbose_name="Амбассадо",
         on_delete=models.CASCADE
     )
-
-
-class Messages_Status(models.Model):
-    STATUS_LIST = (
-        ("черновик", "черновик"),
-        ("шаблон", "шаблон"),
-        ("отложенная", "отложенная"),
+    message_status = models.ForeignKey(
+        "MessageStatus",
+        verbose_name="Статус сообщения",
+        on_delete=models.PROTECT
     )
-    id = models.UUIDField(primary_key=True)
-    message_statis = models.CharField(
-        verbose_name="Статус",
-        choices=STATUS_LIST,
+    send_date = models.DateTimeField(
+        verbose_name="Дата",
+        auto_now_add=True
     )
 
 
-class Messages_Type(models.Model):
-    TYPE_LIST = (
-        ("Анкета", "Анкета"),
-        ("Отчет", "Отчет по гайду"),
-        ("Подтверждение", "Подтверждение адреса"),
-        ("Вопрос", "Вопрос"),
-        ("Запрос", "Запрос на изменение данных"),
+class MessageStatus(models.Model):
+    message_status = models.TextField(
+        verbose_name="Наименование статуса"
     )
-    id = models.UUIDField(primary_key=True)
-    message_type = models.CharField(
-        verbose_name="Тип ответа",
-        choices=TYPE_LIST
-    )
+    available = models.BooleanField()
