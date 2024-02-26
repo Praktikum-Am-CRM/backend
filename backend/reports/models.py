@@ -21,11 +21,11 @@ class ReportStatus(models.Model):
         default=uuid.uuid4,
         editable=False
     )
-    report_status = models.CharField(max_length=100)
+    status_name = models.CharField(max_length=100)
     available = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.report_status
+        return self.status_name
 
 
 class ReportType(models.Model):
@@ -35,14 +35,14 @@ class ReportType(models.Model):
         default=uuid.uuid4,
         editable=False
     )
-    report_type = models.CharField(
+    report_name = models.CharField(
         max_length=100,
         verbose_name='Вид задания'
     )
     available = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.report_type
+        return self.report_name
 
 
 class Placement(models.Model):
