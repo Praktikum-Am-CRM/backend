@@ -10,6 +10,10 @@ class Achieve(models.Model):
     achieve_name = models.CharField(
         max_length=255, verbose_name='Название ачивки'
     )
+    available = models.BooleanField(
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = 'Ачивки'
@@ -19,11 +23,11 @@ class Achieve(models.Model):
         return self.achieve_name
 
 
-class AchieveAmbassador(models.Model):
+class AmbassadorAchieve(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    id_ambassador = models.ForeignKey(Ambassador, on_delete=models.PROTECT)
-    id_achieve = models.ForeignKey(Achieve, on_delete=models.PROTECT)
-    assignment_date_achieve = models.DateTimeField(
+    achieve = models.ForeignKey(Achieve, on_delete=models.PROTECT)
+    ambassador = models.ForeignKey(Ambassador, on_delete=models.PROTECT)
+    assignment_date = models.DateTimeField(
         auto_now_add=True, verbose_name='Дата получения ачивки'
     )
 
@@ -32,4 +36,4 @@ class AchieveAmbassador(models.Model):
         verbose_name_plural = 'Ачивки амбассадоров'
 
     def __str__(self):
-        return f'{self.id_ambassador} - {self.id_achieve}'
+        return f'{self.ambassador} - {self.achieve}'
