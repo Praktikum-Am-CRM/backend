@@ -14,33 +14,35 @@ class Ambassador(models.Model):
     pass
 
 
-class RunStatus(models.Model):
+class ReportStatus(models.Model):
     '''Статус отчета.'''
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
         editable=False
     )
-    run_status = models.CharField(max_length=100)
+    report_status = models.CharField(max_length=100)
+    available = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.run_status
+        return self.report_status
 
 
-class TypeReport(models.Model):
+class ReportType(models.Model):
     '''Вид задания.'''
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
         editable=False
     )
-    type_report = models.CharField(
+    report_type = models.CharField(
         max_length=100,
         verbose_name='Вид задания'
     )
+    available = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.type_report
+        return self.report_type
 
 
 class Placement(models.Model):
@@ -54,6 +56,7 @@ class Placement(models.Model):
         max_length=100,
         verbose_name='Площадка размещения контента'
     )
+    available = models.BooleanField(default=True)
 
     def __str__(self):
         return self.site
@@ -67,12 +70,12 @@ class Report(models.Model):
         verbose_name='ID Отчета',
         unique=True
     )
-    id_ambassador = models.ForeignKey(
+    ambassador_id = models.ForeignKey(
         to=Ambassador,
         on_delete=models.PROTECT
     )
     report_date = models.DateField(
-        auto_now=True,
+        auto_now_add=True,
         verbose_name='Дата отчета'
     )
     content_link = models.URLField(
@@ -86,23 +89,27 @@ class Report(models.Model):
         null=True,
         default=None
     )
-    placement = models.ForeignKey(
+    placement_id = models.ForeignKey(
         to=Placement,
         on_delete=models.PROTECT
     )
-    sign_junior = models.BooleanField()
-    id_run_status = models.ForeignKey(
-        to=RunStatus,
+    report_status_id = models.ForeignKey(
+        to=ReportStatus,
         on_delete=models.PROTECT
     )
+    sign_junior = models.BooleanField()
     grade = models.PositiveSmallIntegerField(
         validators=[validate_one_to_ten]
+    )
+    report_type_id = models.ForeignKey(
+        to=ReportType,
+        on_delete=models.PROTECT
     )
 
     def __str__(self):
         return f'''
         Отчёт {self.id}
-        о задании амбассадора {self.id_ambassador}
-        на платформе {self.placement}
+        о задании амбассадора {self.ambassador_id}
+        на платформе {self.placement_id}
         создан {self.report_date}
         '''

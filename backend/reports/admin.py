@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import Placement, Report, RunStatus, TypeReport
+from .models import Placement, Report, ReportStatus, ReportType
 
 admin.site.register(Placement)
-admin.site.register(RunStatus)
-admin.site.register(TypeReport)
+admin.site.register(ReportStatus)
+admin.site.register(ReportType)
 admin.site.register(Report)
 
 # class PostAdmin(admin.ModelAdmin):
