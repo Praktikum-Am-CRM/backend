@@ -27,7 +27,7 @@ class TelegramBot(models.Model):
         auto_now_add=True,
         verbose_name='Дата запуска бота пользователем'
     )
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"Telegram инфо амбассадора с никнеймом {self.nickname}"
