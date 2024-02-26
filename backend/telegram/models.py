@@ -15,24 +15,19 @@ class TelegramBot(models.Model):
         editable=False,
         unique=True
     )
-    id_ambassador = models.OneToOneField(
-        to=Ambassador,
-        on_delete=models.PROTECT,
-        related_name='telegram_bot'
+    telegram_id = models.CharField(
+        max_length=100,
+        verbose_name='Telegram chat ID'
     )
     nickname = models.CharField(
         max_length=100,
         verbose_name='Telegram Username'
     )
-    telegram_chat_id = models.CharField(
-        max_length=100,
-        verbose_name='Telegram chat ID'
-    )
-    active = models.BooleanField(default=False)
-    registration_time = models.DateTimeField(
+    registration_date = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата запуска бота пользователем'
     )
+    active = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Telegram инфо амбассадора с никнеймом {self.nickname}"
