@@ -81,11 +81,10 @@ class Report(models.Model):
     content_link = models.URLField(
         verbose_name='Ссылка на контент',
         help_text='Добавьте ссылку на контент',
-        unique=True,
         null=False
     )
     screen = models.FileField(
-        upload_to='media/reports/screens/',
+        upload_to='reports/screens/',
         null=True,
         default=None
     )
