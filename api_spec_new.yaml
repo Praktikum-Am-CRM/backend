@@ -292,6 +292,15 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/AchiveList'
+  /api/v1/utility/programs:
+    get:
+      tags:
+        - Вспомогательные функции
+      description: Получить список программ обучения
+      responses:
+        200:
+          $ref: '#/components/responses/ProgramList'
+  
   /api/v1/utility/ambassador_statuses:
     get:
       tags:
@@ -680,6 +689,8 @@ components:
           type: string
           description: Квартира
           example: '12'
+        program:
+          $ref: '#/components/schemas/Program'
     AmbassadorFullInfo:
       description: Полная информация об амбассадоре
       type: object
@@ -800,10 +811,15 @@ components:
           type: string
           description: Учебное заведение
           example: 'МГУ'
-        goals:
-          type: array
-          items:
-            $ref: '#/components/schemas/Goal'
+        goal:
+          type: object
+          properties:
+            goal:
+              $ref: '#/components/schemas/Goal'
+            own_version:
+              type: string
+              description: Свой вариант
+              example: 'Модное веяние'
         activities:
           type: array
           items:
@@ -812,6 +828,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Achive'
+        program:
+          $ref: '#/components/schemas/Program'
     AmbassadorUpdate:
       description: Обновление информации об амбассадоре
       type: object
@@ -926,13 +944,18 @@ components:
           type: string
           description: Учебное заведение
           example: 'МГУ'
-        goals:
-          type: array
-          items:
-            type: string
-            format: uuid
-            description: ID цели обучения
-            example: 'd47bbed4-25b1-489f-926b-c236932c5a87'
+        goal:
+          type: object
+          properties:
+            goal:
+              type: string
+              format: uuid
+              description: ID цели
+              example: '8440ce07-e1ce-4914-a1d0-d25b5ad9f161'
+            own_version:
+              type: string
+              description: Свой вариант
+              example: 'Модное веяние'
         activities:
           type: array
           items:
@@ -947,6 +970,11 @@ components:
             format: uuid
             description: ID ачивки
             example: 'da129117-69f2-404c-8ab0-728b106a8926'
+        program:
+          type: string
+          format: uuid
+          description: ID программы обучения
+          example: 'a40bd4e6-5f6d-4f47-9261-90a7a0186171'
     AmbassadorCreate:
       description: Обновление информации об амбассадоре
       type: object
@@ -1003,13 +1031,18 @@ components:
           type: string
           description: Должность/специальность
           example: 'Генеральный директор'
-        goals:
-          type: array
-          items:
-            type: string
-            format: uuid
-            description: ID цели обучения
-            example: 'd47bbed4-25b1-489f-926b-c236932c5a87'
+        goal:
+          type: object
+          properties:
+            goal:
+              type: string
+              format: uuid
+              description: ID цели
+              example: '8440ce07-e1ce-4914-a1d0-d25b5ad9f161'
+            own_version:
+              type: string
+              description: Свой вариант
+              example: 'Модное веяние'
         activities:
           type: array
           items:
@@ -1017,6 +1050,11 @@ components:
             format: uuid
             description: ID активности
             example: '15bf0dee-267a-4e8b-9de8-1b5b9fb55dfe'
+        program:
+          type: string
+          format: uuid
+          description: ID программы обучения
+          example: 'a40bd4e6-5f6d-4f47-9261-90a7a0186171'
       required:
         - telegram_id
         - first_name
@@ -1031,6 +1069,7 @@ components:
         - specialty_work
         - goals
         - activities
+        - program
     NotFound:
       description: Объект не найден
       type: object
@@ -1174,7 +1213,24 @@ components:
         - sign_junior
         - report_type
         - placement
-
+    Program:
+      description: Программа обучения
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID программы обучения
+          example: 'a40bd4e6-5f6d-4f47-9261-90a7a0186171'
+        program_name:
+          type: string
+          description: Название программы обучения
+          example: 'Web design'
+        available:
+          type: boolean
+          description: доступность для выбора
+          example: True
+        
 
 
   responses:
@@ -1338,7 +1394,14 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/ReportInfo'
-
+    ProgramList:
+      description: Список программ обучения
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Program'
 
 
   securitySchemes:
