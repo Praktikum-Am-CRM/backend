@@ -267,6 +267,118 @@ paths:
         404:
           $ref: '#/components/responses/NotFound'
 
+  # Сообщения
+  /api/v1/ambassador/{ambassador_id}/messages/:
+    get:
+      tags:
+        - Амбассадор
+      security:
+        - Token: [ ]
+      parameters:
+        - name: ambassador_id
+          required: true
+          in: path
+          description: ID амбассадора/кандидата
+          schema:
+            type: string
+            format: uuid
+      description: Получить список сообщений амбассадора
+      responses:
+        200:
+          $ref: '#/components/responses/BotMessageList'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+        404:
+          $ref: '#/components/responses/NotFound'
+  /api/v1/pool_message/:
+    post:
+      tags:
+        - Сообщения
+      security:
+        - Token: [ ]
+      description: Создать сообщение в пуле сообщений
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolMessageCreate'
+      responses:
+        200:
+          $ref: '#/components/responses/PoolMessage'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+  /api/v1/pool_message/{poll_message_id}/:
+    delete:
+      tags:
+        - Сообщения
+      security:
+        - Token: [ ]
+      description: Удалить сообщение из пула сообщений
+      parameters:
+        - name: poll_message_id
+          required: true
+          in: path
+          description: ID сообщения из пула сообщений
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: 'OK'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+        404:
+          $ref: '#/components/responses/NotFound'
+  /api/v1/bot_message/:
+    post:
+      security:
+        - Token: [ ]
+      tags:
+        - Сообщения
+      description: Создать сообщение из телеграм бота
+      parameters: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BotMessageCreate'
+      responses:
+        204:
+          description: 'OK'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+        404:
+          $ref: '#/components/responses/NotFound'
+    patch:
+      security:
+        - Token: [ ]
+      tags:
+        - Сообщения
+      description: Установить реакцию на сообщение от телеграм бота
+      parameters: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BotMessageReaction'
+      responses:
+        204:
+          description: 'OK'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+        404:
+          $ref: '#/components/responses/NotFound'
+
+
+
+
+
   # вспомогательные функции
   /api/v1/utility/goals:
     get:
@@ -300,7 +412,6 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/ProgramList'
-  
   /api/v1/utility/ambassador_statuses:
     get:
       tags:
@@ -357,6 +468,14 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/MessageTypeList'
+  /api/v1/utility/pool_messages:
+    get:
+      tags:
+        - Вспомогательные функции
+      description: Получить список сообщений из пула сообщений
+      responses:
+        200:
+          $ref: '#/components/responses/PoolMessageList'
 
 components:
   schemas:
@@ -1230,8 +1349,162 @@ components:
           type: boolean
           description: доступность для выбора
           example: True
-        
-
+    Message:
+      description: Сообщение
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID сообщения
+          example: 'd8fda9fd-9406-4cd7-a7d7-1730ad2d55c7'
+        message_text:
+          type: string
+          description: Тест сообщения
+          example: 'Это сообщение от менеджера.'
+        media_link:
+          type: string
+          description: Ссылка на медиа в сообщении
+          example: '/media/messages/image1.jpg'
+        date:
+          type: string
+          format: datetime
+          description: Дата и время сообщения
+        message_type:
+          $ref: '#/components/schemas/MessageType'
+    BotMessage:
+      description: Сообщение бота
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID сообщения
+          example: '87dde840-3c21-4c88-b67a-509204161b0c'
+        message:
+          $ref: '#/components/schemas/Message'
+        from_bot:
+          type: boolean
+          description: Признак сообщения от бота (True) или менеджера (False)
+          example: True
+        manager:
+          $ref: '#/components/schemas/Manager'
+        sign_ai:
+          type: boolean
+          description: Признак, что сообщение сгенерировано ИИ
+          example: False
+        message_telegram_id:
+          type: string
+          description: ID сообщения в телеграмме
+          example: '456'
+        reaction:
+          type: integer
+          enum: [ -1, 0, 1 ]
+          description: Реакция (-1 - дизлайк, 0 - нет, 1 - лайк)
+          example: 1
+    PoolMessage:
+      description: Сообщение из пула сообщений
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID сообщения
+          example: '0f4b6aca-1bee-4c9c-ae74-e414582d20c3'
+        message:
+          $ref: '#/components/schemas/Message'
+        message_status:
+          $ref: '#/components/schemas/MessageStatus'
+        send_date:
+          type: string
+          format: datetime
+          description: Дата и время отправки отложенного сообщения
+    PoolMessageCreate:
+      description: Создание сообщения в пуле сообщений
+      type: object
+      properties:
+        message:
+          type: object
+          properties:
+            message_text:
+              type: string
+              description: Тест сообщения
+              example: 'Это сообщение от менеджера.'
+            message_type:
+              type: string
+              format: uuid
+              description: ID типа сообщения
+              example: '7987e39a-162b-4fbf-bd1d-dba01a4ad565'
+          required:
+            - message_text
+            - message_type
+        message_status:
+          type: string
+          format: uuid
+          description: ID статуса сообщения
+          example: '7424fccd-ae47-4ba1-8c0e-623a14974cc5'
+        send_date:
+          type: string
+          format: datetime
+          description: Дата и время отправки отложенного сообщения
+      required:
+        - message
+        - message_status
+    BotMessageCreate:
+      description: Создание сообщения от телеграм бота
+      type: object
+      properties:
+        ambassador_telegram_id:
+          description: ID амбассадора в телеграм
+          type: string
+          example: '12345678'
+        telegram_message_id:
+          description: ID сообщения в телеграм
+          type: string
+          example: '345'
+        message_text:
+          description: Текст сообщения из телеграм
+          type: string
+          example: 'Это сообщение из телеграм'
+        media_link:
+          description: 'Media файл, закодированный в Base64'
+          example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=='
+          type: string
+          format: binary
+        date:
+          description: Дата сообщения
+          type: string
+          format: datetime
+        sign_ai:
+          description: Признак сообщения от ИИ
+          type: boolean
+          example: False
+      required:
+        - ambassador_telegram_id
+        - telegram_message_id
+        - message_text
+        - date
+    BotMessageReaction:
+      description: Реакция на сообщение от телеграм бота
+      type: object
+      properties:
+        ambassador_telegram_id:
+          description: ID амбассадора в телеграм
+          type: string
+          example: '12345678'
+        telegram_message_id:
+          description: ID сообщения в телеграм
+          type: string
+          example: '345'
+        reaction:
+          type: integer
+          enum: [ -1, 0, 1 ]
+          description: Реакция (-1 - дизлайк, 0 - нет, 1 - лайк)
+          example: 1
+      required:
+        - ambassador_telegram_id
+        - telegram_message_id
+        - reaction
 
   responses:
     AuthorizationError:
@@ -1402,6 +1675,28 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Program'
+    BotMessageList:
+      description: Список сообщений амбассадора
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/BotMessage'
+    PoolMessageList:
+      description: Список сообщений из пула сообщений
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/PoolMessage'
+    PoolMessage:
+      description: Сообщение из пула сообщений
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PoolMessage'
 
 
   securitySchemes:
