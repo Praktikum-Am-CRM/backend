@@ -24,4 +24,4 @@ RUN mkdir -p $WORKDIR/static/ && \
 
 USER $USER
 
-ENTRYPOINT ['/bin/bash','/app/dep.sh']
+ENTRYPOINT ["/bin/bash","/app/dep.sh"]
