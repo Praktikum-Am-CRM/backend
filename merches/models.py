@@ -9,13 +9,6 @@ class Ambassador(models.Model):
     pass
 
 
-class Status(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Merch(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     merch_name = models.CharField(
@@ -27,9 +20,7 @@ class Merch(models.Model):
     intangible = models.BooleanField(
         blank=True, null=True, verbose_name='Признак нематериального мерча'
     )
-    available = models.BooleanField(
-        blank=True, null=True, verbose_name='Доступен мерч'
-    )
+    available = models.BooleanField(default=True, verbose_name='Доступен мерч')
 
     class Meta:
         verbose_name = 'Мерч'
@@ -78,28 +69,24 @@ class DeliveryAddress(models.Model):
         return str(self.id)
 
 
-class AmbassadorRequest(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    merch_request = models.ForeignKey(
-        'MerchRequest',
-        on_delete=models.PROTECT,
-        null=True,
+class DeleviryStatus(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
     )
-    ambassador = models.ForeignKey(
-        Ambassador,
-        on_delete=models.PROTECT,
+    delivery_status = models.CharField(
+        max_length=100,
+        unique=True,
     )
-    assignment_date = models.DateField(
-        auto_now_add=True,
-        verbose_name='Дата создания запроса',
-    )
+    available = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = 'Заявки амбассадоров на мерч'
-        verbose_name_plural = 'Заявки амбассадоров на мерч'
+        verbose_name = 'Статус доставки'
+        verbose_name_plural = 'Статус доставки'
 
     def __str__(self):
-        return self.request_merch.id
+        return str(self.id)
 
 
 class MerchRequest(models.Model):
@@ -120,7 +107,7 @@ class MerchRequest(models.Model):
         verbose_name='Адрес доставки',
     )
     request_status = models.ForeignKey(
-        Status,
+        DeleviryStatus,
         on_delete=models.PROTECT,
         verbose_name='Статус выполнения',
     )
@@ -133,27 +120,27 @@ class MerchRequest(models.Model):
         return str(self.id)
 
 
-class DeleviryStatus(models.Model):
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
+class AmbassadorRequest(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    merch_request = models.ForeignKey(
+        MerchRequest,
+        on_delete=models.PROTECT,
     )
-    delivery_status = models.CharField(
-        max_length=100,
-        unique=True,
+    ambassador = models.ForeignKey(
+        Ambassador,
+        on_delete=models.PROTECT,
     )
-    available = models.BooleanField(
-        blank=True,
-        null=True,
+    assignment_date = models.DateField(
+        auto_now_add=True,
+        verbose_name='Дата создания запроса',
     )
 
     class Meta:
-        verbose_name = 'Статус доставки'
-        verbose_name_plural = 'Статус доставки'
+        verbose_name = 'Заявки амбассадоров на мерч'
+        verbose_name_plural = 'Заявки амбассадоров на мерч'
 
     def __str__(self):
-        return str(self.id)
+        return self.merch_request.id
 
 
 class DeliveryHistory(models.Model):
