@@ -17,10 +17,11 @@ class Ambassador(models.Model):
         on_delete=models.PROTECT
     )
     status_id = models.ForeignKey(
-        "Status",
+        "AmbasadorStatus",
         verbose_name="Статус",
         max_length=50,
-        on_delete=models.PROTECT)
+        on_delete=models.PROTECT
+    )
     manager_id = models.ForeignKey(
         "Manager",
         verbose_name="Менеджер",
