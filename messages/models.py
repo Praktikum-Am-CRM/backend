@@ -66,13 +66,6 @@ class Message(models.Model):
         max_length=50,
         on_delete=models.PROTECT
     )
-    message_telegram_id = models.ForeignKey(
-        "BotMessages",
-        verbose_name="Бот",
-        max_length=50,
-        on_delete=models.PROTECT
-    )
-    reaction = models.IntegerField(max_length=2)
 
 
 class MessagePool(models.Model):

@@ -152,6 +152,9 @@ class Goal(models.Model):
         verbose_name="Название цели",
         max_length=50
     )
+    available = models.BooleanField(
+        default=True
+    )
 
 
 class AmbassadorActivity(models.Model):
@@ -176,9 +179,12 @@ class Activity(models.Model):
         editable=False,
         unique=True
     )
-    type_of_activity = models.CharField(
+    activity_name = models.CharField(
         verbose_name="Вид деятельности",
         max_length=50
+    )
+    available = models.BooleanField(
+        default=True
     )
 
 
@@ -212,6 +218,9 @@ class Achive(models.Model):
         verbose_name="Достижение",
         max_length=50,
     )
+    available = models.BooleanField(
+        default=True
+    )
 
 
 class AmbassadorStatusHistory(models.Model):
@@ -244,4 +253,4 @@ class AmbassadorStatus(models.Model):
         max_length=50
     )
     sort_level = models.IntegerField()
-    available = models.BooleanField()
+    available = models.BooleanField(default=True)
