@@ -17,8 +17,8 @@ decorated_login_view = swagger_auto_schema(
     tags=['Пользователи'],
     responses={
         200: settings.SERIALIZERS.token,
-        400: 'Не верные данные для авторизации'
-    }
+        400: 'Не верные данные для авторизации',
+    },
 )(views.TokenCreateView.as_view())
 
 decorated_logout_view = swagger_auto_schema(
@@ -26,10 +26,7 @@ decorated_logout_view = swagger_auto_schema(
     operation_id='Remove user authentication token',
     permission_classes=(permissions.AllowAny,),
     tags=['Пользователи'],
-    responses={
-        204: 'Успешно',
-        401: 'Не авторизированный пользователь'
-    }
+    responses={204: 'Успешно', 401: 'Не авторизированный пользователь'},
 )(views.TokenDestroyView.as_view())
 
 urlpatterns = [
