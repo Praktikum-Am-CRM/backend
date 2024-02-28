@@ -1,9 +1,9 @@
 from django.urls import include, path
+from djoser import views
 from djoser.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
-from djoser import views
 
 app_name = 'api'
 
