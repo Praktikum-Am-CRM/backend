@@ -46,6 +46,10 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'ambassador.apps.AmbassadorConfig',
     'messages.apps.MessagesConfig'
+    'merches.apps.MerchesConfig',
+    'users.apps.UsersConfig',
+    'achievements.apps.AchievementsConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -60,7 +64,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'backend.urls'
 
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 TEMPLATES = [
     {
@@ -152,3 +156,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
 }
+
+AUTH_USER_MODEL = 'users.Manager'
