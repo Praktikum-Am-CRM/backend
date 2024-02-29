@@ -394,6 +394,27 @@ paths:
         404:
           $ref: '#/components/responses/NotFound'
 
+  # Telegram
+  /api/v1/telegram_user:
+    post:
+      security:
+        - Token: [ ]
+      tags:
+        - Telegram
+      description: Создать пользователя телеграм бота
+      parameters: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramUserCreate'
+      responses:
+        204:
+          description: 'OK'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
 
 
 
@@ -601,7 +622,7 @@ components:
           type: boolean
           description: доступность для выбора
           example: True
-    TelegramBot:
+    TelegramUser:
       description: Данные телеграм бота амбассадора
       type: object
       properties:
@@ -625,6 +646,22 @@ components:
         active:
           type: boolean
           description: Доступность амбассадора в телеграм
+    TelegramUserCreate:
+      description: Данные телеграм бота амбассадора
+      type: object
+      properties:
+        telegram_id:
+          type: string
+          description: Telegram ID амбассадора
+          example: '12345678'
+        nickname:
+          type: string
+          description: Telegram nickname амбассадора
+          example: 'superuser'
+        registration_date:
+          type: string
+          format: date
+          description: Дата запуска бота
     Placement:
       description: Площадка размещения отчета
       type: object
@@ -781,7 +818,7 @@ components:
           type: string
           example: '123456'
         telegram:
-          $ref: '#/components/schemas/TelegramBot'
+          $ref: '#/components/schemas/TelegramUser'
         receipt_date:
           description: Дата регистрации как амбассадора (для кандидата - пустое поле)
           type: string
@@ -857,7 +894,7 @@ components:
           type: string
           example: '123456'
         telegram_bot:
-          $ref: '#/components/schemas/TelegramBot'
+          $ref: '#/components/schemas/TelegramUser'
         gender:
           description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
           type: integer
