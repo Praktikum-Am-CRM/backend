@@ -394,6 +394,27 @@ paths:
         404:
           $ref: '#/components/responses/NotFound'
 
+  # Telegram
+  /api/v1/telegram_user:
+    post:
+      security:
+        - Token: [ ]
+      tags:
+        - Telegram
+      description: Создать пользователя телеграм бота
+      parameters: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramUserCreate'
+      responses:
+        204:
+          description: 'OK'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
 
 
 
@@ -601,7 +622,7 @@ components:
           type: boolean
           description: доступность для выбора
           example: True
-    TelegramBot:
+    TelegramUser:
       description: Данные телеграм бота амбассадора
       type: object
       properties:
@@ -625,6 +646,22 @@ components:
         active:
           type: boolean
           description: Доступность амбассадора в телеграм
+    TelegramUserCreate:
+      description: Данные телеграм бота амбассадора
+      type: object
+      properties:
+        telegram_id:
+          type: string
+          description: Telegram ID амбассадора
+          example: '12345678'
+        nickname:
+          type: string
+          description: Telegram nickname амбассадора
+          example: 'superuser'
+        registration_date:
+          type: string
+          format: date
+          description: Дата запуска бота
     Placement:
       description: Площадка размещения отчета
       type: object
@@ -781,7 +818,7 @@ components:
           type: string
           example: '123456'
         telegram:
-          $ref: '#/components/schemas/TelegramBot'
+          $ref: '#/components/schemas/TelegramUser'
         receipt_date:
           description: Дата регистрации как амбассадора (для кандидата - пустое поле)
           type: string
@@ -857,7 +894,7 @@ components:
           type: string
           example: '123456'
         telegram_bot:
-          $ref: '#/components/schemas/TelegramBot'
+          $ref: '#/components/schemas/TelegramUser'
         gender:
           description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
           type: integer
@@ -1298,45 +1335,17 @@ components:
       description: Обновление отчета амбассадора
       type: object
       properties:
-        report_date:
-          type: string
-          format: date
-          description: Дата отчета
-        content_link:
-          type: string
-          format: uri
-          description: Ссылка на контент отчета
-          example: 'http://ivanov.ru/blog/first_report'
-        screen:
-          description: 'Картинка, закодированная в Base64'
-          example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=='
-          type: string
-          format: binary
-        placement:
-          type: string
-          format: uuid
-          description: ID площадки
-          example: '56298889-fc98-4cc3-8779-19df6d5820a3'
         report_status:
           type: string
           format: uuid
           description: ID статуса отчета
           example: '5438731f-7cd6-49a9-a595-f79714942953'
-        sign_junior:
-          description: Признак начинающего амбассадора
-          type: boolean
-          example: True
         grade:
           description: Оценка отчета
           type: integer
           minimum: 1
           maximum: 10
           example: 8
-        report_type:
-          type: string
-          format: uuid
-          description: ID типа отчета
-          example: '8bd8b1d0-95e2-461a-929f-956d7d5f8d20'
     ReportCreate:
       description: Создание отчета амбассадора
       type: object
