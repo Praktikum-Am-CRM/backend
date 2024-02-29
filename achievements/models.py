@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from merches.models import Ambassador
+from ambassador.models import Ambassador
 
 
 class Achieve(models.Model):

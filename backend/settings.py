@@ -43,13 +43,14 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'drf_yasg',
+    'users.apps.UsersConfig',
     'api.apps.ApiConfig',
     'ambassador.apps.AmbassadorConfig',
-    'messages.apps.MessagesConfig'
+    'crm_messages.apps.CrmMessagesConfig',
     'merches.apps.MerchesConfig',
-    'users.apps.UsersConfig',
     'achievements.apps.AchievementsConfig',
-
+    'reports.apps.ReportsConfig',
+    'telegram.apps.TelegramConfig',
 ]
 
 MIDDLEWARE = [
