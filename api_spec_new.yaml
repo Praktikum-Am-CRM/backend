@@ -61,7 +61,7 @@ paths:
             items:
               type: string
               format: uuid
-        - name: sex
+        - name: gender
           required: false
           in: query
           description: Пол (0 - Мужчины, 1 - Женщины)
@@ -83,6 +83,25 @@ paths:
           description: Поиск по имени, программе
           schema:
             type: string
+        - name: sort_by
+          required: false
+          in: query
+          description: Поле, по которому делать сортировку
+          schema:
+            type: string
+            enum:
+              - fio
+              - date
+              - program
+              - gender
+              - status
+        - name: sort_direct
+          required: false
+          in: query
+          description: Направление сортировки (0 - по возрастанию, 1 - по убыванию)
+          schema:
+            type: integer
+            enum: [ 0, 1 ]
         - name: page
           required: false
           in: query
@@ -767,7 +786,7 @@ components:
           description: Дата регистрации как амбассадора (для кандидата - пустое поле)
           type: string
           format: date
-        sex:
+        gender:
           description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
           type: integer
           enum: [ 0, 1]
@@ -839,7 +858,7 @@ components:
           example: '123456'
         telegram_bot:
           $ref: '#/components/schemas/TelegramBot'
-        sex:
+        gender:
           description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
           type: integer
           enum: [ 0, 1]
@@ -974,7 +993,7 @@ components:
           description: Промокод
           type: string
           example: '123456'
-        sex:
+        gender:
           description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
           type: integer
           enum: [ 0, 1]
@@ -1114,7 +1133,7 @@ components:
           description: Отчество амбасадора
           type: string
           example: Иванович
-        sex:
+        gender:
           description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
           type: integer
           enum: [ 0, 1]
@@ -1178,7 +1197,7 @@ components:
         - telegram_id
         - first_name
         - last_name
-        - sex
+        - gender
         - address_country
         - address_region
         - phone_number
