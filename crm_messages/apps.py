@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class MessagesConfig(AppConfig):
+class CrmMessagesConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "messages"
+    name = "crm_messages"
