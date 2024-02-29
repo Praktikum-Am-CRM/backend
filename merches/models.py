@@ -2,17 +2,14 @@ import uuid
 
 from django.db import models
 
+from ambassador.models import Ambassador
 from users.models import Manager
-
-
-class Ambassador(models.Model):
-    pass
 
 
 class Merch(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     merch_name = models.CharField(
-        max_length=255, verbose_name='Название мерча'
+        max_length=255, verbose_name='Название мерча', unique=True
     )
     price = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name='Цена'
@@ -32,7 +29,9 @@ class Merch(models.Model):
 
 class DeliveryAddress(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    is_confirmed = models.BooleanField(blank=True, null=True)
+    is_confirmed = models.BooleanField(
+        default=False, verbose_name='Адрес ' 'подтвержден?'
+    )
     index = models.CharField(max_length=255, verbose_name='Почтовый индекс')
     region = models.CharField(max_length=255, verbose_name='Область')
     district = models.CharField(max_length=255, verbose_name='Район')
@@ -66,27 +65,31 @@ class DeliveryAddress(models.Model):
         verbose_name_plural = 'Адрес доставки'
 
     def __str__(self):
-        return str(self.id)
+        return (
+            f'{self.index} - {self.country} - {self.region} - '
+            f'{self.district} - '
+            f'{self.settlement} - {self.street} - {self.house} - '
+            f'{self.building} - {self.apartment}'
+        )
 
 
-class DeleviryStatus(models.Model):
+class DeliveryStatus(models.Model):
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
         editable=False,
     )
     delivery_status = models.CharField(
-        max_length=100,
-        unique=True,
+        max_length=100, unique=True, verbose_name='Статус доставки'
     )
-    available = models.BooleanField(default=True)
+    available = models.BooleanField(default=True, verbose_name='Доступность')
 
     class Meta:
         verbose_name = 'Статус доставки'
-        verbose_name_plural = 'Статус доставки'
+        verbose_name_plural = 'Статусы доставки'
 
     def __str__(self):
-        return str(self.id)
+        return self.delivery_status
 
 
 class MerchRequest(models.Model):
@@ -107,7 +110,7 @@ class MerchRequest(models.Model):
         verbose_name='Адрес доставки',
     )
     request_status = models.ForeignKey(
-        DeleviryStatus,
+        DeliveryStatus,
         on_delete=models.PROTECT,
         verbose_name='Статус выполнения',
     )
@@ -117,7 +120,7 @@ class MerchRequest(models.Model):
         verbose_name_plural = 'Заявки на мерч'
 
     def __str__(self):
-        return str(self.id)
+        return f'{self.merch} - {self.request_status}'
 
 
 class AmbassadorRequest(models.Model):
@@ -140,7 +143,7 @@ class AmbassadorRequest(models.Model):
         verbose_name_plural = 'Заявки амбассадоров на мерч'
 
     def __str__(self):
-        return self.merch_request.id
+        return f'{self.ambassador} - {self.merch_request}'
 
 
 class DeliveryHistory(models.Model):
@@ -151,13 +154,13 @@ class DeliveryHistory(models.Model):
         verbose_name='Запрос на мерч',
     )
     delivery_status = models.ForeignKey(
-        DeleviryStatus,
+        DeliveryStatus,
         on_delete=models.PROTECT,
-        verbose_name='Запрос на мерч',
+        verbose_name='Статус доставки',
     )
     assignment_date = models.DateField(
         auto_now_add=True,
-        verbose_name='Дата',
+        verbose_name='Дата присвоения',
     )
 
     class Meta:
@@ -165,4 +168,7 @@ class DeliveryHistory(models.Model):
         verbose_name_plural = 'История доставок'
 
     def __str__(self):
-        return str(self.id)
+        return (
+            f'{self.merch_request.merch} - {self.delivery_status} - '
+            f'{self.assignment_date}'
+        )

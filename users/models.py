@@ -7,8 +7,12 @@ class Manager(AbstractUser):
     first_name = models.CharField(max_length=255, verbose_name='Имя')
     last_name = models.CharField(max_length=255, verbose_name='Фамилия')
     email = models.EmailField(unique=True, db_index=True)
-    profession = models.CharField(max_length=255, verbose_name='Специальность')
-    middle_name = models.CharField(max_length=255, verbose_name='Отчество')
+    profession = models.CharField(
+        max_length=255, verbose_name='Специальность', null=True, blank=True
+    )
+    middle_name = models.CharField(
+        max_length=255, verbose_name='Отчество', null=True, blank=True
+    )
     username = models.CharField(
         'Имя пользователя',
         max_length=150,

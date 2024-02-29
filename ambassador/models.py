@@ -1,6 +1,5 @@
 import uuid
 
-from django.core.validators import MinLengthValidator
 from django.db import models
 
 from telegram.models import TelegramBot
@@ -11,82 +10,121 @@ class Ambassador(models.Model):
     id = models.UUIDField(
         primary_key=True, editable=False, default=uuid.uuid4, unique=True
     )
-    telegram_bot_id = models.ForeignKey(
+    telegram_bot = models.ForeignKey(
         TelegramBot,
         verbose_name="Телеграмм бот",
         max_length=50,
         on_delete=models.PROTECT,
     )
-    status_id = models.ForeignKey(
+    status = models.ForeignKey(
         "AmbassadorStatus",
         verbose_name="Статус",
         max_length=50,
         on_delete=models.PROTECT,
     )
-    manager_id = models.ForeignKey(
+    manager = models.ForeignKey(
         Manager,
         verbose_name="Менеджер",
         max_length=50,
         blank=True,
+        null=True,
         on_delete=models.PROTECT,
     )
     promocode = models.CharField(
         verbose_name='Промокод', max_length=255, blank=True
     )
     receipt_date = models.DateField(
-        auto_now_add=True, verbose_name="Дата", blank=True
+        verbose_name="Дата принятия в " "амбассадоры", blank=True, null=True
     )
     reminder_counter = models.PositiveIntegerField(
-        verbose_name="Счетчик напоминалок", blank=True
+        verbose_name="Счетчик напоминалок",
+        blank=True,
+        default=0,
     )
-    adress_index = models.CharField(verbose_name="Индекс", max_length=10)
-    adress_country = models.CharField(verbose_name="Страна", max_length=50)
-    adress_region = models.CharField(verbose_name="Регион", max_length=50)
-    adress_district = models.CharField(
-        verbose_name="Район", max_length=50, blank=True
+    address_index = models.CharField(
+        verbose_name="Индекс",
+        max_length=10,
+        blank=True,
+        null=True,
     )
-    adress_settlement = models.CharField(
-        verbose_name="Населённый пункт", max_length=50
+    address_country = models.CharField(
+        verbose_name="Страна",
+        max_length=50,
+        blank=True,
+        null=True,
     )
-    adress_street = models.CharField(
-        verbose_name="Улица", max_length=50, blank=True
+    address_region = models.CharField(
+        verbose_name="Регион",
+        max_length=50,
+        blank=True,
+        null=True,
     )
-    adress_house = models.PositiveIntegerField(verbose_name="Дом")
-    adress_building = models.CharField(
-        verbose_name="Корпус", max_length=10, blank=True
+    address_district = models.CharField(
+        verbose_name="Район",
+        max_length=50,
+        blank=True,
+        null=True,
     )
-    adress_apartment = models.CharField(
-        verbose_name="Квартира", max_length=10, blank=True
+    address_settlement = models.CharField(
+        verbose_name="Населённый пункт",
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+    address_street = models.CharField(
+        verbose_name="Улица",
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+    address_house = models.PositiveIntegerField(verbose_name="Дом", default=0)
+    address_building = models.CharField(
+        verbose_name="Корпус",
+        max_length=10,
+        blank=True,
+        null=True,
+    )
+    address_apartment = models.CharField(
+        verbose_name="Квартира",
+        max_length=10,
+        blank=True,
+        null=True,
     )
     size_clothing = models.CharField(
         verbose_name="Размер одежды",
         max_length=2,
+        blank=True,
+        null=True,
     )
     size_choe = models.PositiveIntegerField(
-        verbose_name="Размер обуви",
+        verbose_name="Размер обуви", default=0
     )
     phone = models.CharField(
         verbose_name="Телефон",
-        max_length=18,
-        validators=[
-            MinLengthValidator(14, message='Минимум 14 символов'),
-        ],
+        max_length=20,
     )
     email = models.EmailField()
-    note = models.TextField(verbose_name="Заметка", max_length=50, blank=True)
+    note = models.TextField(
+        verbose_name="Заметка",
+        max_length=200,
+        blank=True,
+        null=True,
+    )
     blog_link = models.URLField(verbose_name="Ссылка на блог")
-    place_work = models.CharField(verbose_name="Место работы", max_length=50)
-    specialty_work = models.CharField(verbose_name="Должность", max_length=50)
+    place_work = models.CharField(verbose_name="Место работы", max_length=200)
+    specialty_work = models.CharField(verbose_name="Должность", max_length=100)
     educational_institution = models.CharField(
         verbose_name="Учебное заведение",
-        max_length=50,
+        max_length=200,
     )
     first_name = models.CharField(
         verbose_name="Имя",
         max_length=50,
     )
     last_name = models.CharField(verbose_name="Фамилия", max_length=50)
-    middle_name = models.CharField(verbose_name="Отчество", max_length=50)
+    middle_name = models.CharField(
+        verbose_name="Отчество", max_length=50, blank=True, null=True
+    )
     gender = models.CharField(verbose_name="Пол", max_length=50)
     birthday = models.DateField(verbose_name="Дата рождения")
 
@@ -94,40 +132,72 @@ class Ambassador(models.Model):
         verbose_name = 'Амбасадор'
         verbose_name_plural = 'Амбасадоры'
 
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+
 
 class AmbassadorGoal(models.Model):
-    goal_id = models.ForeignKey(
+    id = models.UUIDField(
+        primary_key=True, editable=False, default=uuid.uuid4, unique=True
+    )
+    goal = models.ForeignKey(
         "Goal", verbose_name="Цель", max_length=50, on_delete=models.CASCADE
     )
-    ambassador_id = models.ForeignKey(
+    ambassador = models.ForeignKey(
         "Ambassador",
         verbose_name="Амбассадор",
         max_length=50,
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        verbose_name = 'Цель обучения амбассадора'
+        verbose_name_plural = 'Цели обучения амбассадора'
+
+    def __str__(self):
+        return f'{self.ambassador} - {self.goal}'
 
 
 class Goal(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
-    goal_name = models.CharField(verbose_name="Название цели", max_length=50)
+    goal_name = models.CharField(
+        verbose_name="Название цели", max_length=50, unique=True
+    )
     available = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = 'Цель обучения'
+        verbose_name_plural = 'Цели обучения'
+
+    def __str__(self):
+        return f'{self.goal_name}'
 
 
 class AmbassadorActivity(models.Model):
-    activity_id = models.ForeignKey(
+    id = models.UUIDField(
+        primary_key=True, editable=False, default=uuid.uuid4, unique=True
+    )
+    activity = models.ForeignKey(
         "Activity",
-        verbose_name="Активный",
+        verbose_name="Вид деятельности",
         max_length=50,
         on_delete=models.CASCADE,
     )
-    ambassador_id = models.ForeignKey(
+    ambassador = models.ForeignKey(
         "Ambassador",
         verbose_name="Амбассадор",
         max_length=50,
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        verbose_name = 'Вид деятельности амбассадора'
+        verbose_name_plural = 'Виды деятельности амбассадора'
+
+    def __str__(self):
+        return f'{self.ambassador} - {self.activity}'
 
 
 class Activity(models.Model):
@@ -135,63 +205,61 @@ class Activity(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
     activity_name = models.CharField(
-        verbose_name="Вид деятельности", max_length=50
+        verbose_name="Вид деятельности", max_length=50, unique=True
     )
-    available = models.BooleanField(default=True)
+    available = models.BooleanField(default=True, verbose_name='Доступность')
 
+    class Meta:
+        verbose_name = 'Вид деятельности'
+        verbose_name_plural = 'Виды деятельности'
 
-# class AmbassadorAchive(models.Model):
-#     achive_id = models.ForeignKey(
-#         "Achive",
-#         verbose_name="Достижения",
-#         max_length=50,
-#         on_delete=models.CASCADE,
-#     )
-#     ambassador_id = models.ForeignKey(
-#         "Ambassador",
-#         verbose_name="Амбассадор",
-#         max_length=50,
-#         on_delete=models.CASCADE,
-#     )
-#     assignment_date = models.DateField(
-#         verbose_name="Дата выполнения", auto_now_add=True
-#     )
-#
-#
-# class Achive(models.Model):
-#     id = models.UUIDField(
-#         primary_key=True, default=uuid.uuid4, editable=False, unique=True
-#     )
-#     achive_name = models.CharField(
-#         verbose_name="Достижение",
-#         max_length=50,
-#     )
-#     available = models.BooleanField(default=True)
+    def __str__(self):
+        return f'{self.activity_name}'
 
 
 class AmbassadorStatusHistory(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
-    ambassador_id = models.ForeignKey(
+    ambassador = models.ForeignKey(
         "Ambassador",
         verbose_name="Амбассадор",
         max_length=50,
         on_delete=models.CASCADE,
     )
-    ambassador_status_id = models.ForeignKey(
+    ambassador_status = models.ForeignKey(
         "AmbassadorStatus",
         verbose_name="Статус",
         max_length=50,
         on_delete=models.PROTECT,
     )
-    assignment_date = models.DateField(verbose_name="Дата")
+    assignment_date = models.DateField(verbose_name='Дата присвоения')
+
+    class Meta:
+        verbose_name = 'История присвоения статусов'
+        verbose_name_plural = 'История присвоения статусов'
+
+    def __str__(self):
+        return (
+            f'{self.ambassador} - '
+            f'{self.ambassador_status} - '
+            f'{self.assignment_date}'
+        )
 
 
 class AmbassadorStatus(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
-    status_name = models.CharField(verbose_name="Статус отчета", max_length=50)
-    sort_level = models.IntegerField()
-    available = models.BooleanField(default=True)
+    status_name = models.CharField(
+        verbose_name="Статус амбассадора", max_length=50, unique=True
+    )
+    sort_level = models.IntegerField(verbose_name='Уровень сортировки')
+    available = models.BooleanField(default=True, verbose_name='Доступность')
+
+    class Meta:
+        verbose_name = 'Статус амбассадора'
+        verbose_name_plural = 'Статусы амбассадора'
+
+    def __str__(self):
+        return f'{self.status_name}'
