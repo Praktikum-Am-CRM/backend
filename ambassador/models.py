@@ -158,6 +158,7 @@ class AmbassadorAchive(models.Model):
     )
 
 
+# Есть ощущение что это заглушка пока не было отельного приложения и модели
 class Achive(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
@@ -192,6 +193,7 @@ class AmbassadorStatus(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
+    # Статус отчета?
     status_name = models.CharField(verbose_name="Статус отчета", max_length=50)
     sort_level = models.IntegerField()
     available = models.BooleanField(default=True)
