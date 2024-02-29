@@ -3,10 +3,6 @@ import uuid
 from django.db import models
 
 
-class Ambassador(models.Model):
-    pass
-
-
 class TelegramBot(models.Model):
     '''Данные амбассадора из Telegram.'''
 

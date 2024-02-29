@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'merches.apps.MerchesConfig',
     'users.apps.UsersConfig',
     'achievements.apps.AchievementsConfig',
+    'telegram.apps.TelegramConfig',
 ]
 
 MIDDLEWARE = [
