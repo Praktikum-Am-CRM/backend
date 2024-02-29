@@ -446,7 +446,7 @@ paths:
       description: Получить список площадок размешения
       responses:
         200:
-          $ref: '#/components/responses/GoalList'
+          $ref: '#/components/responses/PlacementList'
   /api/v1/utility/report_statuses:
     get:
       tags:
@@ -1133,6 +1133,10 @@ components:
           description: Отчество амбасадора
           type: string
           example: Иванович
+        promocode:
+          description: Промокод
+          type: string
+          example: '123456'
         gender:
           description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
           type: integer
@@ -1142,10 +1146,46 @@ components:
           type: string
           description: Страна проживания
           example: 'Россия'
+        address_index:
+          type: string
+          description: Почтовый индекс
+          example: '123423'
         address_region:
           type: string
           description: Регион/область
           example: 'Москва'
+        address_district:
+          type: string
+          description: Район
+          example: 'Хорошёво-Мнёвники'
+        address_settlement:
+          type: string
+          description: Город
+          example: 'Москва'
+        address_street:
+          type: string
+          description: Улица
+          example: 'проспект Маршала Жукова'
+        address_house:
+          type: string
+          description: Дом
+          example: '45'
+        address_building:
+          type: string
+          description: Корпус
+          example: '1'
+        address_apartment:
+          type: string
+          description: Квартира
+          example: '12'
+        size_clothing:
+          type: string
+          description: Размер одежды
+          example: 'М'
+        size_shoe:
+          type: number
+          description: Размер обуви
+          example: 37.5
         phone_number:
           type: string
           pattern: \+7[0-9]{3}[0-9]{3}[0-9]{2}[0-9]{2}
@@ -1169,6 +1209,10 @@ components:
           type: string
           description: Должность/специальность
           example: 'Генеральный директор'
+        educational_institution:
+          type: string
+          description: Учебное заведение
+          example: 'МГУ'
         goal:
           type: object
           properties:
@@ -1193,21 +1237,6 @@ components:
           format: uuid
           description: ID программы обучения
           example: 'a40bd4e6-5f6d-4f47-9261-90a7a0186171'
-      required:
-        - telegram_id
-        - first_name
-        - last_name
-        - gender
-        - address_country
-        - address_region
-        - phone_number
-        - email
-        - blog_link
-        - place_work
-        - specialty_work
-        - goals
-        - activities
-        - program
     NotFound:
       description: Объект не найден
       type: object
