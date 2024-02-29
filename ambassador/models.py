@@ -140,33 +140,33 @@ class Activity(models.Model):
     available = models.BooleanField(default=True)
 
 
-class AmbassadorAchive(models.Model):
-    achive_id = models.ForeignKey(
-        "Achive",
-        verbose_name="Достижения",
-        max_length=50,
-        on_delete=models.CASCADE,
-    )
-    ambassador_id = models.ForeignKey(
-        "Ambassador",
-        verbose_name="Амбассадор",
-        max_length=50,
-        on_delete=models.CASCADE,
-    )
-    assignment_date = models.DateField(
-        verbose_name="Дата выполнения", auto_now_add=True
-    )
-
-
-class Achive(models.Model):
-    id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True
-    )
-    achive_name = models.CharField(
-        verbose_name="Достижение",
-        max_length=50,
-    )
-    available = models.BooleanField(default=True)
+# class AmbassadorAchive(models.Model):
+#     achive_id = models.ForeignKey(
+#         "Achive",
+#         verbose_name="Достижения",
+#         max_length=50,
+#         on_delete=models.CASCADE,
+#     )
+#     ambassador_id = models.ForeignKey(
+#         "Ambassador",
+#         verbose_name="Амбассадор",
+#         max_length=50,
+#         on_delete=models.CASCADE,
+#     )
+#     assignment_date = models.DateField(
+#         verbose_name="Дата выполнения", auto_now_add=True
+#     )
+#
+#
+# class Achive(models.Model):
+#     id = models.UUIDField(
+#         primary_key=True, default=uuid.uuid4, editable=False, unique=True
+#     )
+#     achive_name = models.CharField(
+#         verbose_name="Достижение",
+#         max_length=50,
+#     )
+#     available = models.BooleanField(default=True)
 
 
 class AmbassadorStatusHistory(models.Model):

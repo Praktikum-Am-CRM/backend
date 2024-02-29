@@ -8,12 +8,9 @@ from ambassador.models import Ambassador
 class Achieve(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     achieve_name = models.CharField(
-        max_length=255, verbose_name='Название ачивки'
+        max_length=50, verbose_name='Название ачивки'
     )
-    available = models.BooleanField(
-        blank=True,
-        null=True,
-    )
+    available = models.BooleanField(default=True, verbose_name='Доступна')
 
     class Meta:
         verbose_name = 'Ачивки'
