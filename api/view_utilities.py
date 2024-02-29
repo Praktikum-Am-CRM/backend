@@ -3,13 +3,20 @@ from rest_framework.response import Response
 
 from achievements.models import Achieve
 from achievements.serializers import AchieveSerializer
-
 from ambassador.models import Activity, AmbassadorStatus, Goal
 from ambassador.serializers import (
     ActivitySerializer,
     AmbassadorStatusSerializer,
     GoalSerializer,
 )
+from crm_messages.models import MessagePool, MessageStatus, MessageType
+from crm_messages.serializers import (
+    MessagePoolSerializer,
+    MessageStatusSerializer,
+    MessageTypeSerializer,
+)
+from merches.models import DeleviryStatus
+from merches.serializers import DeliveryStatusSerializer
 from reports.models import Placement, ReportStatus, ReportType
 from reports.serializers import (
     PlacementSerializer,
@@ -29,46 +36,78 @@ def get_report_types(request):
 @api_view(['GET'])
 def get_report_statuses(request):
     '''/api/v1/utility/report_statuses'''
-    report_types = ReportStatus.objects.all()
-    serializer = ReportStatusSerializer(report_types, many=True)
+    report_statuses = ReportStatus.objects.all()
+    serializer = ReportStatusSerializer(report_statuses, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
 def get_placements(request):
     '''/api/v1/utility/placements'''
-    report_types = Placement.objects.all()
-    serializer = PlacementSerializer(report_types, many=True)
+    placements = Placement.objects.all()
+    serializer = PlacementSerializer(placements, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
 def get_goals(request):
     '''/api/v1/utility/goals'''
-    report_types = Goal.objects.all()
-    serializer = GoalSerializer(report_types, many=True)
+    goals = Goal.objects.all()
+    serializer = GoalSerializer(goals, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
 def get_activities(request):
     '''/api/v1/utility/activities'''
-    report_types = Activity.objects.all()
-    serializer = ActivitySerializer(report_types, many=True)
+    activities = Activity.objects.all()
+    serializer = ActivitySerializer(activities, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
 def get_ambassador_statuses(request):
     '''/api/v1/utility/ambassador_statuses'''
-    report_types = AmbassadorStatus.objects.all()
-    serializer = AmbassadorStatusSerializer(report_types, many=True)
+    ambassador_statuses = AmbassadorStatus.objects.all()
+    serializer = AmbassadorStatusSerializer(ambassador_statuses, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
 def get_achivies(request):
     '''/api/v1/utility/achivies'''
-    report_types = Achieve.objects.all()
-    serializer = AchieveSerializer(report_types, many=True)
+    achivies = Achieve.objects.all()
+    serializer = AchieveSerializer(achivies, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_pool_messages(request):
+    '''/api/v1/utility/pool_messages'''
+    pool_messages = MessagePool.objects.all()
+    serializer = MessagePoolSerializer(pool_messages, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_message_statuses(request):
+    '''/api/v1/utility/message_statuses'''
+    message_statuses = MessageStatus.objects.all()
+    serializer = MessageStatusSerializer(message_statuses, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_message_types(request):
+    '''/api/v1/utility/message_types'''
+    message_types = MessageType.objects.all()
+    serializer = MessageTypeSerializer(message_types, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_delivery_statuses(request):
+    '''/api/v1/utility/delivery_statuses'''
+    delivery_statuses = DeleviryStatus.objects.all()
+    serializer = DeliveryStatusSerializer(delivery_statuses, many=True)
     return Response(serializer.data)
