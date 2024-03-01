@@ -20,6 +20,8 @@ class BotMessages(models.Model):
         Manager,
         verbose_name='Менеджер',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
     )
     ambassador = models.ForeignKey(
         Ambassador,
@@ -64,13 +66,16 @@ class Message(models.Model):
         verbose_name='Текст сообщения', max_length=250
     )
     media_link = models.FileField(
-        verbose_name='Медиа файл', upload_to='messages/', null=True
+        verbose_name='Медиа файл', upload_to='messages/', null=True, blank=True
     )
     date = models.DateTimeField(
         verbose_name='Дата сообщения', auto_now_add=True
     )
     message_type = models.ForeignKey(
-        'MessageType', max_length=50, on_delete=models.PROTECT
+        'MessageType',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
     )
 
     class Meta:
@@ -93,7 +98,9 @@ class MessagePool(models.Model):
         on_delete=models.PROTECT,
     )
     send_date = models.DateTimeField(
-        verbose_name='Когда отправить сообщение', null=True
+        verbose_name='Когда отправить сообщение',
+        null=True,
+        blank=True,
     )
 
     class Meta:
