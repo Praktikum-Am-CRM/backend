@@ -12,10 +12,10 @@ class Merch(models.Model):
         max_length=255, verbose_name='Название мерча', unique=True
     )
     price = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name='Цена'
+        max_digits=10, decimal_places=2, verbose_name='Цена', default=0
     )
     intangible = models.BooleanField(
-        blank=True, null=True, verbose_name='Признак нематериального мерча'
+        default=False, verbose_name='Признак нематериального мерча'
     )
     available = models.BooleanField(default=True, verbose_name='Доступен мерч')
 
@@ -33,18 +33,24 @@ class DeliveryAddress(models.Model):
         default=False, verbose_name='Адрес ' 'подтвержден?'
     )
     index = models.CharField(max_length=255, verbose_name='Почтовый индекс')
-    region = models.CharField(max_length=255, verbose_name='Область')
-    district = models.CharField(max_length=255, verbose_name='Район')
-    settlement = models.CharField(
-        max_length=255, verbose_name='Населенный пункт', blank=True
+    region = models.CharField(
+        max_length=255, verbose_name='Область', blank=True
     )
-    street = models.CharField(max_length=255, verbose_name='Улица')
+    district = models.CharField(
+        max_length=255, verbose_name='Район', blank=True
+    )
+    settlement = models.CharField(
+        max_length=255,
+        verbose_name='Населенный пункт',
+    )
+    street = models.CharField(max_length=255, verbose_name='Улица', blank=True)
     house = models.CharField(max_length=255, verbose_name='Дом')
     building = models.CharField(
         max_length=255, verbose_name='Корпус', blank=True
     )
     country = models.CharField(
-        max_length=255, verbose_name='Страна', blank=True
+        max_length=255,
+        verbose_name='Страна',
     )
     apartment = models.CharField(
         max_length=255, verbose_name='Квартира', blank=True
@@ -79,7 +85,7 @@ class DeliveryStatus(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
-    delivery_status = models.CharField(
+    status_name = models.CharField(
         max_length=100, unique=True, verbose_name='Статус доставки'
     )
     available = models.BooleanField(default=True, verbose_name='Доступность')
@@ -89,7 +95,7 @@ class DeliveryStatus(models.Model):
         verbose_name_plural = 'Статусы доставки'
 
     def __str__(self):
-        return self.delivery_status
+        return self.status_name
 
 
 class MerchRequest(models.Model):
