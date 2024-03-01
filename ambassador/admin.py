@@ -74,9 +74,31 @@ class AmbassadorAdmin(admin.ModelAdmin):
     fio.short_description = 'ФИО'
 
 
-admin.site.register(AmbassadorGoal)
-admin.site.register(AmbassadorStatus)
-admin.site.register(AmbassadorStatusHistory)
-admin.site.register(AmbassadorActivity)
-admin.site.register(Goal)
-admin.site.register(Activity)
+@admin.register(AmbassadorGoal)
+class AmbassadroGoalAdmin(admin.ModelAdmin):
+    list_display = ('id', 'ambassador', 'goal')
+
+
+@admin.register(AmbassadorStatus)
+class AmbassadorStatusAdmin(admin.ModelAdmin):
+    list_display = ('id', 'status_name', 'available')
+
+
+@admin.register(AmbassadorStatusHistory)
+class AmbassadorStatusHistoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'ambassador', 'ambassador_status', 'assignment_date')
+
+
+@admin.register(AmbassadorActivity)
+class AmbassadorActivityAdmin(admin.ModelAdmin):
+    list_display = ('id', 'ambassador', 'activity')
+
+
+@admin.register(Goal)
+class GoalAdmin(admin.ModelAdmin):
+    list_display = ('id', 'goal_name', 'available')
+
+
+@admin.register(Activity)
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ('id', 'activity_name', 'available')
