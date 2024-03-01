@@ -11,7 +11,9 @@ class ReportStatus(models.Model):
     """Статус отчета."""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    status_name = models.CharField(max_length=100, unique=True)
+    status_name = models.CharField(
+        max_length=100, unique=True, verbose_name='Статус отчета'
+    )
     available = models.BooleanField(default=True, verbose_name='Доступность')
 
     class Meta:
@@ -78,16 +80,25 @@ class Report(models.Model):
         null=False,
     )
     screen = models.FileField(
-        upload_to='reports/', null=True, default=None, verbose_name='Скриншот'
+        upload_to='reports/',
+        null=True,
+        default=None,
+        verbose_name='Скриншот',
+        blank=True,
     )
     placement = models.ForeignKey(to=Placement, on_delete=models.PROTECT)
     report_status = models.ForeignKey(
-        to=ReportStatus, on_delete=models.PROTECT
+        to=ReportStatus,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
     )
     sign_junior = models.BooleanField(
         default=False, verbose_name='Начинающий амбассадор?'
     )
-    grade = models.PositiveSmallIntegerField(validators=[validate_one_to_ten])
+    grade = models.PositiveSmallIntegerField(
+        validators=[validate_one_to_ten], default=1
+    )
     report_type = models.ForeignKey(to=ReportType, on_delete=models.PROTECT)
 
     class Meta:
