@@ -85,8 +85,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-db_postgres = os.getenv('POSTGRES_DB', 'True').lower()
-if db_postgres == 'True':
+use_db_postgres = os.getenv('USE_POSTGRES_DB', 'True').lower()
+if use_db_postgres == 'true':
     DATABASES = {
         'default': {
             'ENGINE': os.getenv('ENGINE'),
