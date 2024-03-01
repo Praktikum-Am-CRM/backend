@@ -12,7 +12,7 @@ if not RUNNING_IN_DOCKER:
 else:
     load_dotenv()
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', 'dnfslkjfosneofksdlfknoweifoiefo')
 
 env_debug = os.getenv('DEBUG', 'True').lower()
 DEBUG = True if env_debug == 'true' else False
@@ -85,20 +85,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-use_db_postgres = os.getenv('USE_POSTGRES_DB', 'True').lower()
+use_db_postgres = os.getenv('USE_POSTGRES_DB', 'false').lower()
 if use_db_postgres == 'true':
     DATABASES = {
         'default': {
-            'ENGINE': os.getenv('ENGINE'),
-            'NAME': os.getenv('POSTGRES_DB'),
-            'USER': os.getenv('POSTGRES_USER'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'ENGINE': os.getenv('ENGINE', ''),
+            'NAME': os.getenv('POSTGRES_DB', ''),
+            'USER': os.getenv('POSTGRES_USER', ''),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
             'HOST': (
-                os.getenv('POSTGRES_HOST')
+                os.getenv('POSTGRES_HOST', '')
                 if RUNNING_IN_DOCKER
                 else 'localhost'
             ),
-            'PORT': os.getenv('POSTGRES_PORT'),
+            'PORT': os.getenv('POSTGRES_PORT', ''),
         }
     }
 else:
