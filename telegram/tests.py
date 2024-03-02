@@ -5,9 +5,11 @@ from .models import TelegramBot
 
 
 class TelegramBotModelTest(TestCase):
+    """Тесты для модели пользователя (TelegramBot)."""
+
     @classmethod
     def setUpTestData(cls):
-        # Создаем объект для тестирования
+        """Создания объекта."""
         cls.telegram_bot = TelegramBot.objects.create(
             telegram_id='123456789',
             nickname='test_user',

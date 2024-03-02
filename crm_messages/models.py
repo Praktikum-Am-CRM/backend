@@ -110,7 +110,7 @@ class MessagePool(models.Model):
     def __str__(self):
         return (
             f'{self.message_status} - '
-            f' {self.message}'
+            f'{self.message}'
             f' - {self.send_date}'
             if self.send_date
             else ''
