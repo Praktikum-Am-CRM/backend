@@ -1,6 +1,10 @@
+import shutil
+import tempfile
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils import timezone
 
 from ambassador.models import Ambassador, AmbassadorStatus
@@ -9,8 +13,10 @@ from telegram.models import TelegramBot
 from .models import Placement, Report, ReportStatus, ReportType
 
 User = get_user_model()
+TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
 
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class ReportModelTest(TestCase):
     """Тесты модели Report."""
 
@@ -89,6 +95,10 @@ class ReportModelTest(TestCase):
             report_type=report_type,
             screen=cls.screen_file,
         )
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TEMP_MEDIA_ROOT)
 
     def test_report_str_representation(self):
         """Тестирование строкового представления объекта Report."""
