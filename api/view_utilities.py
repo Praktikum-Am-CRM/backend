@@ -15,7 +15,7 @@ from crm_messages.serializers import (
     MessageStatusSerializer,
     MessageTypeSerializer,
 )
-from merches.models import DeleviryStatus
+from merches.models import DeliveryStatus
 from merches.serializers import DeliveryStatusSerializer
 from reports.models import Placement, ReportStatus, ReportType
 from reports.serializers import (
@@ -27,7 +27,7 @@ from reports.serializers import (
 
 @api_view(['GET'])
 def get_report_types(request):
-    '''/api/v1/utility/report_types'''
+    """/api/v1/utility/report_types"""
     report_types = ReportType.objects.all()
     serializer = ReportTypeSerializer(report_types, many=True)
     return Response(serializer.data)
@@ -35,7 +35,7 @@ def get_report_types(request):
 
 @api_view(['GET'])
 def get_report_statuses(request):
-    '''/api/v1/utility/report_statuses'''
+    """/api/v1/utility/report_statuses"""
     report_statuses = ReportStatus.objects.all()
     serializer = ReportStatusSerializer(report_statuses, many=True)
     return Response(serializer.data)
@@ -43,7 +43,7 @@ def get_report_statuses(request):
 
 @api_view(['GET'])
 def get_placements(request):
-    '''/api/v1/utility/placements'''
+    """/api/v1/utility/placements"""
     placements = Placement.objects.all()
     serializer = PlacementSerializer(placements, many=True)
     return Response(serializer.data)
@@ -51,7 +51,7 @@ def get_placements(request):
 
 @api_view(['GET'])
 def get_goals(request):
-    '''/api/v1/utility/goals'''
+    """/api/v1/utility/goals"""
     goals = Goal.objects.all()
     serializer = GoalSerializer(goals, many=True)
     return Response(serializer.data)
@@ -59,7 +59,7 @@ def get_goals(request):
 
 @api_view(['GET'])
 def get_activities(request):
-    '''/api/v1/utility/activities'''
+    """/api/v1/utility/activities"""
     activities = Activity.objects.all()
     serializer = ActivitySerializer(activities, many=True)
     return Response(serializer.data)
@@ -67,7 +67,7 @@ def get_activities(request):
 
 @api_view(['GET'])
 def get_ambassador_statuses(request):
-    '''/api/v1/utility/ambassador_statuses'''
+    """/api/v1/utility/ambassador_statuses"""
     ambassador_statuses = AmbassadorStatus.objects.all()
     serializer = AmbassadorStatusSerializer(ambassador_statuses, many=True)
     return Response(serializer.data)
@@ -75,7 +75,7 @@ def get_ambassador_statuses(request):
 
 @api_view(['GET'])
 def get_achivies(request):
-    '''/api/v1/utility/achivies'''
+    """/api/v1/utility/achivies"""
     achivies = Achieve.objects.all()
     serializer = AchieveSerializer(achivies, many=True)
     return Response(serializer.data)
@@ -83,7 +83,7 @@ def get_achivies(request):
 
 @api_view(['GET'])
 def get_pool_messages(request):
-    '''/api/v1/utility/pool_messages'''
+    """/api/v1/utility/pool_messages"""
     pool_messages = MessagePool.objects.all()
     serializer = MessagePoolSerializer(pool_messages, many=True)
     return Response(serializer.data)
@@ -91,7 +91,7 @@ def get_pool_messages(request):
 
 @api_view(['GET'])
 def get_message_statuses(request):
-    '''/api/v1/utility/message_statuses'''
+    """/api/v1/utility/message_statuses"""
     message_statuses = MessageStatus.objects.all()
     serializer = MessageStatusSerializer(message_statuses, many=True)
     return Response(serializer.data)
@@ -99,7 +99,7 @@ def get_message_statuses(request):
 
 @api_view(['GET'])
 def get_message_types(request):
-    '''/api/v1/utility/message_types'''
+    """/api/v1/utility/message_types"""
     message_types = MessageType.objects.all()
     serializer = MessageTypeSerializer(message_types, many=True)
     return Response(serializer.data)
@@ -107,7 +107,7 @@ def get_message_types(request):
 
 @api_view(['GET'])
 def get_delivery_statuses(request):
-    '''/api/v1/utility/delivery_statuses'''
-    delivery_statuses = DeleviryStatus.objects.all()
+    """/api/v1/utility/delivery_statuses"""
+    delivery_statuses = DeliveryStatus.objects.all()
     serializer = DeliveryStatusSerializer(delivery_statuses, many=True)
     return Response(serializer.data)

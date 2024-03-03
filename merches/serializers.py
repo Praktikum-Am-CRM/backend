@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
-from .models import DeleviryStatus
+from .models import DeliveryStatus
 
 
 class DeliveryStatusSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DeleviryStatus
+        model = DeliveryStatus
         fields = ['id', 'status_name', 'available']
