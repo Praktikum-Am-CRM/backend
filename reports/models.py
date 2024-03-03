@@ -71,9 +71,7 @@ class Report(models.Model):
         unique=True,
     )
     ambassador = models.ForeignKey(to=Ambassador, on_delete=models.PROTECT)
-    report_date = models.DateField(
-        auto_now_add=True, verbose_name='Дата отчета'
-    )
+    report_date = models.DateField(verbose_name='Дата отчета')
     content_link = models.URLField(
         verbose_name='Ссылка на контент',
         help_text='Добавьте ссылку на контент',
