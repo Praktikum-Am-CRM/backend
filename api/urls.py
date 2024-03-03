@@ -5,10 +5,13 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
+from ambassador.views import AmbassadorViewList
+
 app_name = 'api'
 
 router = DefaultRouter()
 # router.register('my_data', GetMethod, basename='my_data')
+router.register('ambassador', AmbassadorViewList)
 
 decorated_login_view = swagger_auto_schema(
     method='POST',
