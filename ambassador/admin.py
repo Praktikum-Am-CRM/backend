@@ -76,7 +76,7 @@ class AmbassadorAdmin(admin.ModelAdmin):
 
 @admin.register(AmbassadorGoal)
 class AmbassadroGoalAdmin(admin.ModelAdmin):
-    list_display = ('id', 'ambassador', 'goal')
+    list_display = ('id', 'ambassador', 'goal', 'own_version')
 
 
 @admin.register(AmbassadorStatus)
