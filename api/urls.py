@@ -15,6 +15,7 @@ from api.view_utilities import (
     get_message_types,
     get_placements,
     get_pool_messages,
+    get_programs,
     get_report_statuses,
     get_report_types,
 )
@@ -86,4 +87,5 @@ urlpatterns = [
         get_delivery_statuses,
         name='get_delivery_statuses',
     ),
+    path('utility/programs', get_programs, name='programs'),
 ]
