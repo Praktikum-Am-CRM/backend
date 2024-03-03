@@ -17,6 +17,8 @@ from crm_messages.serializers import (
 )
 from merches.models import DeliveryStatus
 from merches.serializers import DeliveryStatusSerializer
+from program.models import Program
+from program.serializers import ProgramSerializer
 from reports.models import Placement, ReportStatus, ReportType
 from reports.serializers import (
     PlacementSerializer,
@@ -110,4 +112,12 @@ def get_delivery_statuses(request):
     """/api/v1/utility/delivery_statuses"""
     delivery_statuses = DeliveryStatus.objects.all()
     serializer = DeliveryStatusSerializer(delivery_statuses, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_programs(request):
+    '''/api/v1/utility/programs'''
+    programs = Program.objects.all()
+    serializer = ProgramSerializer(programs, many=True)
     return Response(serializer.data)
