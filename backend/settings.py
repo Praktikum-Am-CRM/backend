@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'achievements.apps.AchievementsConfig',
     'reports.apps.ReportsConfig',
     'telegram.apps.TelegramConfig',
+    'program.apps.ProgramConfig',
 ]
 
 MIDDLEWARE = [
