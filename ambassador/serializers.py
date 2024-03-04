@@ -1,23 +1,19 @@
 ﻿from rest_framework import serializers
 
-from .models import Ambassador, AmbassadorStatus, Manager
+from users.serializers import ManagerSerializer
+
+from .models import Ambassador, AmbassadorStatus
 
 
-class ManagerSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Manager
-        fields = "__all__"
-
-
-class AmbassadorStatusSerializers(serializers.ModelSerializer):
+class AmbassadorStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = AmbassadorStatus
         fields = "__all__"
 
 
-class AmbassadorSerialisers(serializers.ModelSerializer):
-    status = AmbassadorStatusSerializers(read_only=True)
-    manager = ManagerSerializers(read_only=True)
+class AmbassadorSerializer(serializers.ModelSerializer):
+    status = AmbassadorStatusSerializer(read_only=True)
+    manager = ManagerSerializer(read_only=True)
 
     class Meta:
         model = Ambassador

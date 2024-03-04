@@ -5,13 +5,18 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
-from ambassador.views import AmbassadorViewList
+from ambassador.views import (
+    AmbassadorViewList,
+    create_ambassador,
+    get_ambassador_messages,
+    get_ambassador_reports,
+    update_ambassador,
+)
 
 app_name = 'api'
 
 router = DefaultRouter()
 # router.register('my_data', GetMethod, basename='my_data')
-router.register('ambassador', AmbassadorViewList)
 
 decorated_login_view = swagger_auto_schema(
     method='POST',
@@ -36,4 +41,22 @@ urlpatterns = [
     path('', include(router.urls)),
     path('auth/token/login', decorated_login_view, name='login'),
     path('auth/token/logout', decorated_logout_view, name='logout'),
+    # Ambassador URLs
+    path('ambassador/', AmbassadorViewList.as_view(), name='ambassadors_list'),
+    path('ambassador/', create_ambassador, name='create_ambassador'),
+    path(
+        'ambassador/<uuid:ambassador_id>/',
+        update_ambassador,
+        name='update_ambassador',
+    ),
+    path(
+        'ambassador/<uuid:ambassador_id>/reports/',
+        get_ambassador_reports,
+        name='get_ambassador_reports',
+    ),
+    path(
+        'api/v1/ambassador/<uuid:ambassador_id>/messages/',
+        get_ambassador_messages,
+        name='get_ambassador_messages',
+    ),
 ]
