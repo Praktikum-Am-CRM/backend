@@ -5,6 +5,21 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
+from api.view_utilities import (
+    get_achievies,
+    get_activities,
+    get_ambassador_statuses,
+    get_delivery_statuses,
+    get_goals,
+    get_message_statuses,
+    get_message_types,
+    get_placements,
+    get_pool_messages,
+    get_programs,
+    get_report_statuses,
+    get_report_types,
+)
+
 app_name = 'api'
 
 router = DefaultRouter()
@@ -33,4 +48,44 @@ urlpatterns = [
     path('', include(router.urls)),
     path('auth/token/login', decorated_login_view, name='login'),
     path('auth/token/logout', decorated_logout_view, name='logout'),
+    path(
+        'utility/report_types',
+        get_report_types,
+        name='get_report_types',
+    ),
+    path(
+        'utility/report_statuses',
+        get_report_statuses,
+        name='get_report_statuses',
+    ),
+    path('utility/placements', get_placements, name='get_placements'),
+    path('utility/goals', get_goals, name='get_goals'),
+    path('utility/activities', get_activities, name='get_activities'),
+    path(
+        'utility/ambassador_statuses',
+        get_ambassador_statuses,
+        name='get_ambassador_statuses',
+    ),
+    path('utility/achievies', get_achievies, name='get_achivies'),
+    path(
+        'utility/pool_messages',
+        get_pool_messages,
+        name='get_pool_messages',
+    ),
+    path(
+        'utility/message_statuses',
+        get_message_statuses,
+        name='get_message_statuses',
+    ),
+    path(
+        'utility/message_types',
+        get_message_types,
+        name='get_message_types',
+    ),
+    path(
+        'utility/delivery_statuses',
+        get_delivery_statuses,
+        name='get_delivery_statuses',
+    ),
+    path('utility/programs', get_programs, name='programs'),
 ]
