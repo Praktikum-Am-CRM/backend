@@ -31,5 +31,9 @@ class Manager(AbstractUser):
 
     def get_full_name(self) -> str:
         """ФИО."""
-        names = (self.last_name, self.first_name, self.middle_name)
-        return " ".join(names) if any(names) else self.username or self.email
+        names = [
+            name
+            for name in (self.last_name, self.first_name, self.middle_name)
+            if name is not None
+        ]
+        return " ".join(names)

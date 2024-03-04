@@ -1,3 +1,4 @@
+import datetime
 import shutil
 import tempfile
 
@@ -94,6 +95,7 @@ class ReportModelTest(TestCase):
             grade=5,
             report_type=report_type,
             screen=cls.screen_file,
+            report_date=datetime.date.today(),
         )
 
     @classmethod

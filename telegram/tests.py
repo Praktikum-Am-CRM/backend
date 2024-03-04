@@ -1,3 +1,5 @@
+import datetime
+
 from django.test import TestCase
 from django.utils import timezone
 
@@ -35,6 +37,7 @@ class TelegramBotModelTest(TestCase):
         new_bot = TelegramBot.objects.create(
             telegram_id='987654321',
             nickname='another_user',
+            registration_date=datetime.date.today(),
         )
         self.assertTrue(new_bot.active)
         self.assertTrue(new_bot.registration_date)
