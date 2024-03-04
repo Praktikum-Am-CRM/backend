@@ -16,7 +16,7 @@ class TelegramBot(models.Model):
         max_length=100, verbose_name='Telegram Username'
     )
     registration_date = models.DateTimeField(
-        auto_now_add=True, verbose_name='Дата запуска бота пользователем'
+        verbose_name='Дата запуска бота пользователем'
     )
     active = models.BooleanField(default=True, verbose_name='Активный?')
 

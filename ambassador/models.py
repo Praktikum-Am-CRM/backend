@@ -149,6 +149,12 @@ class AmbassadorGoal(models.Model):
         max_length=50,
         on_delete=models.CASCADE,
     )
+    own_version = models.CharField(
+        verbose_name='Своя версия',
+        max_length=250,
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = 'Цель обучения амбассадора'

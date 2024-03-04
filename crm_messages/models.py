@@ -69,7 +69,9 @@ class Message(models.Model):
         verbose_name='Медиа файл', upload_to='messages/', null=True, blank=True
     )
     date = models.DateTimeField(
-        verbose_name='Дата сообщения', auto_now_add=True
+        verbose_name='Дата сообщения',
+        blank=True,
+        null=True,
     )
     message_type = models.ForeignKey(
         'MessageType',

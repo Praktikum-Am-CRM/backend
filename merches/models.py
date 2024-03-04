@@ -140,7 +140,6 @@ class AmbassadorRequest(models.Model):
         on_delete=models.PROTECT,
     )
     assignment_date = models.DateField(
-        auto_now_add=True,
         verbose_name='Дата создания запроса',
     )
 
@@ -165,7 +164,6 @@ class DeliveryHistory(models.Model):
         verbose_name='Статус доставки',
     )
     assignment_date = models.DateField(
-        auto_now_add=True,
         verbose_name='Дата присвоения',
     )
 
