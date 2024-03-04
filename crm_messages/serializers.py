@@ -14,7 +14,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class MessageTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = MessageType
-        fields = ['id', 'achive_name', 'available']
+        fields = ['id', 'type_name', 'available']
 
 
 class MessageStatusSerializer(serializers.ModelSerializer):

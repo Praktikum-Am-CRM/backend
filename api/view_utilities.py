@@ -76,10 +76,10 @@ def get_ambassador_statuses(request):
 
 
 @api_view(['GET'])
-def get_achivies(request):
+def get_achievies(request):
     """/api/v1/utility/achivies"""
-    achivies = Achieve.objects.all()
-    serializer = AchieveSerializer(achivies, many=True)
+    achievies = Achieve.objects.all()
+    serializer = AchieveSerializer(achievies, many=True)
     return Response(serializer.data)
 
 

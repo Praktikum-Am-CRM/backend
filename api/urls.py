@@ -6,7 +6,7 @@ from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
 from api.view_utilities import (
-    get_achivies,
+    get_achievies,
     get_activities,
     get_ambassador_statuses,
     get_delivery_statuses,
@@ -66,7 +66,7 @@ urlpatterns = [
         get_ambassador_statuses,
         name='get_ambassador_statuses',
     ),
-    path('utility/achivies', get_achivies, name='get_achivies'),
+    path('utility/achievies', get_achievies, name='get_achivies'),
     path(
         'utility/pool_messages',
         get_pool_messages,

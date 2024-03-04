@@ -19,7 +19,7 @@ class Base64ImageField(serializers.ImageField):
 class ReportTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportType
-        fields = ['id', 'report_name', 'available']
+        fields = ['id', 'type_name', 'available']
 
 
 class ReportStatusSerializer(serializers.ModelSerializer):
