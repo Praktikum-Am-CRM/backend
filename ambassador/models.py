@@ -15,12 +15,14 @@ class Ambassador(models.Model):
         verbose_name="Телеграмм бот",
         max_length=50,
         on_delete=models.PROTECT,
+        related_name='ambassadors',
     )
     status = models.ForeignKey(
         "AmbassadorStatus",
         verbose_name="Статус",
         max_length=50,
         on_delete=models.PROTECT,
+        related_name='ambassadors',
     )
     manager = models.ForeignKey(
         Manager,
@@ -29,6 +31,7 @@ class Ambassador(models.Model):
         blank=True,
         null=True,
         on_delete=models.PROTECT,
+        related_name='ambassadors',
     )
     promocode = models.CharField(
         verbose_name='Промокод', max_length=255, blank=True
@@ -141,13 +144,18 @@ class AmbassadorGoal(models.Model):
         primary_key=True, editable=False, default=uuid.uuid4, unique=True
     )
     goal = models.ForeignKey(
-        "Goal", verbose_name="Цель", max_length=50, on_delete=models.CASCADE
+        "Goal",
+        verbose_name="Цель",
+        max_length=50,
+        on_delete=models.CASCADE,
+        related_name='ambassadors',
     )
     ambassador = models.ForeignKey(
         "Ambassador",
         verbose_name="Амбассадор",
         max_length=50,
         on_delete=models.CASCADE,
+        related_name='goals',
     )
     own_version = models.CharField(
         verbose_name='Своя версия',
@@ -190,12 +198,14 @@ class AmbassadorActivity(models.Model):
         verbose_name="Вид деятельности",
         max_length=50,
         on_delete=models.CASCADE,
+        related_name='ambassadors',
     )
     ambassador = models.ForeignKey(
         "Ambassador",
         verbose_name="Амбассадор",
         max_length=50,
         on_delete=models.CASCADE,
+        related_name='activities',
     )
 
     class Meta:
@@ -232,12 +242,14 @@ class AmbassadorStatusHistory(models.Model):
         verbose_name="Амбассадор",
         max_length=50,
         on_delete=models.CASCADE,
+        related_name='status_history',
     )
     ambassador_status = models.ForeignKey(
         "AmbassadorStatus",
         verbose_name="Статус",
         max_length=50,
         on_delete=models.PROTECT,
+        related_name='status_history',
     )
     assignment_date = models.DateField(verbose_name='Дата присвоения')
 

@@ -22,8 +22,12 @@ class Achieve(models.Model):
 
 class AmbassadorAchieve(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    achieve = models.ForeignKey(Achieve, on_delete=models.PROTECT)
-    ambassador = models.ForeignKey(Ambassador, on_delete=models.PROTECT)
+    achieve = models.ForeignKey(
+        Achieve, on_delete=models.PROTECT, related_name='ambassadors'
+    )
+    ambassador = models.ForeignKey(
+        Ambassador, on_delete=models.PROTECT, related_name='achieves'
+    )
     assignment_date = models.DateField(verbose_name='Дата получения ачивки')
 
     class Meta:

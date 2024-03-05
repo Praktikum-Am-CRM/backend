@@ -22,8 +22,12 @@ class Program(models.Model):
 
 class AmbassadorProgram(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    ambassador = models.ForeignKey(Ambassador, on_delete=models.PROTECT)
-    program = models.ForeignKey(Program, on_delete=models.PROTECT)
+    ambassador = models.ForeignKey(
+        Ambassador, on_delete=models.PROTECT, related_name='programs'
+    )
+    program = models.ForeignKey(
+        Program, on_delete=models.PROTECT, related_name='ambassadors'
+    )
 
     class Meta:
         verbose_name = 'Программа амбассадоров'

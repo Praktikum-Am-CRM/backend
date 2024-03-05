@@ -104,21 +104,25 @@ class MerchRequest(models.Model):
         Manager,
         on_delete=models.PROTECT,
         verbose_name='Менеджер',
+        related_name='merch_requests',
     )
     merch = models.ForeignKey(
         Merch,
         on_delete=models.PROTECT,
         verbose_name='Мерч',
+        related_name='merch_requests',
     )
     delivery_address = models.ForeignKey(
         DeliveryAddress,
         on_delete=models.PROTECT,
         verbose_name='Адрес доставки',
+        related_name='merch_requests',
     )
     request_status = models.ForeignKey(
         DeliveryStatus,
         on_delete=models.PROTECT,
         verbose_name='Статус выполнения',
+        related_name='merch_requests',
     )
 
     class Meta:
@@ -132,12 +136,10 @@ class MerchRequest(models.Model):
 class AmbassadorRequest(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     merch_request = models.ForeignKey(
-        MerchRequest,
-        on_delete=models.PROTECT,
+        MerchRequest, on_delete=models.PROTECT, related_name='ambassadors'
     )
     ambassador = models.ForeignKey(
-        Ambassador,
-        on_delete=models.PROTECT,
+        Ambassador, on_delete=models.PROTECT, related_name='requests'
     )
     assignment_date = models.DateField(
         verbose_name='Дата создания запроса',
@@ -157,11 +159,13 @@ class DeliveryHistory(models.Model):
         MerchRequest,
         on_delete=models.PROTECT,
         verbose_name='Запрос на мерч',
+        related_name='delivery_history',
     )
     delivery_status = models.ForeignKey(
         DeliveryStatus,
         on_delete=models.PROTECT,
         verbose_name='Статус доставки',
+        related_name='delivery_history',
     )
     assignment_date = models.DateField(
         verbose_name='Дата присвоения',

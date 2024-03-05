@@ -14,6 +14,7 @@ class BotMessages(models.Model):
         'Message',
         verbose_name='Сообщение',
         on_delete=models.PROTECT,
+        related_name='bot_messages',
     )
     from_bot = models.BooleanField()
     manager = models.ForeignKey(
@@ -22,11 +23,13 @@ class BotMessages(models.Model):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        related_name='bot_messages',
     )
     ambassador = models.ForeignKey(
         Ambassador,
         verbose_name='Амбасcадор',
         on_delete=models.PROTECT,
+        related_name='bot_messages',
     )
     sign_ai = models.BooleanField(verbose_name='Искусственный интеллект')
 
@@ -78,6 +81,7 @@ class Message(models.Model):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        related_name='messages',
     )
 
     class Meta:
@@ -93,11 +97,13 @@ class MessagePool(models.Model):
         primary_key=True, editable=False, default=uuid.uuid4, unique=True
     )
     message = models.ForeignKey(
-        'Message', verbose_name='Сообщение', on_delete=models.PROTECT
+        'Message',
+        verbose_name='Сообщение',
+        on_delete=models.PROTECT,
+        related_name='messages_pool',
     )
     message_status = models.ForeignKey(
-        'MessageStatus',
-        on_delete=models.PROTECT,
+        'MessageStatus', on_delete=models.PROTECT, related_name='messages_pool'
     )
     send_date = models.DateTimeField(
         verbose_name='Когда отправить сообщение',
