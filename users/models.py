@@ -26,5 +26,14 @@ class Manager(AbstractUser):
         'last_name',
     )
 
-    def __str__(self):
-        return f'{self.last_name} {self.first_name} {self.middle_name}'
+    def __str__(self) -> str:
+        return self.get_full_name()
+
+    def get_full_name(self) -> str:
+        """ФИО."""
+        names = [
+            name
+            for name in (self.last_name, self.first_name, self.middle_name)
+            if name is not None
+        ]
+        return " ".join(names)

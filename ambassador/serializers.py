@@ -3,7 +3,13 @@
 from program.serializers import ProgramSerializer
 from users.serializers import ManagerSerializer
 
-from .models import Ambassador, AmbassadorStatus
+from .models import Activity, Ambassador, AmbassadorStatus, Goal
+
+
+class GoalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Goal
+        fields = ['id', 'goal_name', 'available']
 
 
 class AmbassadorStatusSerializer(serializers.ModelSerializer):
@@ -20,3 +26,9 @@ class AmbassadorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ambassador
         fields = "__all__"
+
+
+class ActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Activity
+        fields = ['id', 'activity_name', 'available']

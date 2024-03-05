@@ -70,10 +70,10 @@ class Report(models.Model):
         verbose_name='ID Отчета',
         unique=True,
     )
-    ambassador = models.ForeignKey(to=Ambassador, on_delete=models.PROTECT)
-    report_date = models.DateField(
-        auto_now_add=True, verbose_name='Дата отчета'
+    ambassador = models.ForeignKey(
+        to=Ambassador, on_delete=models.PROTECT, related_name='reports'
     )
+    report_date = models.DateField(verbose_name='Дата отчета')
     content_link = models.URLField(
         verbose_name='Ссылка на контент',
         help_text='Добавьте ссылку на контент',
@@ -86,12 +86,15 @@ class Report(models.Model):
         verbose_name='Скриншот',
         blank=True,
     )
-    placement = models.ForeignKey(to=Placement, on_delete=models.PROTECT)
+    placement = models.ForeignKey(
+        to=Placement, on_delete=models.PROTECT, related_name='reports'
+    )
     report_status = models.ForeignKey(
         to=ReportStatus,
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        related_name='reports',
     )
     sign_junior = models.BooleanField(
         default=False, verbose_name='Начинающий амбассадор?'
@@ -99,7 +102,9 @@ class Report(models.Model):
     grade = models.PositiveSmallIntegerField(
         validators=[validate_one_to_ten], default=1
     )
-    report_type = models.ForeignKey(to=ReportType, on_delete=models.PROTECT)
+    report_type = models.ForeignKey(
+        to=ReportType, on_delete=models.PROTECT, related_name='reports'
+    )
 
     class Meta:
         verbose_name = 'Отчет о задании'

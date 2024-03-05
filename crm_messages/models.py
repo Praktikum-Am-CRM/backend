@@ -14,6 +14,7 @@ class BotMessages(models.Model):
         'Message',
         verbose_name='Сообщение',
         on_delete=models.PROTECT,
+        related_name='bot_messages',
     )
     from_bot = models.BooleanField()
     manager = models.ForeignKey(
@@ -22,11 +23,13 @@ class BotMessages(models.Model):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        related_name='bot_messages',
     )
     ambassador = models.ForeignKey(
         Ambassador,
         verbose_name='Амбасcадор',
         on_delete=models.PROTECT,
+        related_name='bot_messages',
     )
     sign_ai = models.BooleanField(verbose_name='Искусственный интеллект')
 
@@ -69,13 +72,16 @@ class Message(models.Model):
         verbose_name='Медиа файл', upload_to='messages/', null=True, blank=True
     )
     date = models.DateTimeField(
-        verbose_name='Дата сообщения', auto_now_add=True
+        verbose_name='Дата сообщения',
+        blank=True,
+        null=True,
     )
     message_type = models.ForeignKey(
         'MessageType',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        related_name='messages',
     )
 
     class Meta:
@@ -91,11 +97,13 @@ class MessagePool(models.Model):
         primary_key=True, editable=False, default=uuid.uuid4, unique=True
     )
     message = models.ForeignKey(
-        'Message', verbose_name='Сообщение', on_delete=models.PROTECT
+        'Message',
+        verbose_name='Сообщение',
+        on_delete=models.PROTECT,
+        related_name='messages_pool',
     )
     message_status = models.ForeignKey(
-        'MessageStatus',
-        on_delete=models.PROTECT,
+        'MessageStatus', on_delete=models.PROTECT, related_name='messages_pool'
     )
     send_date = models.DateTimeField(
         verbose_name='Когда отправить сообщение',
@@ -110,7 +118,7 @@ class MessagePool(models.Model):
     def __str__(self):
         return (
             f'{self.message_status} - '
-            f' {self.message}'
+            f'{self.message}'
             f' - {self.send_date}'
             if self.send_date
             else ''

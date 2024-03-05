@@ -9,12 +9,14 @@ class TelegramBot(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
-    telegram_id = models.CharField(max_length=100, verbose_name='telegram_bot')
+    telegram_id = models.CharField(
+        max_length=100, verbose_name='Telegram chat ID'
+    )
     nickname = models.CharField(
         max_length=100, verbose_name='Telegram Username'
     )
     registration_date = models.DateTimeField(
-        auto_now_add=True, verbose_name='Дата запуска бота пользователем'
+        verbose_name='Дата запуска бота пользователем'
     )
     active = models.BooleanField(default=True, verbose_name='Активный?')
 
