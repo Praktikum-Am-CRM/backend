@@ -35,7 +35,6 @@ class MessagePoolSerializer(serializers.ModelSerializer):
         fields = ['id', 'message', 'message_status', 'send_date']
 
 
-
 class BotMessagesSerializer(serializers.ModelSerializer):
     message_type = MessageTypeSerializer()
     manager = ManagerSerializer()
@@ -51,4 +50,3 @@ class BotMessagesSerializer(serializers.ModelSerializer):
             'message_telegram_id',
             'reaction',
         ]
-

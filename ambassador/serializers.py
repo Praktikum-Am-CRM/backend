@@ -6,7 +6,6 @@ from users.serializers import ManagerSerializer
 from .models import Activity, Ambassador, AmbassadorStatus, Goal
 
 
-
 class GoalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Goal
