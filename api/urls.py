@@ -20,6 +20,7 @@ from api.view_utilities import (
     get_report_types,
 )
 
+
 from .views import (
     AmbassadorViewList,
     create_or_update_ambassador,
@@ -96,6 +97,7 @@ urlpatterns = [
         name='get_delivery_statuses',
     ),
     path('utility/programs', get_programs, name='programs'),
+
     # Ambassador URLs
     path('ambassador/', AmbassadorViewList.as_view(), name='ambassadors_list'),
     path('ambassador/', create_or_update_ambassador, name='create_ambassador'),
@@ -114,4 +116,5 @@ urlpatterns = [
         get_ambassador_messages,
         name='get_ambassador_messages',
     ),
+
 ]

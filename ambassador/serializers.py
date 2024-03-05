@@ -1,9 +1,10 @@
-﻿from rest_framework import serializers
+from rest_framework import serializers
 
 from program.serializers import ProgramSerializer
 from users.serializers import ManagerSerializer
 
 from .models import Activity, Ambassador, AmbassadorStatus, Goal
+
 
 
 class GoalSerializer(serializers.ModelSerializer):
