@@ -417,7 +417,7 @@ paths:
           $ref: '#/components/responses/AuthenticationError'
 
   # Мерчи
-  /api/v1/ambassador/{ambassador_id}/merchies/:
+  /api/v1/ambassador/{ambassador_id}/merches/:
     get:
       tags:
         - Амбассадор
@@ -434,11 +434,73 @@ paths:
       description: Получить список мерчей амбассадора
       responses:
         200:
-          $ref: '#/components/responses/AmbassadorMerchiesList'
+          $ref: '#/components/responses/AmbassadorMerchesList'
         401:
           $ref: '#/components/responses/AuthenticationError'
         404:
           $ref: '#/components/responses/NotFound'
+  /api/v1/ambassador/{ambassador_id}/merch_request/:
+    post:
+      tags:
+        - Амбассадор
+      security:
+        - Token: [ ]
+      parameters:
+        - name: ambassador_id
+          required: true
+          in: path
+          description: ID амбассадора/кандидата
+          schema:
+            type: string
+            format: uuid
+      description: Создать заявку на мерч для амбассадора
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmbassadorRequestCreate'
+      responses:
+        200:
+          $ref: '#/components/responses/AmbassadorMerchesList'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+        404:
+          $ref: '#/components/responses/NotFound'
+  /api/v1/merch_request:
+    get:
+      tags:
+        - Мерч
+      security:
+        - Token: [ ]
+      description: Получить список заявок на мерчи
+      parameters:
+        - name: status
+          required: false
+          in: query
+          description: Статус доставки мерча
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+        - name: page
+          required: false
+          in: query
+          description: Номер страницы
+          schema:
+            type: integer
+        - name: limit
+          required: false
+          in: query
+          description: Количество объектов на странице
+          schema:
+            type: integer
+      responses:
+        200:
+          $ref: '#/components/responses/MerchRequestList'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+
 
 
   # вспомогательные функции
@@ -1027,6 +1089,29 @@ components:
             $ref: '#/components/schemas/Achive'
         program:
           $ref: '#/components/schemas/Program'
+    AmbassadorMinInfo:
+      description: Минимальная информация об амбассадоре
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID амбассадора
+          example: '435e536e-3e2e-4e6f-a8d8-5ac36d650bb4'
+        first_name:
+          description: Имя амбасадора
+          type: string
+          example: Иван
+        last_name:
+          description: Фамилия амбасадора
+          type: string
+          example: Иванов
+        middle_name:
+          description: Отчество амбасадора
+          type: string
+          example: Иванович
+        status:
+          $ref: '#/components/schemas/AmbassadorStatus'
     AmbassadorUpdate:
       description: Обновление информации об амбассадоре
       type: object
@@ -1587,7 +1672,294 @@ components:
     Merch:
       description: Мерч
       type: object
-
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID мерча
+          example: 'ad5759cb-1db2-4098-9756-796987b20956'
+        merch_name:
+          type: string
+          description: Название мерча
+          example: 'Толстовка.'
+        price:
+          type: integer
+          format: float
+          minimum: 0
+          description: Цена мерча
+          example: 100.3
+        intangible:
+          type: boolean
+          description: Признак нематериального мерча
+          example: False
+        available:
+          type: boolean
+          description: доступность для выбора
+          example: True
+    DeliveryAddress:
+      description: Адрес доставки мерча
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID адреса доставки
+          example: '25acb1eb-cad9-414d-910c-85c4df363582'
+        is_confirmed:
+          type: boolean
+          description: Адрес подтвержден?
+          example: True
+        country:
+          type: string
+          description: Страна проживания
+          example: 'Россия'
+        index:
+          type: string
+          description: Почтовый индекс
+          example: '123423'
+        region:
+          type: string
+          description: Регион/область
+          example: 'Москва'
+        district:
+          type: string
+          description: Район
+          example: 'Хорошёво-Мнёвники'
+        settlement:
+          type: string
+          description: Город
+          example: 'Москва'
+        street:
+          type: string
+          description: Улица
+          example: 'проспект Маршала Жукова'
+        house:
+          type: string
+          description: Дом
+          example: '45'
+        building:
+          type: string
+          description: Корпус
+          example: '1'
+        apartment:
+          type: string
+          description: Квартира
+          example: '12'
+    MerchRequest:
+      description: Заявка на мерч
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID заявки на мерч
+          example: '5bc856d7-37b6-48ee-8a26-af1652da32c1'
+        manager:
+          $ref: '#/components/schemas/Manager'
+        merch:
+          $ref: '#/components/schemas/Merch'
+        delivery_address:
+          $ref: '#/components/schemas/DeliveryAddress'
+        request_status:
+          $ref: '#/components/schemas/DeliveryStatus'
+    MerchRequestInfo:
+      description: Заявка на мерч
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID заявки на мерч
+          example: '5bc856d7-37b6-48ee-8a26-af1652da32c1'
+        manager:
+          $ref: '#/components/schemas/Manager'
+        ambassador:
+          $ref: '#/components/schemas/AmbassadorMinInfo'
+        merch:
+          $ref: '#/components/schemas/Merch'
+        delivery_address:
+          $ref: '#/components/schemas/DeliveryAddress'
+        request_status:
+          $ref: '#/components/schemas/DeliveryStatus'
+    AmbassadorRequest:
+      description: Заявки амбассадора на мерч
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID заявки амбассадора на мерч
+          example: 'b0a169d1-00b6-4316-8008-7172a04b8443'
+        ambassador:
+          $ref: '#/components/schemas/AmbassadorMinInfo'
+        merch_request:
+          $ref: '#/components/schemas/MerchRequest'
+        assignment_date:
+          type: string
+          format: date
+          description: Дата создания запроса
+    DeliveryHistory:
+      description: История доставок
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID заявки амбассадора на мерч
+          example: 'b0a169d1-00b6-4316-8008-7172a04b8443'
+        delivery_status:
+          $ref: '#/components/schemas/DeliveryStatus'
+        merch_request:
+          $ref: '#/components/schemas/MerchRequest'
+        assignment_date:
+          type: string
+          format: date
+          description: Дата присвоения статуса
+    MerchRequestCreate:
+      description: Создание заявки на мерч
+      type: object
+      properties:
+        merch:
+          type: string
+          format: uuid
+          description: ID мерча
+          example: 'ad5759cb-1db2-4098-9756-796987b20956'
+        delivery_address:
+          type: string
+          format: uuid
+          description: ID адреса доставки
+          example: '25acb1eb-cad9-414d-910c-85c4df363582'
+      required:
+        - merch
+        - delivery_address
+    MerchRequestUpdate:
+      description: Изменение заявки на мерч
+      type: object
+      properties:
+        merch:
+          type: string
+          format: uuid
+          description: ID мерча
+          example: 'ad5759cb-1db2-4098-9756-796987b20956'
+        delivery_address:
+          type: string
+          format: uuid
+          description: ID адреса доставки
+          example: '25acb1eb-cad9-414d-910c-85c4df363582'
+        request_status:
+          type: string
+          format: uuid
+          description: ID статуса доставки (DeliveryStatus)
+          example: '968fc610-7d8f-4944-acc6-db2b09f8ac12'
+    DeliveryAddressCreate:
+      description: Создание адреса доставки мерча
+      type: object
+      properties:
+        is_confirmed:
+          type: boolean
+          description: Адрес подтвержден?
+          example: True
+        country:
+          type: string
+          description: Страна проживания
+          example: 'Россия'
+        index:
+          type: string
+          description: Почтовый индекс
+          example: '123423'
+        region:
+          type: string
+          description: Регион/область
+          example: 'Москва'
+        district:
+          type: string
+          description: Район
+          example: 'Хорошёво-Мнёвники'
+        settlement:
+          type: string
+          description: Город
+          example: 'Москва'
+        street:
+          type: string
+          description: Улица
+          example: 'проспект Маршала Жукова'
+        house:
+          type: string
+          description: Дом
+          example: '45'
+        building:
+          type: string
+          description: Корпус
+          example: '1'
+        apartment:
+          type: string
+          description: Квартира
+          example: '12'
+      required:
+        - country
+        - index
+        - settlement
+        - house
+    DeliveryAddressUpdate:
+      description: Обновление адреса доставки мерча
+      type: object
+      properties:
+        is_confirmed:
+          type: boolean
+          description: Адрес подтвержден?
+          example: True
+        country:
+          type: string
+          description: Страна проживания
+          example: 'Россия'
+        index:
+          type: string
+          description: Почтовый индекс
+          example: '123423'
+        region:
+          type: string
+          description: Регион/область
+          example: 'Москва'
+        district:
+          type: string
+          description: Район
+          example: 'Хорошёво-Мнёвники'
+        settlement:
+          type: string
+          description: Город
+          example: 'Москва'
+        street:
+          type: string
+          description: Улица
+          example: 'проспект Маршала Жукова'
+        house:
+          type: string
+          description: Дом
+          example: '45'
+        building:
+          type: string
+          description: Корпус
+          example: '1'
+        apartment:
+          type: string
+          description: Квартира
+          example: '12'
+    AmbassadorRequestCreate:
+      description: Заявки амбассадора на мерч
+      type: object
+      properties:
+        merch_request:
+          type: string
+          format: uuid
+          description: ID заявки на мерч
+          example: '5bc856d7-37b6-48ee-8a26-af1652da32c1'
+        assignment_date:
+          type: string
+          format: date
+          description: Дата создания запроса
+      required:
+        - merch_request
+        - assignment_date
 
   responses:
     AuthorizationError:
@@ -1695,9 +2067,29 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/AmbassadorShortInfo'
+            type: object
+            properties:
+              count:
+                type: integer
+                example: 123
+                description: 'Общее количество объектов в базе'
+              next:
+                type: string
+                nullable: true
+                format: uri
+                example: https://ambassadorsyapractice.ru/api/v1/ambassador/?page=4
+                description: 'Ссылка на следующую страницу'
+              previous:
+                type: string
+                nullable: true
+                format: uri
+                example: https://ambassadorsyapractice.ru/api/v1/ambassador/?page=2
+                description: 'Ссылка на предыдущую страницу'
+              results:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AmbassadorShortInfo'
+                description: 'Список объектов текущей страницы'
     AmbassadorFullInfo:
       description: Полная информация об амбассадоре
       content:
@@ -1780,14 +2172,42 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PoolMessage'
-    AmbassadorMerchiesList:
+    AmbassadorMerchesList:
       description: Список мерчей амбассадора
       content:
         application/json:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/AmbassadorMerch'
+              $ref: '#/components/schemas/AmbassadorRequest'
+    MerchRequestList:
+      description: Список заявок на мерчи
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+                example: 123
+                description: 'Общее количество объектов в базе'
+              next:
+                type: string
+                nullable: true
+                format: uri
+                example: https://ambassadorsyapractice.ru/api/v1/merch_request/?page=4
+                description: 'Ссылка на следующую страницу'
+              previous:
+                type: string
+                nullable: true
+                format: uri
+                example: https://ambassadorsyapractice.ru/api/v1/merch_request/?page=2
+                description: 'Ссылка на предыдущую страницу'
+              results:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MerchRequestInfo'
+                description: 'Список объектов текущей страницы'
 
   securitySchemes:
     Token:
