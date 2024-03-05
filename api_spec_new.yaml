@@ -416,7 +416,29 @@ paths:
         401:
           $ref: '#/components/responses/AuthenticationError'
 
-
+  # Мерчи
+  /api/v1/ambassador/{ambassador_id}/merchies/:
+    get:
+      tags:
+        - Амбассадор
+      security:
+        - Token: [ ]
+      parameters:
+        - name: ambassador_id
+          required: true
+          in: path
+          description: ID амбассадора/кандидата
+          schema:
+            type: string
+            format: uuid
+      description: Получить список мерчей амбассадора
+      responses:
+        200:
+          $ref: '#/components/responses/AmbassadorMerchiesList'
+        401:
+          $ref: '#/components/responses/AuthenticationError'
+        404:
+          $ref: '#/components/responses/NotFound'
 
 
   # вспомогательные функции
@@ -1562,6 +1584,10 @@ components:
         - ambassador_telegram_id
         - telegram_message_id
         - reaction
+    Merch:
+      description: Мерч
+      type: object
+
 
   responses:
     AuthorizationError:
@@ -1754,7 +1780,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PoolMessage'
-
+    AmbassadorMerchiesList:
+      description: Список мерчей амбассадора
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/AmbassadorMerch'
 
   securitySchemes:
     Token:
