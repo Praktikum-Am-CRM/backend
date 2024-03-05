@@ -9,9 +9,7 @@ class TelegramBot(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
-    telegram_id = models.CharField(
-        max_length=100, verbose_name='Telegram chat ID'
-    )
+    telegram_id = models.CharField(max_length=100, verbose_name='telegram_bot')
     nickname = models.CharField(
         max_length=100, verbose_name='Telegram Username'
     )

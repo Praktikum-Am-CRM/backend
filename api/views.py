@@ -7,12 +7,12 @@ from rest_framework.response import Response
 
 from ambassador.filters import AmbassadorFilter
 from ambassador.models import Ambassador
+from ambassador.serializers import AmbassadorSerializer
 from crm_messages.models import BotMessages
 from crm_messages.serializers import BotMessagesSerializer
 from reports.models import Report
 from reports.serializers import ReportSerializer
-
-from .serializers import AmbassadorSerializer
+from telegram.models import TelegramBot
 
 
 class AmbassadorViewList(generics.ListAPIView):
@@ -41,14 +41,43 @@ class AmbassadorViewList(generics.ListAPIView):
     ]
 
 
+# def create_ambassador(request):
+#     '''Создание Амбассадора.'''
+#     serializer = AmbassadorSerializer(data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data, status=HTTPStatus.OK)
+#     return Response(serializer.errors, status=HTTPStatus.BAD_REQUEST)
+
+
 @api_view(['POST'])
-def create_ambassador(request):
-    '''Создание Амбассадора.'''
-    serializer = AmbassadorSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=HTTPStatus.OK)
-    return Response(serializer.errors, status=HTTPStatus.BAD_REQUEST)
+def create_or_update_ambassador(request, telegram_id):
+    try:
+        ambassador = Ambassador.objects.get(
+            telegram_bot__telegram_id=telegram_id
+        )
+        ambassador.first_name = request.data['first_name']
+        ambassador.last_name = request.data['last_name']
+        ambassador.email = request.data['email']
+        ambassador.save()
+        return ambassador
+    except Ambassador.DoesNotExist:
+        try:
+            telegram_bot = TelegramBot.objects.get(telegram_id=telegram_id)
+            ambassador = Ambassador.objects.create(
+                first_name=request.data['first_name'],
+                last_name=request.data['last_name'],
+                email=request.data['email'],
+                telegram_bot=telegram_bot,
+            )
+            return ambassador
+        except TelegramBot.DoesNotExist:
+            # Если не удалось найти соответствующую запись в TelegramBot
+            serializer = AmbassadorSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=HTTPStatus.OK)
+            return Response(serializer.errors, status=HTTPStatus.BAD_REQUEST)
 
 
 @api_view(['PATCH'])
