@@ -1,0 +1,14 @@
+version: "3.9"
+name: "ya-amb-crm"
+services:
+  postgres:
+    image: postgres:15.4-alpine
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./.env
+    volumes:
+      - data_value:/var/lib/postgresql/data/
+
+volumes:
+  data_value:

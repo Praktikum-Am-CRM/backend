@@ -1,0 +1,39 @@
+version: "3.9"
+name: "ya-amb-crm"
+services:
+  postgres:
+    image: postgres:15.4-alpine
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./.env
+    volumes:
+      - data_value:/var/lib/postgresql/data/
+
+  django:
+    build: ../
+    restart: no
+    depends_on:
+      - postgres
+    volumes:
+      - static_value:/app/static/
+      - media_value:/app/media/
+    env_file:
+      - ./.env
+
+  nginx:
+    image: nginx:1.19.3
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - static_value:/var/html/static/
+      - media_value:/var/html/media/
+    depends_on:
+      - django
+
+
+volumes:
+  data_value:
+  static_value:
+  media_value:
