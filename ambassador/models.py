@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 
+from achievements.models import Achieve
 from program.models import Program
 from telegram.models import TelegramBot
 from users.models import Manager
@@ -148,6 +149,12 @@ class Ambassador(models.Model):
         blank=True,
         related_name='goals',
         through='AmbassadorActivity',
+    )
+    achieves = models.ManyToManyField(
+        Achieve,
+        blank=True,
+        related_name='achieves',
+        through='AmbassadorAchieve',
     )
 
     class Meta:
@@ -311,3 +318,17 @@ class AmbassadorProgram(models.Model):
 
     def __str__(self):
         return f'{self.ambassador} - {self.program}'
+
+
+class AmbassadorAchieve(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    achieve = models.ForeignKey(Achieve, on_delete=models.PROTECT)
+    ambassador = models.ForeignKey(Ambassador, on_delete=models.PROTECT)
+    assignment_date = models.DateField(verbose_name='Дата получения ачивки')
+
+    class Meta:
+        verbose_name = 'Ачивки амбассадоров'
+        verbose_name_plural = 'Ачивки амбассадоров'
+
+    def __str__(self):
+        return f'{self.ambassador} - {self.achieve} - {self.assignment_date}'

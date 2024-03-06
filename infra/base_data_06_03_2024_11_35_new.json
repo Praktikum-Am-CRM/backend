@@ -13291,7 +13291,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "56686b8e-129b-419d-a2db-95da73a68ee3",
   "fields": {
     "achieve": "32cdcb0f-0332-4e8a-a260-d4c63d2981a0",
@@ -13300,7 +13300,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "5fe46e87-4866-4376-ae4f-b17ef46638c3",
   "fields": {
     "achieve": "9760475a-3670-4460-95a8-62f937362ea3",
@@ -13309,7 +13309,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "6009cc63-f30d-4f34-8ef5-97a54b24a3c2",
   "fields": {
     "achieve": "32cdcb0f-0332-4e8a-a260-d4c63d2981a0",
@@ -13318,7 +13318,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "699c7e78-7d5d-4c07-a6d3-303a9c2a2bc0",
   "fields": {
     "achieve": "5e7cce27-747e-4746-a49e-610e02198213",
@@ -13327,7 +13327,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "6ef81356-3d56-4556-95e6-077020bda92e",
   "fields": {
     "achieve": "32cdcb0f-0332-4e8a-a260-d4c63d2981a0",
@@ -13336,7 +13336,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "76f6ffc3-6331-46ee-bb36-d790cb917cec",
   "fields": {
     "achieve": "c6510bc6-4833-4c46-998c-e3e6a02854fb",
@@ -13345,7 +13345,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "8008cd3b-4b8f-4847-a1ac-80d89ab47bef",
   "fields": {
     "achieve": "32cdcb0f-0332-4e8a-a260-d4c63d2981a0",
@@ -13354,7 +13354,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "8092f1d1-bfe5-415b-a251-623783ed018b",
   "fields": {
     "achieve": "9760475a-3670-4460-95a8-62f937362ea3",
@@ -13363,7 +13363,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "836bedba-07b9-4545-88ca-9d58efcdd39e",
   "fields": {
     "achieve": "32cdcb0f-0332-4e8a-a260-d4c63d2981a0",
@@ -13372,7 +13372,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "8f3c55bb-d064-496e-8bc9-5edfa4334d5d",
   "fields": {
     "achieve": "c6510bc6-4833-4c46-998c-e3e6a02854fb",
@@ -13381,7 +13381,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "907c9414-0336-4e61-8b14-a837c6ee2846",
   "fields": {
     "achieve": "5e7cce27-747e-4746-a49e-610e02198213",
@@ -13390,7 +13390,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "97a308ad-b4e0-4b41-a93a-df1a6f9db4fd",
   "fields": {
     "achieve": "c6510bc6-4833-4c46-998c-e3e6a02854fb",
@@ -13399,7 +13399,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "bb11be2a-8a64-4e07-9def-36b276e59cc0",
   "fields": {
     "achieve": "32cdcb0f-0332-4e8a-a260-d4c63d2981a0",
@@ -13408,7 +13408,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "c685626e-c217-43ca-969b-87a206fa0a2f",
   "fields": {
     "achieve": "32cdcb0f-0332-4e8a-a260-d4c63d2981a0",
@@ -13417,7 +13417,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "cc17a74a-06ba-4f8f-9319-77d85fdae6db",
   "fields": {
     "achieve": "9760475a-3670-4460-95a8-62f937362ea3",
@@ -13426,7 +13426,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "dc3ffe6a-4c77-4b73-ba26-2a2ae2d3bfd9",
   "fields": {
     "achieve": "9760475a-3670-4460-95a8-62f937362ea3",
@@ -13435,7 +13435,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "eedee41a-44cf-4483-b744-d561ad25afde",
   "fields": {
     "achieve": "9760475a-3670-4460-95a8-62f937362ea3",
@@ -13444,7 +13444,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "f22afddc-3195-454b-a905-8cebd555534e",
   "fields": {
     "achieve": "5e7cce27-747e-4746-a49e-610e02198213",
@@ -13453,7 +13453,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "fbcacb34-566d-4f5a-b81c-b7ab8f9bc4f3",
   "fields": {
     "achieve": "9760475a-3670-4460-95a8-62f937362ea3",
@@ -13462,7 +13462,7 @@
   }
 },
 {
-  "model": "achievements.ambassadorachieve",
+  "model": "ambassador.ambassadorachieve",
   "pk": "fed9ebf3-399c-473d-a0c9-f11c3838b8cd",
   "fields": {
     "achieve": "9760475a-3670-4460-95a8-62f937362ea3",

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from achievements.serializers import AchieveSerializer
 from program.serializers import ProgramSerializer
 from telegram.serializers import TelegramBotSerializer
 
@@ -29,6 +30,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
     activity = ActivitySerializer(many=True)
     programs = ProgramSerializer(many=True)
     telegram_bot = TelegramBotSerializer()
+    achieves = AchieveSerializer(many=True)
 
     class Meta:
         model = Ambassador
@@ -65,4 +67,5 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             'programs',
             'goals',
             'activity',
+            'achieves',
         ]
