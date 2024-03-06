@@ -41,4 +41,14 @@ class ReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Report
-        fields = '__all__'
+        fields = [
+            'id',
+            'report_date',
+            'content_link',
+            'screen',
+            'placement',
+            'report_status',
+            'sign_junior',
+            'grade',
+            'report_type',
+        ]

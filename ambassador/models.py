@@ -2,6 +2,8 @@ import uuid
 
 from django.db import models
 
+from achievements.models import Achieve
+from program.models import Program
 from telegram.models import TelegramBot
 from users.models import Manager
 
@@ -130,6 +132,30 @@ class Ambassador(models.Model):
     )
     gender = models.CharField(verbose_name="Пол", max_length=50)
     birthday = models.DateField(verbose_name="Дата рождения")
+    programs = models.ManyToManyField(
+        Program,
+        blank=True,
+        related_name='programs',
+        through='AmbassadorProgram',
+    )
+    goals = models.ManyToManyField(
+        'Goal',
+        blank=True,
+        related_name='goals',
+        through='AmbassadorGoal',
+    )
+    activity = models.ManyToManyField(
+        'Activity',
+        blank=True,
+        related_name='goals',
+        through='AmbassadorActivity',
+    )
+    achieves = models.ManyToManyField(
+        Achieve,
+        blank=True,
+        related_name='achieves',
+        through='AmbassadorAchieve',
+    )
 
     class Meta:
         verbose_name = 'Амбасадор'
@@ -148,14 +174,12 @@ class AmbassadorGoal(models.Model):
         verbose_name="Цель",
         max_length=50,
         on_delete=models.CASCADE,
-        related_name='ambassadors',
     )
     ambassador = models.ForeignKey(
         "Ambassador",
         verbose_name="Амбассадор",
         max_length=50,
         on_delete=models.CASCADE,
-        related_name='goals',
     )
     own_version = models.CharField(
         verbose_name='Своя версия',
@@ -198,14 +222,12 @@ class AmbassadorActivity(models.Model):
         verbose_name="Вид деятельности",
         max_length=50,
         on_delete=models.CASCADE,
-        related_name='ambassadors',
     )
     ambassador = models.ForeignKey(
         "Ambassador",
         verbose_name="Амбассадор",
         max_length=50,
         on_delete=models.CASCADE,
-        related_name='activities',
     )
 
     class Meta:
@@ -281,3 +303,32 @@ class AmbassadorStatus(models.Model):
 
     def __str__(self):
         return f'{self.status_name}'
+
+
+class AmbassadorProgram(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ambassador = models.ForeignKey(Ambassador, on_delete=models.PROTECT)
+    program = models.ForeignKey(
+        Program, on_delete=models.PROTECT, related_name='ambassadors'
+    )
+
+    class Meta:
+        verbose_name = 'Программа амбассадоров'
+        verbose_name_plural = 'Программы амбассадоров'
+
+    def __str__(self):
+        return f'{self.ambassador} - {self.program}'
+
+
+class AmbassadorAchieve(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    achieve = models.ForeignKey(Achieve, on_delete=models.PROTECT)
+    ambassador = models.ForeignKey(Ambassador, on_delete=models.PROTECT)
+    assignment_date = models.DateField(verbose_name='Дата получения ачивки')
+
+    class Meta:
+        verbose_name = 'Ачивки амбассадоров'
+        verbose_name_plural = 'Ачивки амбассадоров'
+
+    def __str__(self):
+        return f'{self.ambassador} - {self.achieve} - {self.assignment_date}'
