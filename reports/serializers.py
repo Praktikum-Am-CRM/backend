@@ -3,7 +3,7 @@ import base64
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 
-from .models import Placement, ReportStatus, ReportType
+from .models import Placement, Report, ReportStatus, ReportType
 
 
 class Base64ImageField(serializers.ImageField):
@@ -32,3 +32,13 @@ class PlacementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Placement
         fields = ['id', 'site', 'available']
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    placement = PlacementSerializer()
+    report_status = ReportStatusSerializer()
+    report_type = ReportTypeSerializer()
+
+    class Meta:
+        model = Report
+        fields = '__all__'
