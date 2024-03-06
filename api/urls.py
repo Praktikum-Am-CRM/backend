@@ -20,6 +20,8 @@ from api.view_utilities import (
     get_report_types,
 )
 
+from .view_telegram import TelegramUserCreateView
+
 app_name = 'api'
 
 router = DefaultRouter()
@@ -88,4 +90,9 @@ urlpatterns = [
         name='get_delivery_statuses',
     ),
     path('utility/programs', get_programs, name='programs'),
+    path(
+        'telegram_user/',
+        TelegramUserCreateView.as_view(),
+        name='telegram_user_create',
+    ),
 ]
