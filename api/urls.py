@@ -5,6 +5,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
+from api.view_ambassadors import AmbassadorViewSet
 from api.view_utilities import (
     get_achievies,
     get_activities,
@@ -23,7 +24,7 @@ from api.view_utilities import (
 app_name = 'api'
 
 router = DefaultRouter()
-# router.register('my_data', GetMethod, basename='my_data')
+router.register('ambassador', AmbassadorViewSet, basename='ambassador')
 
 decorated_login_view = swagger_auto_schema(
     method='POST',

@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from ambassador.models import Ambassador
+# from ambassador.models import Ambassador
 
 
 class Program(models.Model):
@@ -20,18 +20,22 @@ class Program(models.Model):
         return self.program_name
 
 
-class AmbassadorProgram(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    ambassador = models.ForeignKey(
-        Ambassador, on_delete=models.PROTECT, related_name='programs'
-    )
-    program = models.ForeignKey(
-        Program, on_delete=models.PROTECT, related_name='ambassadors'
-    )
-
-    class Meta:
-        verbose_name = 'Программа амбассадоров'
-        verbose_name_plural = 'Программы амбассадоров'
-
-    def __str__(self):
-        return f'{self.ambassador} - {self.program}'
+# class AmbassadorProgram(models.Model):
+#     id = models.UUIDField(
+#       primary_key=True,
+#       default=uuid.uuid4,
+#       editable=False
+#     )
+#     ambassador = models.ForeignKey(
+#         Ambassador, on_delete=models.PROTECT, related_name='programs'
+#     )
+#     program = models.ForeignKey(
+#         Program, on_delete=models.PROTECT, related_name='ambassadors'
+#     )
+#
+#     class Meta:
+#         verbose_name = 'Программа амбассадоров'
+#         verbose_name_plural = 'Программы амбассадоров'
+#
+#     def __str__(self):
+#         return f'{self.ambassador} - {self.program}'
