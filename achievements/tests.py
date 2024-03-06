@@ -2,10 +2,10 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from ambassador.models import Ambassador, AmbassadorStatus
+from ambassador.models import Ambassador, AmbassadorAchieve, AmbassadorStatus
 from telegram.models import TelegramBot
 
-from .models import Achieve, AmbassadorAchieve
+from .models import Achieve
 
 User = get_user_model()
 

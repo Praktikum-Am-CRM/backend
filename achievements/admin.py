@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from .models import Achieve, AmbassadorAchieve
+from ambassador.models import AmbassadorAchieve
+
+from .models import Achieve
 
 
 @admin.register(Achieve)

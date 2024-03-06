@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from .models import AmbassadorProgram, Program
+from ambassador.models import AmbassadorProgram
+
+from .models import Program
 
 
 @admin.register(Program)
