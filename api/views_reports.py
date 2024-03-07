@@ -19,7 +19,7 @@ class ReportViewSet(
     permission_classes = [IsAuthenticated]
 
     @action(
-        detail=True,
+        detail=False,
         methods=['get'],
     )
     def unread_reports(self, request):
