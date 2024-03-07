@@ -54,19 +54,37 @@ class MerchRequestSerializer(serializers.ModelSerializer):
 
 
 class AmbassadorRequestSerializer(serializers.ModelSerializer):
-    merch_request_id = serializers.UUIDField(source='merch_request.id')
-    merch_request_merch = serializers.SerializerMethodField()
+    request_id = serializers.UUIDField(source='merch_request.id')
+    request_merch = serializers.SerializerMethodField()
+    request_status = serializers.SerializerMethodField()
+    request_delivery_address = serializers.SerializerMethodField()
 
     class Meta:
         model = AmbassadorRequest
         fields = [
             'id',
-            'merch_request_id',
-            'merch_request_merch',
+            'request_id',
+            'request_merch',
             'assignment_date',
+            'request_status',
+            'request_delivery_address',
         ]
 
-    def get_merch_request_merch(self, obj):
+    def get_request_merch(self, obj):
         merch_ser = MerchSerializer(obj.merch_request.merch)
 
         return merch_ser.data
+
+    def get_request_status(self, obj):
+        request_status_ser = DeliveryStatusSerializer(
+            obj.merch_request.request_status
+        )
+
+        return request_status_ser.data
+
+    def get_request_delivery_address(self, obj):
+        request_delivery_address_ser = DeliveryAddressSerializer(
+            obj.merch_request.delivery_address
+        )
+
+        return request_delivery_address_ser.data
