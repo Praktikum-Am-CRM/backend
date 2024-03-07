@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from ambassador.serializers import AmbassadorShortSerializer
 from users.serializer import ManagerSerializer
 
 from .models import (
@@ -34,10 +35,22 @@ class MerchRequestSerializer(serializers.ModelSerializer):
     manager = ManagerSerializer()
     request_status = DeliveryStatusSerializer()
     delivery_address = DeliveryAddressSerializer()
+    ambassadors = serializers.SerializerMethodField()
 
     class Meta:
         model = MerchRequest
         fields = '__all__'
+
+    def get_ambassadors(self, obj):
+        ambassador_request = AmbassadorRequest.objects.filter(
+            merch_request=obj
+        )
+        if ambassador_request:
+            ambassador_serializer = AmbassadorShortSerializer(
+                ambassador_request[0].ambassador
+            )
+            return ambassador_serializer.data
+        return {}
 
 
 class AmbassadorRequestSerializer(serializers.ModelSerializer):
