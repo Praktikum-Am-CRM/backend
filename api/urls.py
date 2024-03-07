@@ -20,14 +20,13 @@ from api.view_utilities import (
     get_report_statuses,
     get_report_types,
 )
-from api.views_reports import (
-    ReportListCreateAPIView,
-    ReportRetrieveUpdateAPIView,
-)
+
+from .views_reports import ReportViewSet
 
 app_name = 'api'
 router = DefaultRouter()
 router.register('ambassador', AmbassadorViewSet, basename='ambassador')
+router.register(r'report', ReportViewSet, basename='report')
 
 decorated_login_view = swagger_auto_schema(
     method='POST',
@@ -92,12 +91,4 @@ urlpatterns = [
         name='get_delivery_statuses',
     ),
     path('utility/programs', get_programs, name='programs'),
-    path(
-        'report/', ReportListCreateAPIView.as_view(), name='report-list-create'
-    ),
-    path(
-        'report/<uuid:pk>/',
-        ReportRetrieveUpdateAPIView.as_view(),
-        name='report-retrieve-update',
-    ),
 ]
