@@ -21,6 +21,8 @@ from api.view_utilities import (
     get_report_types,
 )
 
+
+from .views_reports import ReportViewSet
 from .view_telegram import TelegramUserCreateView
 
 app_name = 'api'
@@ -30,6 +32,7 @@ router.register('ambassador', AmbassadorViewSet, basename='ambassador')
 router.register(
     'telegram_user', TelegramUserCreateView, basename='telegram_user_create'
 )
+router.register(r'report', ReportViewSet, basename='report')
 
 decorated_login_view = swagger_auto_schema(
     method='POST',
