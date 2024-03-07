@@ -1,12 +1,26 @@
 from rest_framework import serializers
 
-from .models import AmbassadorRequest, DeliveryStatus, Merch, MerchRequest
+from users.serializer import ManagerSerializer
+
+from .models import (
+    AmbassadorRequest,
+    DeliveryAddress,
+    DeliveryStatus,
+    Merch,
+    MerchRequest,
+)
 
 
 class DeliveryStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeliveryStatus
         fields = ['id', 'status_name', 'available']
+
+
+class DeliveryAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryAddress
+        fields = '__all__'
 
 
 class MerchSerializer(serializers.ModelSerializer):
@@ -16,6 +30,11 @@ class MerchSerializer(serializers.ModelSerializer):
 
 
 class MerchRequestSerializer(serializers.ModelSerializer):
+    merch = MerchSerializer()
+    manager = ManagerSerializer()
+    request_status = DeliveryStatusSerializer()
+    delivery_address = DeliveryAddressSerializer()
+
     class Meta:
         model = MerchRequest
         fields = '__all__'
