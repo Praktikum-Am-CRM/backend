@@ -18,6 +18,8 @@ class BotMessagesAdmin(admin.ModelAdmin):
         'from_bot',
         'message',
         'sign_ai',
+        'message_telegram_id',
+        'reaction',
     )
 
 
