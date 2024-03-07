@@ -21,9 +21,8 @@ from api.view_utilities import (
     get_report_types,
 )
 
-
-from .views_reports import ReportViewSet
 from .view_telegram import TelegramUserCreateView
+from .views_reports import ReportViewSet
 
 app_name = 'api'
 
