@@ -23,7 +23,6 @@ from api.view_utilities import (
 
 from .view_telegram import TelegramUserCreateView
 from .views_merches import MerchesViewSet
-
 from .views_reports import ReportViewSet
 
 app_name = 'api'
