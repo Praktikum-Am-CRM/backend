@@ -27,6 +27,9 @@ app_name = 'api'
 
 router = DefaultRouter()
 router.register('ambassador', AmbassadorViewSet, basename='ambassador')
+router.register(
+    'telegram_user', TelegramUserCreateView, basename='telegram_user_create'
+)
 
 decorated_login_view = swagger_auto_schema(
     method='POST',
@@ -91,9 +94,4 @@ urlpatterns = [
         name='get_delivery_statuses',
     ),
     path('utility/programs', get_programs, name='programs'),
-    path(
-        'telegram_user/',
-        TelegramUserCreateView.as_view(),
-        name='telegram_user_create',
-    ),
 ]
