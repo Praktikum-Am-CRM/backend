@@ -21,10 +21,12 @@ from api.view_utilities import (
     get_report_types,
 )
 
-app_name = 'api'
+from .views_reports import ReportViewSet
 
+app_name = 'api'
 router = DefaultRouter()
 router.register('ambassador', AmbassadorViewSet, basename='ambassador')
+router.register(r'report', ReportViewSet, basename='report')
 
 decorated_login_view = swagger_auto_schema(
     method='POST',
