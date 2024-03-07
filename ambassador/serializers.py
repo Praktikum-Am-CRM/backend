@@ -69,3 +69,22 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             'activity',
             'achieves',
         ]
+
+
+class AmbassadorShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ambassador
+        fields = [
+            'id',
+            'status',
+            'manager',
+            'promocode',
+            'receipt_date',
+            'reminder_counter',
+            'email',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'gender',
+            'birthday',
+        ]
