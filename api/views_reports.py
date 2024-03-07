@@ -7,9 +7,9 @@ from reports.serializers import ReportSerializer
 
 class ReportViewSet(
     mixins.ListModelMixin,
-    mixins.CreateModelMixin,
+    # mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
+    # mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = Report.objects.all()
