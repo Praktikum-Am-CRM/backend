@@ -88,4 +88,8 @@ class AmbassadorShortSerializer(serializers.ModelSerializer):
             'middle_name',
             'gender',
             'birthday',
+            'phone',
+            'size_clothing',
+            'size_choe',
+            'note',
         ]

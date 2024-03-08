@@ -1,4 +1,5 @@
 # from rest_framework import mixins, permissions, status, viewsets
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -11,6 +12,7 @@ from merches.serializers import AmbassadorRequestSerializer
 from reports.models import Report
 from reports.serializers import ReportSerializer
 
+from .filters import AmbassadorFilter
 from .paginators import CustomPNPaginator
 
 
@@ -21,6 +23,8 @@ class AmbassadorViewSet(
     serializer_class = AmbassadorSerializer
     permission_classes = (permissions.IsAuthenticated,)
     pagination_class = CustomPNPaginator
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = AmbassadorFilter
 
     @action(
         detail=True,
