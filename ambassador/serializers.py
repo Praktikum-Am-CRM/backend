@@ -52,7 +52,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             'address_building',
             'address_apartment',
             'size_clothing',
-            'size_clothing',
+            'size_choe',
             'email',
             'note',
             'blog_link',
@@ -68,6 +68,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             'goals',
             'activity',
             'achieves',
+            'phone',
         ]
 
 
