@@ -3,7 +3,10 @@ from .models import CrmSettings
 
 class CRMDefaultSettings:
     def __init__(self):
-        self._crm_settings = CrmSettings.objects.first()
+        try:
+            self._crm_settings = CrmSettings.objects.first()
+        except Exception:
+            self._crm_settings = None
 
     @property
     def default_ambassador_status(self):
