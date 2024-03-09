@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import (
     Activity,
     Ambassador,
+    AmbassadorAchieve,
     AmbassadorActivity,
     AmbassadorGoal,
     AmbassadorProgram,
@@ -26,9 +27,28 @@ class AmbassadorGoalInline(admin.TabularInline):
     verbose_name_plural = 'Цели обучения'
 
 
+class AmbassadorActivityInline(admin.TabularInline):
+    model = AmbassadorActivity
+    extra = 1
+    verbose_name = 'Активность'
+    verbose_name_plural = 'Активности'
+
+
+class AmbassadorAchievesInline(admin.TabularInline):
+    model = AmbassadorAchieve
+    extra = 1
+    verbose_name = 'Цель обучения'
+    verbose_name_plural = 'Цели обучения'
+
+
 @admin.register(Ambassador)
 class AmbassadorAdmin(admin.ModelAdmin):
-    inlines = [AmbassadorProgramInline, AmbassadorGoalInline]
+    inlines = [
+        AmbassadorProgramInline,
+        AmbassadorGoalInline,
+        AmbassadorActivityInline,
+        AmbassadorAchievesInline,
+    ]
     list_display = ('id', 'fio', 'email', 'status')
     fieldsets = (
         (
