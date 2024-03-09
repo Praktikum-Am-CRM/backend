@@ -5,14 +5,30 @@ from .models import (
     Ambassador,
     AmbassadorActivity,
     AmbassadorGoal,
+    AmbassadorProgram,
     AmbassadorStatus,
     AmbassadorStatusHistory,
     Goal,
 )
 
 
+class AmbassadorProgramInline(admin.TabularInline):
+    model = AmbassadorProgram
+    extra = 1
+    verbose_name = 'Программа обучения'
+    verbose_name_plural = 'Программы обучения'
+
+
+class AmbassadorGoalInline(admin.TabularInline):
+    model = AmbassadorGoal
+    extra = 1
+    verbose_name = 'Цель обучения'
+    verbose_name_plural = 'Цели обучения'
+
+
 @admin.register(Ambassador)
 class AmbassadorAdmin(admin.ModelAdmin):
+    inlines = [AmbassadorProgramInline, AmbassadorGoalInline]
     list_display = ('id', 'fio', 'email', 'status')
     fieldsets = (
         (
@@ -35,6 +51,8 @@ class AmbassadorAdmin(admin.ModelAdmin):
                     'middle_name',
                     'gender',
                     'birthday',
+                    'size_clothing',
+                    'size_choe',
                 )
             },
         ),
