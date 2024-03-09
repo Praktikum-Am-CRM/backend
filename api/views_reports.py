@@ -44,19 +44,3 @@ class ReportViewSet(
         unread_reports = Report.objects.filter(report_status=None)
         serializer = ReportSerializer(unread_reports, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-    # @action(
-    #     detail=True,
-    #     methods=['patch'],
-    # )
-    # def update_report_status(self, request, pk):
-    #     report = get_object_or_404(Report, id=pk)
-    #
-    #     report_status = ReportStatus.objects.filter(reports=report)
-    #     serializer = ReportStatusSerializer(
-    #         report_status, data=request.data, partial=True
-    #     )
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_200_OK)
-    #     return Response(status=status.HTTP_400_BAD_REQUEST)
