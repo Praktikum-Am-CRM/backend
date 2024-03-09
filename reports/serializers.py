@@ -2,6 +2,7 @@ import base64
 
 from django.core.files.base import ContentFile
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from .models import Placement, Report, ReportStatus, ReportType
 
@@ -52,3 +53,17 @@ class ReportSerializer(serializers.ModelSerializer):
             'grade',
             'report_type',
         ]
+
+
+class ReportUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = [
+            'report_status',
+            'grade',
+        ]
+
+    def validate_grade(self, value):
+        if value < 1 or value > 10:
+            raise ValidationError('Оценка должна быть в диапазоне от 1 до 10')
+        return value
