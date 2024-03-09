@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'reports.apps.ReportsConfig',
     'telegram.apps.TelegramConfig',
     'program.apps.ProgramConfig',
+    'crm_settings.apps.CrmSettingsConfig',
 ]
 
 MIDDLEWARE = [

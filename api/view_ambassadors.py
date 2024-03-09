@@ -6,7 +6,11 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from ambassador.models import Ambassador
-from ambassador.serializers import AmbassadorSerializer
+from ambassador.serializers import (
+    AmbassadorBotCreateSerializer,
+    AmbassadorSerializer,
+    AmbassadorUpdateSerializer,
+)
 from merches.models import AmbassadorRequest
 from merches.serializers import AmbassadorRequestSerializer
 from reports.models import Report
@@ -17,7 +21,11 @@ from .paginators import CustomPNPaginator
 
 
 class AmbassadorViewSet(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
 ):
     queryset = Ambassador.objects.all()
     serializer_class = AmbassadorSerializer
@@ -25,6 +33,28 @@ class AmbassadorViewSet(
     pagination_class = CustomPNPaginator
     filter_backends = (DjangoFilterBackend,)
     filterset_class = AmbassadorFilter
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return AmbassadorBotCreateSerializer
+
+        if self.action in ['update', 'partial_update']:
+            return AmbassadorUpdateSerializer
+
+        return AmbassadorSerializer
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+        serializer = AmbassadorSerializer(instance)
+        return Response(serializer.data)
 
     @action(
         detail=True,

@@ -36,7 +36,10 @@ class Ambassador(models.Model):
         related_name='ambassadors',
     )
     promocode = models.CharField(
-        verbose_name='Промокод', max_length=255, blank=True
+        verbose_name='Промокод',
+        max_length=255,
+        blank=True,
+        null=True,
     )
     receipt_date = models.DateField(
         verbose_name="Дата принятия в " "амбассадоры", blank=True, null=True
@@ -55,8 +58,8 @@ class Ambassador(models.Model):
     address_country = models.CharField(
         verbose_name="Страна",
         max_length=50,
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
     )
     address_region = models.CharField(
         verbose_name="Регион",
@@ -73,8 +76,8 @@ class Ambassador(models.Model):
     address_settlement = models.CharField(
         verbose_name="Населённый пункт",
         max_length=50,
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
     )
     address_street = models.CharField(
         verbose_name="Улица",
@@ -107,8 +110,11 @@ class Ambassador(models.Model):
     phone = models.CharField(
         verbose_name="Телефон",
         max_length=20,
+        blank=True,
+        null=True,
+        default='',
     )
-    email = models.EmailField()
+    email = models.EmailField(verbose_name='Электронная почта')
     note = models.TextField(
         verbose_name="Заметка",
         max_length=200,
@@ -134,13 +140,13 @@ class Ambassador(models.Model):
     birthday = models.DateField(verbose_name="Дата рождения")
     programs = models.ManyToManyField(
         Program,
-        blank=True,
+        blank=False,
         related_name='programs',
         through='AmbassadorProgram',
     )
     goals = models.ManyToManyField(
         'Goal',
-        blank=True,
+        blank=False,
         related_name='goals',
         through='AmbassadorGoal',
     )
