@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'drf_yasg',
+    'django_filters',
     'users.apps.UsersConfig',
     'api.apps.ApiConfig',
     'ambassador.apps.AmbassadorConfig',
