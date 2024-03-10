@@ -1,0 +1,51 @@
+version: "3.9"
+name: "ya-amb-crm"
+services:
+  postgres:
+    image: postgres:15.4-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./.env
+    volumes:
+      - data_value:/var/lib/postgresql/data/
+
+  frontend:
+    image: asbest/am-crm-frontend:latest
+    volumes:
+      - ../frontend:/app/result_build/
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - frontend
+    restart: unless-stopped
+    volumes:
+      - ../frontend/static:/app/static/
+      - media_value:/app/media/
+    env_file:
+      - ./.env
+
+  nginx:
+    image: nginx:1.19.3
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx_conf/:/etc/nginx/conf.d/
+      - media_value:/var/html/media/
+      - ../frontend/build/:/usr/share/nginx/html/
+      - ../frontend/static/:/var/html/static/
+      - ./cert/:/cert/
+    depends_on:
+      - django
+
+
+volumes:
+  data_value:
+  media_value:
