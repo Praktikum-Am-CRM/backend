@@ -47,7 +47,7 @@ class CrmSettings(models.Model):
     goal_own_version = models.OneToOneField(
         Goal,
         on_delete=models.PROTECT,
-        null=False, blank=False,
+        null=True, blank=True,
     )
     date = models.DateTimeField(
         auto_now_add=True,
