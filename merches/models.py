@@ -3,13 +3,14 @@ import uuid
 from django.db import models
 
 from ambassador.models import Ambassador
+from backend.constants import MAX_NAME_LENGTH
 from users.models import Manager
 
 
 class Merch(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     merch_name = models.CharField(
-        max_length=255, verbose_name='Название мерча', unique=True
+        max_length=MAX_NAME_LENGTH, verbose_name='Название мерча', unique=True
     )
     price = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name='Цена', default=0
@@ -86,7 +87,7 @@ class DeliveryStatus(models.Model):
         editable=False,
     )
     status_name = models.CharField(
-        max_length=100, unique=True, verbose_name='Статус доставки'
+        max_length=MAX_NAME_LENGTH, unique=True, verbose_name='Статус доставки'
     )
     available = models.BooleanField(default=True, verbose_name='Доступность')
 
