@@ -4,7 +4,7 @@ from achievements.serializers import AchieveSerializer
 from program.serializers import ProgramSerializer
 from telegram.serializers import TelegramBotSerializer
 
-from .models import Activity, Ambassador, AmbassadorStatus, Goal
+from .models import Activity, Ambassador, AmbassadorStatus, Goal, Program
 
 
 class GoalSerializer(serializers.ModelSerializer):
@@ -88,3 +88,19 @@ class AmbassadorShortSerializer(serializers.ModelSerializer):
             'gender',
             'birthday',
         ]
+
+
+class AmbassadorProgramSerializer(serializers.ModelSerializer):
+    count = serializers.IntegerField(source='programs.count')
+
+    class Meta:
+        model = Program
+        fields = ('id', 'program_name', 'available', 'count')
+
+
+class AmbassadorStatSerializer(serializers.ModelSerializer):
+    count = serializers.IntegerField(source='ambassadors.count')
+
+    class Meta:
+        model = AmbassadorStatus
+        fields = ('id', 'status_name', 'sort_level', 'available', 'count')

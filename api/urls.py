@@ -20,6 +20,8 @@ from api.view_utilities import (
     get_report_statuses,
     get_report_types,
 )
+from api.views_program import AmbassadorProgramViewsList
+from api.views_status import AmbassadorStatusViewSet
 
 from .view_telegram import TelegramUserCreateView
 from .views_merches import MerchesViewSet
@@ -34,6 +36,16 @@ router.register(
 )
 router.register(r'report', ReportViewSet, basename='report')
 router.register('merch_request', MerchesViewSet, basename='merch_request')
+router.register(
+    'statistic/ambassador_program',
+    AmbassadorProgramViewsList,
+    basename='ambassador_program',
+)
+router.register(
+    'statistic/ambassador_status',
+    AmbassadorStatusViewSet,
+    basename='ambassador_status',
+)
 
 
 decorated_login_view = swagger_auto_schema(
