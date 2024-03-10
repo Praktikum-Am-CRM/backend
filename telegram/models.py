@@ -2,6 +2,8 @@ import uuid
 
 from django.db import models
 
+from backend.constants import MAX_NAME_LENGTH
+
 
 class TelegramBot(models.Model):
     """Данные амбассадора из Telegram."""
@@ -13,7 +15,7 @@ class TelegramBot(models.Model):
         max_length=100, verbose_name='Telegram chat ID'
     )
     nickname = models.CharField(
-        max_length=100, verbose_name='Telegram Username'
+        max_length=MAX_NAME_LENGTH, verbose_name='Telegram Username'
     )
     registration_date = models.DateTimeField(
         verbose_name='Дата запуска бота пользователем'

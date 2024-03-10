@@ -16,7 +16,7 @@ from crm_messages.serializers import BotMessageSerializer
 from merches.models import AmbassadorRequest
 from merches.serializers import AmbassadorRequestSerializer
 from reports.models import Report
-from reports.serializers import ReportSerializer
+from reports.serializers import ReportForAmbassadorSerializer
 
 from .filters import AmbassadorFilter
 from .paginators import CustomPNPaginator
@@ -66,7 +66,7 @@ class AmbassadorViewSet(
         ambassador = get_object_or_404(Ambassador, id=pk)
 
         reports = Report.objects.filter(ambassador=ambassador)
-        serializer = ReportSerializer(reports, many=True)
+        serializer = ReportForAmbassadorSerializer(reports, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
