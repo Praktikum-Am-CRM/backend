@@ -177,6 +177,8 @@ class AmbassadorSerializer(serializers.ModelSerializer):
 
 
 class AmbassadorShortSerializer(serializers.ModelSerializer):
+    status = AmbassadorStatusSerializer()
+
     class Meta:
         model = Ambassador
         fields = [
