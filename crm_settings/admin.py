@@ -14,5 +14,6 @@ class CrmSettingsAdmin(admin.ModelAdmin):
         'delayed_sending_message_type',
         'default_delivery_status',
         'default_report_status',
-        'default_report_type'
+        'default_report_type',
+        'goal_own_version'
     )
