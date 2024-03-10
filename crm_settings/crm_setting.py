@@ -61,5 +61,12 @@ class CRMDefaultSettings:
             return self._crm_settings.default_report_type
         return None
 
+    @property
+    def goal_own_version(self):
+        self.__load_data()
+        if self._crm_settings:
+            return self._crm_settings.goal_own_version
+        return None
+
 
 crm_settings = CRMDefaultSettings()
