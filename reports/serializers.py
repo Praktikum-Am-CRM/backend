@@ -2,6 +2,9 @@ import base64
 
 from django.core.files.base import ContentFile
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+
+from ambassador.serializers import AmbassadorShortSerializer
 
 from .models import Placement, Report, ReportStatus, ReportType
 
@@ -34,7 +37,7 @@ class PlacementSerializer(serializers.ModelSerializer):
         fields = ['id', 'site', 'available']
 
 
-class ReportSerializer(serializers.ModelSerializer):
+class ReportForAmbassadorSerializer(serializers.ModelSerializer):
     placement = PlacementSerializer()
     report_status = ReportStatusSerializer()
     report_type = ReportTypeSerializer()
@@ -52,3 +55,39 @@ class ReportSerializer(serializers.ModelSerializer):
             'grade',
             'report_type',
         ]
+
+
+class ReportListSerializer(serializers.ModelSerializer):
+    placement = PlacementSerializer()
+    report_status = ReportStatusSerializer()
+    report_type = ReportTypeSerializer()
+    ambassador = AmbassadorShortSerializer()
+
+    class Meta:
+        model = Report
+        fields = [
+            'id',
+            'ambassador',
+            'report_date',
+            'content_link',
+            'screen',
+            'placement',
+            'report_status',
+            'sign_junior',
+            'grade',
+            'report_type',
+        ]
+
+
+class ReportUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = [
+            'report_status',
+            'grade',
+        ]
+
+    def validate_grade(self, value):
+        if value < 1 or value > 10:
+            raise ValidationError('Оценка должна быть в диапазоне от 1 до 10')
+        return value

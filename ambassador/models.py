@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 
 from achievements.models import Achieve
+from backend.constants import MAX_NAME_LENGTH, MAX_STATUS_TYPE_NAME_LENGTH
 from program.models import Program
 from telegram.models import TelegramBot
 from users.models import Manager
@@ -22,7 +23,7 @@ class Ambassador(models.Model):
     status = models.ForeignKey(
         "AmbassadorStatus",
         verbose_name="Статус",
-        max_length=50,
+        max_length=MAX_STATUS_TYPE_NAME_LENGTH,
         on_delete=models.PROTECT,
         related_name='ambassadors',
     )
@@ -36,7 +37,10 @@ class Ambassador(models.Model):
         related_name='ambassadors',
     )
     promocode = models.CharField(
-        verbose_name='Промокод', max_length=255, blank=True
+        verbose_name='Промокод',
+        max_length=255,
+        blank=True,
+        null=True,
     )
     receipt_date = models.DateField(
         verbose_name="Дата принятия в " "амбассадоры", blank=True, null=True
@@ -55,8 +59,8 @@ class Ambassador(models.Model):
     address_country = models.CharField(
         verbose_name="Страна",
         max_length=50,
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
     )
     address_region = models.CharField(
         verbose_name="Регион",
@@ -73,8 +77,8 @@ class Ambassador(models.Model):
     address_settlement = models.CharField(
         verbose_name="Населённый пункт",
         max_length=50,
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
     )
     address_street = models.CharField(
         verbose_name="Улица",
@@ -107,8 +111,11 @@ class Ambassador(models.Model):
     phone = models.CharField(
         verbose_name="Телефон",
         max_length=20,
+        blank=True,
+        null=True,
+        default='',
     )
-    email = models.EmailField()
+    email = models.EmailField(verbose_name='Электронная почта')
     note = models.TextField(
         verbose_name="Заметка",
         max_length=200,
@@ -134,13 +141,13 @@ class Ambassador(models.Model):
     birthday = models.DateField(verbose_name="Дата рождения")
     programs = models.ManyToManyField(
         Program,
-        blank=True,
+        blank=False,
         related_name='programs',
         through='AmbassadorProgram',
     )
     goals = models.ManyToManyField(
         'Goal',
-        blank=True,
+        blank=False,
         related_name='goals',
         through='AmbassadorGoal',
     )
@@ -172,7 +179,7 @@ class AmbassadorGoal(models.Model):
     goal = models.ForeignKey(
         "Goal",
         verbose_name="Цель",
-        max_length=50,
+        max_length=MAX_NAME_LENGTH,
         on_delete=models.CASCADE,
     )
     ambassador = models.ForeignKey(
@@ -201,7 +208,7 @@ class Goal(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
     goal_name = models.CharField(
-        verbose_name="Название цели", max_length=50, unique=True
+        verbose_name="Название цели", max_length=MAX_NAME_LENGTH, unique=True
     )
     available = models.BooleanField(default=True)
 
@@ -220,7 +227,7 @@ class AmbassadorActivity(models.Model):
     activity = models.ForeignKey(
         "Activity",
         verbose_name="Вид деятельности",
-        max_length=50,
+        max_length=MAX_NAME_LENGTH,
         on_delete=models.CASCADE,
     )
     ambassador = models.ForeignKey(
@@ -243,7 +250,9 @@ class Activity(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
     activity_name = models.CharField(
-        verbose_name="Вид деятельности", max_length=50, unique=True
+        verbose_name="Вид деятельности",
+        max_length=MAX_NAME_LENGTH,
+        unique=True,
     )
     available = models.BooleanField(default=True, verbose_name='Доступность')
 
@@ -269,7 +278,7 @@ class AmbassadorStatusHistory(models.Model):
     ambassador_status = models.ForeignKey(
         "AmbassadorStatus",
         verbose_name="Статус",
-        max_length=50,
+        max_length=MAX_NAME_LENGTH,
         on_delete=models.PROTECT,
         related_name='status_history',
     )
@@ -292,7 +301,9 @@ class AmbassadorStatus(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
     status_name = models.CharField(
-        verbose_name="Статус амбассадора", max_length=50, unique=True
+        verbose_name="Статус амбассадора",
+        max_length=MAX_NAME_LENGTH,
+        unique=True,
     )
     sort_level = models.IntegerField(verbose_name='Уровень сортировки')
     available = models.BooleanField(default=True, verbose_name='Доступность')
