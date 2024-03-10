@@ -12,7 +12,6 @@ from program.serializers import ProgramSerializer
 from telegram.models import TelegramBot
 from telegram.serializers import TelegramBotSerializer
 
-
 from .models import (
     Activity,
     Ambassador,
