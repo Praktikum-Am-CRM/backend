@@ -217,6 +217,7 @@ class AmbassadorUpdateSerializer(serializers.ModelSerializer):
     )
     own_version = serializers.CharField(
         max_length=250,
+        required=False,
     )
 
     class Meta:
@@ -304,6 +305,7 @@ class AmbassadorBotCreateSerializer(serializers.Serializer):
     promocode = serializers.CharField(max_length=255, required=False)
     own_version = serializers.CharField(
         max_length=250,
+        required=False,
     )
 
     def create(self, validated_data):
