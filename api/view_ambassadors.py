@@ -11,6 +11,8 @@ from ambassador.serializers import (
     AmbassadorSerializer,
     AmbassadorUpdateSerializer,
 )
+from crm_messages.models import BotMessages
+from crm_messages.serializers import BotMessageSerializer
 from merches.models import AmbassadorRequest
 from merches.serializers import AmbassadorRequestSerializer
 from reports.models import Report
@@ -82,3 +84,10 @@ class AmbassadorViewSet(
         return Response(
             ambassador_requests_serializer.data, status=status.HTTP_200_OK
         )
+
+    @action(detail=True, methods=['get'])
+    def messages(self, request, pk):
+        ambassador = get_object_or_404(Ambassador, id=pk)
+        messages = BotMessages.objects.filter(ambassador=ambassador)
+        serializer = BotMessageSerializer(messages, many=True)
+        return Response(serializer.data)

@@ -1,6 +1,14 @@
 from rest_framework import serializers
 
-from .models import Message, MessagePool, MessageStatus, MessageType
+from users.serializer import ManagerSerializer
+
+from .models import (
+    BotMessages,
+    Message,
+    MessagePool,
+    MessageStatus,
+    MessageType,
+)
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -30,3 +38,20 @@ class MessagePoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = MessagePool
         fields = ['id', 'message', 'message_status', 'send_date']
+
+
+class BotMessageSerializer(serializers.ModelSerializer):
+    message = MessageSerializer()
+    manager = ManagerSerializer()
+
+    class Meta:
+        model = BotMessages
+        fields = [
+            'id',
+            'message',
+            'from_bot',
+            'manager',
+            'sign_ai',
+            'message_telegram_id',
+            'reaction',
+        ]
