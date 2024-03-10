@@ -1,8 +1,12 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from api.filters import ReportFilter
+
+# from api.paginators import CustomPNPaginator
 from reports.models import Report
 from reports.serializers import ReportSerializer, ReportUpdateSerializer
 
@@ -15,7 +19,11 @@ class ReportViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = Report.objects.all()
+    serializer_class = ReportSerializer
     permission_classes = [IsAuthenticated]
+    # pagination_class = CustomPNPaginator
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = ReportFilter
 
     def get_serializer_class(self):
         if self.action in ('update', 'partial_update'):
