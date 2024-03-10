@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 
 from ambassador.models import Ambassador
+from backend.constants import MAX_NAME_LENGTH
 
 from .validators import validate_one_to_ten
 
@@ -12,7 +13,7 @@ class ReportStatus(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     status_name = models.CharField(
-        max_length=100, unique=True, verbose_name='Статус отчета'
+        max_length=MAX_NAME_LENGTH, unique=True, verbose_name='Статус отчета'
     )
     available = models.BooleanField(default=True, verbose_name='Доступность')
 
@@ -29,7 +30,7 @@ class ReportType(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type_name = models.CharField(
-        max_length=100, verbose_name='Вид задания', unique=True
+        max_length=MAX_NAME_LENGTH, verbose_name='Вид задания', unique=True
     )
     available = models.BooleanField(default=True, verbose_name='Доступность')
 
@@ -46,7 +47,7 @@ class Placement(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     site = models.CharField(
-        max_length=100,
+        max_length=MAX_NAME_LENGTH,
         verbose_name='Площадка размещения контента',
         unique=True,
     )

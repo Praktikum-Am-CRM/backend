@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 
 from ambassador.models import Ambassador
+from backend.constants import MAX_NAME_LENGTH
 from users.models import Manager
 
 MESSAGE_REACTION = (
@@ -68,7 +69,9 @@ class MessageType(models.Model):
         primary_key=True, editable=False, default=uuid.uuid4, unique=True
     )
     type_name = models.CharField(
-        max_length=50, verbose_name='Тип ' 'сообщения', unique=True
+        max_length=MAX_NAME_LENGTH,
+        verbose_name='Тип ' 'сообщения',
+        unique=True,
     )
     available = models.BooleanField(default=True, verbose_name='Доступность')
 
@@ -149,7 +152,9 @@ class MessageStatus(models.Model):
         primary_key=True, editable=False, default=uuid.uuid4, unique=True
     )
     status_name = models.CharField(
-        verbose_name='Наименование статуса', max_length=50, unique=True
+        verbose_name='Наименование статуса',
+        max_length=MAX_NAME_LENGTH,
+        unique=True,
     )
     available = models.BooleanField(default=True, verbose_name='Доступность')
 
