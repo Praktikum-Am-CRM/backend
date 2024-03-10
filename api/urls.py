@@ -22,6 +22,7 @@ from api.view_utilities import (
 )
 
 from .view_telegram import TelegramUserCreateView
+from .views_botmessage import SendMessageToTelegramViewSet
 from .views_merches import MerchesViewSet
 from .views_reports import ReportViewSet
 
@@ -34,6 +35,9 @@ router.register(
 )
 router.register(r'report', ReportViewSet, basename='report')
 router.register('merch_request', MerchesViewSet, basename='merch_request')
+router.register(
+    'bot_message', SendMessageToTelegramViewSet, basename='bot_message'
+)
 
 
 decorated_login_view = swagger_auto_schema(
