@@ -1,1764 +1,1741 @@
-openapi: 3.0.3
+swagger: '2.0'
 info:
   title: Yandex Ambassador CRM API
-  description: Описание API для CRM системы проекта Yandex Ambassador
-  version: 1.0.0
-servers:
-  - url: http://localhost:8000/
-    description: Локальный сервер джанги
-
+  description: Описание API endpoint for Yandex Ambassador. Автодокументация - https://ambassadorsyapractice.ru/docs
+  license:
+    name: MIT License
+  version: v1
+host: ambassadorsyapractice.ru
+schemes:
+- https
+basePath: /api/v1
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Token:
+    type: Token
+    name: Authorization
+    in: header
+security:
+- Token: []
 paths:
-  # Авторизация
-  /api/v1/auth/token/login/:
-    post:
-      tags:
-        - Авторизация
-      description: Получение токена аутентификации пользователя.
-      parameters: [ ]
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TokenCreate'
-      responses:
-        201:
-          description: Успешная авторизация
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TokenGetResponse'
-        400:
-          $ref: '#/components/responses/AuthorizationError'
-  /api/v1/auth/token/logout/:
-    post:
-      security:
-        - Token: [ ]
-      tags:
-        - Авторизация
-      description: Удалить токена аутентификации пользователя.
-      parameters: [ ]
-      responses:
-        204:
-          description: 'Токен удален'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-
-  # Амбассадоры
-  /api/v1/ambassador/:
+  /ambassador/:
     get:
-      security:
-        - Token: [ ]
-      tags:
-        - Амбассадор
-      description: Получить список амбассадоров/кандидатов
+      operationId: ambassador_list
+      description: ''
       parameters:
-        - name: status
-          required: false
-          in: query
-          description: Статус амбассадора/кадидата
-          schema:
-            type: array
-            items:
-              type: string
-              format: uuid
-        - name: gender
-          required: false
-          in: query
-          description: Пол (0 - Мужчины, 1 - Женщины)
-          schema:
-            type: integer
-            enum: [ 0, 1 ]
-        - name: programs
-          required: false
-          in: query
-          description: Программы обучения
-          schema:
-            type: array
-            items:
-              type: string
-              format: uuid
-        - name: search
-          required: false
-          in: query
-          description: Поиск по имени, программе
-          schema:
-            type: string
-        - name: sort_by
-          required: false
-          in: query
-          description: Поле, по которому делать сортировку
-          schema:
-            type: string
-            enum:
-              - fio
-              - date
-              - program
-              - gender
-              - status
-        - name: sort_direct
-          required: false
-          in: query
-          description: Направление сортировки (0 - по возрастанию, 1 - по убыванию)
-          schema:
-            type: integer
-            enum: [ 0, 1 ]
-        - name: page
-          required: false
-          in: query
-          description: Номер страницы
-          schema:
-            type: integer
-        - name: limit
-          required: false
-          in: query
-          description: Количество объектов на странице
-          schema:
-            type: integer
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: search
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      - name: limit
+        in: query
+        description: Number of results to return per page.
+        required: false
+        type: integer
       responses:
-        200:
-          $ref: '#/components/responses/AmbassadorList'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Ambassador'
+      tags:
+      - ambassador
     post:
-      security:
-        - Token: [ ]
-      tags:
-        - Амбассадор
-      description: Создать амбассадора/кандидата
-      parameters: [ ]
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AmbassadorCreate'
-      responses:
-        200:
-          $ref: '#/components/responses/AmbassadorCreate'
-        400:
-          $ref: '#/components/responses/ValidationError'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-        404:
-          $ref: '#/components/responses/NotFound'
-  /api/v1/ambassador/{ambassador_id}/:
-    get:
-      security:
-        - Token: [ ]
-      tags:
-        - Амбассадор
+      operationId: ambassador_create
+      description: ''
       parameters:
-        - name: ambassador_id
-          required: true
-          in: path
-          description: ID амбассадора/кандидата
-          schema:
-            type: string
-            format: uuid
-      description: Получить данные амбассадора/кандидата
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AmbassadorBotCreate'
       responses:
-        200:
-          $ref: '#/components/responses/AmbassadorFullInfo'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-        404:
-          $ref: '#/components/responses/NotFound'
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/AmbassadorBotCreate'
+      tags:
+      - ambassador
+    parameters: []
+  /ambassador/{id}/:
+    get:
+      operationId: ambassador_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Ambassador'
+      tags:
+      - ambassador
+    put:
+      operationId: ambassador_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AmbassadorUpdate'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/AmbassadorUpdate'
+      tags:
+      - ambassador
     patch:
-      security:
-        - Token: [ ]
-      tags:
-        - Амбассадор
+      operationId: ambassador_partial_update
+      description: ''
       parameters:
-        - name: ambassador_id
-          required: true
-          in: path
-          description: ID амбассадора/кандидата
-          schema:
-            type: string
-            format: uuid
-      description: 'Обновить данные амбассадора/кандидата.'
-      requestBody:
-        description: 'Все поля являются не обязательными. Обновляются только заданные поля.<br><b>Для активностей и ачивок передается полный список установленных для амбассадора значений</b>'
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AmbassadorUpdate'
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AmbassadorUpdate'
       responses:
-        200:
-          $ref: '#/components/responses/AmbassadorFullInfo'
-        400:
-          $ref: '#/components/responses/ValidationError'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-        404:
-          $ref: '#/components/responses/NotFound'
-
-  # Отчеты
-  /api/v1/ambassador/{ambassador_id}/reports/:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/AmbassadorUpdate'
+      tags:
+      - ambassador
+    parameters:
+    - name: id
+      in: path
+      description: A UUID string identifying this Амбасадор.
+      required: true
+      type: string
+      format: uuid
+  /ambassador/{id}/merches/:
     get:
-      tags:
-        - Амбассадор
-      security:
-        - Token: [ ]
-      parameters:
-        - name: ambassador_id
-          required: true
-          in: path
-          description: ID амбассадора/кандидата
-          schema:
-            type: string
-            format: uuid
-      description: Получить список отчетов амбассадора/кандидата
+      operationId: ambassador_merches
+      description: ''
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/ReportList'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-        404:
-          $ref: '#/components/responses/NotFound'
-  /api/v1/report/:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Ambassador'
+      tags:
+      - ambassador
+    parameters:
+    - name: id
+      in: path
+      description: A UUID string identifying this Амбасадор.
+      required: true
+      type: string
+      format: uuid
+  /ambassador/{id}/messages/:
+    get:
+      operationId: ambassador_messages
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Ambassador'
+      tags:
+      - ambassador
+    parameters:
+    - name: id
+      in: path
+      description: A UUID string identifying this Амбасадор.
+      required: true
+      type: string
+      format: uuid
+  /ambassador/{id}/reports/:
+    get:
+      operationId: ambassador_reports
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Ambassador'
+      tags:
+      - ambassador
+    parameters:
+    - name: id
+      in: path
+      description: A UUID string identifying this Амбасадор.
+      required: true
+      type: string
+      format: uuid
+  /auth/token/login:
     post:
-      tags:
-        - Отчет
-      security:
-        - Token: [ ]
-      description: Создать отчет амбассадора
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ReportCreate'
-      responses:
-        200:
-          $ref: '#/components/responses/ReportInfo'
-        400:
-          $ref: '#/components/responses/ValidationError'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-        404:
-          $ref: '#/components/responses/NotFound'
-  /api/v1/report/{report_id}:
-    get:
-      tags:
-        - Отчет
-      security:
-        - Token: [ ]
+      operationId: Obtain user authentication token
+      description: Use this endpoint to obtain user authentication token.
       parameters:
-        - name: report_id
-          required: true
-          in: path
-          description: ID отчета
-          schema:
-            type: string
-            format: uuid
-      description: Получить отчет амбассадора
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenCreate'
       responses:
-        200:
-          $ref: '#/components/responses/ReportInfo'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-        404:
-          $ref: '#/components/responses/NotFound'
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Token'
+        '400':
+          description: Не верные данные для авторизации
+      tags:
+      - Manager
+    parameters: []
+  /auth/token/logout:
+    post:
+      operationId: Remove user authentication token
+      description: Use this endpoint to logout user (remove user authentication token).
+      parameters: []
+      responses:
+        '204':
+          description: Успешно
+        '401':
+          description: Не авторизированный пользователь
+      tags:
+      - Manager
+    parameters: []
+  /bot_message/:
+    get:
+      operationId: bot_message_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/BotMessageList'
+      tags:
+      - bot_message
+    post:
+      operationId: bot_message_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/BotMessagesCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/BotMessagesCreate'
+      tags:
+      - bot_message
+    parameters: []
+  /bot_message/{id}/:
+    get:
+      operationId: bot_message_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/BotMessageList'
+      tags:
+      - bot_message
+    parameters:
+    - name: id
+      in: path
+      description: A UUID string identifying this Сообщение телеграм бота.
+      required: true
+      type: string
+      format: uuid
+  /merch_request/:
+    get:
+      operationId: merch_request_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MerchRequest'
+      tags:
+      - merch_request
+    parameters: []
+  /report/:
+    get:
+      operationId: report_list
+      description: ''
+      parameters:
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      - name: limit
+        in: query
+        description: Number of results to return per page.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/ReportList'
+      tags:
+      - report
+    parameters: []
+  /report/unread_reports/:
+    get:
+      operationId: report_unread_reports
+      description: ''
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      - name: limit
+        in: query
+        description: Number of results to return per page.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/ReportList'
+      tags:
+      - report
+    parameters: []
+  /report/{id}/:
+    get:
+      operationId: report_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ReportList'
+      tags:
+      - report
+    put:
+      operationId: report_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ReportUpdate'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ReportUpdate'
+      tags:
+      - report
     patch:
-      tags:
-        - Отчет
-      security:
-        - Token: [ ]
+      operationId: report_partial_update
+      description: ''
       parameters:
-        - name: report_id
-          required: true
-          in: path
-          description: ID отчета
-          schema:
-            type: string
-            format: uuid
-      description: обновить отчет амбассадора
-      requestBody:
-        description: 'Все поля являются не обязательными. Обновляются только заданные поля.'
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ReportUpdate'
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ReportUpdate'
       responses:
-        200:
-          $ref: '#/components/responses/ReportInfo'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-        404:
-          $ref: '#/components/responses/NotFound'
-
-  # Сообщения
-  /api/v1/ambassador/{ambassador_id}/messages/:
-    get:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ReportUpdate'
       tags:
-        - Амбассадор
-      security:
-        - Token: [ ]
+      - report
+    parameters:
+    - name: id
+      in: path
+      description: A UUID string identifying this Отчет о задании.
+      required: true
+      type: string
+      format: uuid
+  /statistic/ambassador_program/:
+    get:
+      operationId: statistic_ambassador_program_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AmbassadorProgram'
+      tags:
+      - statistic
+    parameters: []
+  /statistic/ambassador_status/:
+    get:
+      operationId: statistic_ambassador_status_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AmbassadorStat'
+      tags:
+      - statistic
+    parameters: []
+  /telegram_user/:
+    post:
+      operationId: telegram_user_create
+      description: ''
       parameters:
-        - name: ambassador_id
-          required: true
-          in: path
-          description: ID амбассадора/кандидата
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TelegramBotCreate'
+      responses:
+        '201':
+          description: ''
           schema:
-            type: string
-            format: uuid
-      description: Получить список сообщений амбассадора
-      responses:
-        200:
-          $ref: '#/components/responses/BotMessageList'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-        404:
-          $ref: '#/components/responses/NotFound'
-  /api/v1/pool_message/:
-    post:
+            $ref: '#/definitions/TelegramBotCreate'
       tags:
-        - Сообщения
-      security:
-        - Token: [ ]
-      description: Создать сообщение в пуле сообщений
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PoolMessageCreate'
-      responses:
-        200:
-          $ref: '#/components/responses/PoolMessage'
-        400:
-          $ref: '#/components/responses/ValidationError'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-  /api/v1/pool_message/{poll_message_id}/:
-    delete:
-      tags:
-        - Сообщения
-      security:
-        - Token: [ ]
-      description: Удалить сообщение из пула сообщений
-      parameters:
-        - name: poll_message_id
-          required: true
-          in: path
-          description: ID сообщения из пула сообщений
-          schema:
-            type: string
-            format: uuid
-      responses:
-        204:
-          description: 'OK'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-        404:
-          $ref: '#/components/responses/NotFound'
-  /api/v1/bot_message/:
-    post:
-      security:
-        - Token: [ ]
-      tags:
-        - Сообщения
-      description: Создать сообщение из телеграм бота
-      parameters: [ ]
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BotMessageCreate'
-      responses:
-        204:
-          description: 'OK'
-        400:
-          $ref: '#/components/responses/ValidationError'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-        404:
-          $ref: '#/components/responses/NotFound'
-    patch:
-      security:
-        - Token: [ ]
-      tags:
-        - Сообщения
-      description: Установить реакцию на сообщение от телеграм бота
-      parameters: [ ]
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BotMessageReaction'
-      responses:
-        204:
-          description: 'OK'
-        400:
-          $ref: '#/components/responses/ValidationError'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-        404:
-          $ref: '#/components/responses/NotFound'
-
-  # Telegram
-  /api/v1/telegram_user:
-    post:
-      security:
-        - Token: [ ]
-      tags:
-        - Telegram
-      description: Создать пользователя телеграм бота
-      parameters: [ ]
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TelegramUserCreate'
-      responses:
-        204:
-          description: 'OK'
-        400:
-          $ref: '#/components/responses/ValidationError'
-        401:
-          $ref: '#/components/responses/AuthenticationError'
-
-
-
-
-  # вспомогательные функции
-  /api/v1/utility/goals:
+      - telegram_user
+    parameters: []
+  /utility/achievies:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список целей обучения
+      operationId: utility_achievies_list
+      description: /api/v1/utility/achivies
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/GoalList'
-  /api/v1/utility/activities:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+  /utility/activities:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список активностей
+      operationId: utility_activities_list
+      description: /api/v1/utility/activities
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/ActivityList'
-  /api/v1/utility/achivies:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+  /utility/ambassador_statuses:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список ачивок
+      operationId: utility_ambassador_statuses_list
+      description: /api/v1/utility/ambassador_statuses
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/AchiveList'
-  /api/v1/utility/programs:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+  /utility/delivery_statuses:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список программ обучения
+      operationId: utility_delivery_statuses_list
+      description: /api/v1/utility/delivery_statuses
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/ProgramList'
-  /api/v1/utility/ambassador_statuses:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+  /utility/goals:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список статусов амбассадора
+      operationId: utility_goals_list
+      description: /api/v1/utility/goals
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/AmbassadorStatusList'
-  /api/v1/utility/placements:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+  /utility/message_statuses:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список площадок размешения
+      operationId: utility_message_statuses_list
+      description: /api/v1/utility/message_statuses
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/PlacementList'
-  /api/v1/utility/report_statuses:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+  /utility/message_types:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список статусов отчетов
+      operationId: utility_message_types_list
+      description: /api/v1/utility/message_types
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/ReportStatusList'
-  /api/v1/utility/report_types:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+  /utility/placements:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список типов отчетов
+      operationId: utility_placements_list
+      description: /api/v1/utility/placements
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/ReportTypeList'
-  /api/v1/utility/delivery_statuses:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+  /utility/pool_messages:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список статусов доставки
+      operationId: utility_pool_messages_list
+      description: /api/v1/utility/pool_messages
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/DeliveryStatusList'
-  /api/v1/utility/message_statuses:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+  /utility/programs:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список статусов сообщений
+      operationId: utility_programs_list
+      description: /api/v1/utility/programs
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/MessageStatusList'
-  /api/v1/utility/message_types:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+  /utility/report_statuses:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список типов сообщений
+      operationId: utility_report_statuses_list
+      description: /api/v1/utility/report_statuses
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/MessageTypeList'
-  /api/v1/utility/pool_messages:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+  /utility/report_types:
     get:
-      tags:
-        - Вспомогательные функции
-      description: Получить список сообщений из пула сообщений
+      operationId: utility_report_types_list
+      description: /api/v1/utility/report_types
+      parameters: []
       responses:
-        200:
-          $ref: '#/components/responses/PoolMessageList'
-
-components:
-  schemas:
-    TokenCreate:
-      type: object
-      properties:
-        email:
-          type: string
-        password:
-          type: string
-      required:
-        - password
-        - email
-    TokenGetResponse:
-      type: object
-      properties:
-        auth_token:
-          type: string
-    AuthorizationError:
-      description: Ошибка аутентификации
-      type: object
-      properties:
-        non_field_errors:
-          description: 'Описание ошибки'
-          example: "Невозможно войти с предоставленными учетными данными."
-          type: string
-    AuthenticationError:
-      description: Ошибка авторизации
-      type: object
-      properties:
-        detail:
-          description: 'Описание ошибки'
-          example: "Учетные данные не были предоставлены."
-          type: string
-    Goal:
-      description: Цель обучения
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID цели
-          example: '8440ce07-e1ce-4914-a1d0-d25b5ad9f161'
-        goal_name:
-          type: string
-          description: Название цели
-          example: 'Получение новой профессии'
-        available:
-          type: boolean
-          description: доступность для выбора
-          example: True
-    Activity:
-      description: Вид деятельности
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID вида деятельности
-          example: 'd65747f0-ede2-4ed9-8dcb-6b553370eaa7'
-        activity_name:
-          type: string
-          description: Название вида деятельности
-          example: 'Вести блог'
-        available:
-          type: boolean
-          description: доступность для выбора
-          example: True
-    Achive:
-      description: Ачивка
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID ачивки
-          example: '58cee7d5-f7a5-44d5-9ccf-5d6a1056dbc4'
-        achive_name:
-          type: string
-          description: Название ачивки
-          example: 'Друг'
-        available:
-          type: boolean
-          description: доступность для выбора
-          example: True
-    AmbassadorStatus:
-      description: Статус амбассадора
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID статуса амбассадора
-          example: '59116eca-9b39-4fb0-a985-2ce52b492176'
-        status_name:
-          type: string
-          description: Название статуса амбассадора
-          example: 'Активный'
-        sort_level:
-          type: integer
-          description: Уровень сортировки
-          example: 1
-        available:
-          type: boolean
-          description: доступность для выбора
-          example: True
-    TelegramUser:
-      description: Данные телеграм бота амбассадора
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID статуса амбассадора
-          example: 'dd60fa28-544b-43fb-9e7e-491aa16a14cf'
-        telegram_id:
-          type: string
-          description: Telegram ID амбассадора
-          example: '12345678'
-        nickname:
-          type: string
-          description: Telegram nickname амбассадора
-          example: 'superuser'
-        registration_date:
-          type: string
-          format: date
-          description: Дата запуска бота
-        active:
-          type: boolean
-          description: Доступность амбассадора в телеграм
-    TelegramUserCreate:
-      description: Данные телеграм бота амбассадора
-      type: object
-      properties:
-        telegram_id:
-          type: string
-          description: Telegram ID амбассадора
-          example: '12345678'
-        nickname:
-          type: string
-          description: Telegram nickname амбассадора
-          example: 'superuser'
-        registration_date:
-          type: string
-          format: date
-          description: Дата запуска бота
-    Placement:
-      description: Площадка размещения отчета
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID площадки
-          example: '4e3dfd98-d825-41de-a52a-7e41a8483a58'
-        site:
-          type: string
-          description: Название площадки
-          example: 'Хабр'
-        available:
-          type: boolean
-          description: доступность для выбора
-          example: True
-    ReportStatus:
-      description: Статус отчета
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID статуса отчета
-          example: '7bfcac94-a9ef-4358-b6b8-4c802fc09679'
-        status_name:
-          type: string
-          description: Название статуса
-          example: 'На рассмотрении'
-        available:
-          type: boolean
-          description: доступность для выбора
-          example: True
-    ReportType:
-      description: Тип отчета
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID типа отчета
-          example: '09b7216a-2f09-4fb3-a9c1-fd95bd33bb00'
-        type_name:
-          type: string
-          description: Название типа
-          example: 'Статья'
-        available:
-          type: boolean
-          description: доступность для выбора
-          example: True
-    DeliveryStatus:
-      description: Статус отправки
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID статуса отправки
-          example: '968fc610-7d8f-4944-acc6-db2b09f8ac12'
-        status_name:
-          type: string
-          description: Название статуса
-          example: 'Передан в службу доставки'
-        available:
-          type: boolean
-          description: доступность для выбора
-          example: True
-    MessageType:
-      description: Тип сообщения
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID типа сообщения
-          example: 'adc9f111-307a-4209-8f44-a54805d0f439'
-        type_name:
-          type: string
-          description: Название типа
-          example: 'Отчет по гайду'
-        available:
-          type: boolean
-          description: доступность для выбора
-          example: True
-    MessageStatus:
-      description: Статус сообщения
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID статуса сообщения
-          example: 'c38c4ca6-e78e-47ff-aaa9-de98a6cb0fbd'
-        status_name:
-          type: string
-          description: Название статуса
-          example: 'Шаблон'
-        available:
-          type: boolean
-          description: доступность для выбора
-          example: True
-    Manager:
-      description: Менеджер проекта
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID менеджера
-          example: '423a318e-6152-48f3-97b2-d2e6b77142f1'
-        first_name:
-          type: string
-          description: Имя менеджера
-          example: 'Иван'
-        last_name:
-          type: string
-          description: Фамилия менеджера
-          example: 'Иванов'
-        middle_name:
-          type: string
-          description: Отчество менеджера
-          example: 'Иван'
-        email:
-          type: string
-          format: email
-          description: E-mail менеджера
-          example: 'ivan@ivanov.ru'
-    AmbassadorShortInfo:
-      description: Краткая информация об амбассадоре
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID амбассадора
-          example: '435e536e-3e2e-4e6f-a8d8-5ac36d650bb4'
-        first_name:
-          description: Имя амбасадора
-          type: string
-          example: Иван
-        last_name:
-          description: Фамилия амбасадора
-          type: string
-          example: Иванов
-        middle_name:
-          description: Отчество амбасадора
-          type: string
-          example: Иванович
-        status:
-          $ref: '#/components/schemas/AmbassadorStatus'
-        promocode:
-          description: Промокод
-          type: string
-          example: '123456'
-        telegram:
-          $ref: '#/components/schemas/TelegramUser'
-        receipt_date:
-          description: Дата регистрации как амбассадора (для кандидата - пустое поле)
-          type: string
-          format: date
-        gender:
-          description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
-          type: integer
-          enum: [ 0, 1]
-          example: 0
-        address_country:
-          type: string
-          description: Страна проживания
-          example: 'Россия'
-        address_index:
-          type: string
-          description: Почтовый индекс
-          example: '123423'
-        address_region:
-          type: string
-          description: Регион/область
-          example: 'Москва'
-        address_district:
-          type: string
-          description: Район
-          example: 'Хорошёво-Мнёвники'
-        address_settlement:
-          type: string
-          description: Город
-          example: 'Москва'
-        address_street:
-          type: string
-          description: Улица
-          example: 'проспект Маршала Жукова'
-        address_house:
-          type: string
-          description: Дом
-          example: '45'
-        address_building:
-          type: string
-          description: Корпус
-          example: '1'
-        address_apartment:
-          type: string
-          description: Квартира
-          example: '12'
-        program:
-          $ref: '#/components/schemas/Program'
-    AmbassadorFullInfo:
-      description: Полная информация об амбассадоре
-      type: object
-      properties:
-        id:
+        '200':
+          description: ''
+      tags:
+      - utility
+    parameters: []
+definitions:
+  TelegramBot:
+    required:
+    - telegram_id
+    - nickname
+    - registration_date
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      telegram_id:
+        title: Telegram chat ID
+        type: string
+        maxLength: 100
+        minLength: 1
+      nickname:
+        title: Telegram Username
+        type: string
+        maxLength: 200
+        minLength: 1
+      registration_date:
+        title: Дата запуска бота пользователем
+        type: string
+        format: date-time
+      active:
+        title: Активный?
+        type: boolean
+  AmbassadorStatus:
+    required:
+    - status_name
+    - sort_level
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      status_name:
+        title: Статус амбассадора
+        type: string
+        maxLength: 200
+        minLength: 1
+      sort_level:
+        title: Уровень сортировки
+        type: integer
+      available:
+        title: Доступность
+        type: boolean
+  Program:
+    required:
+    - program_name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      program_name:
+        title: Название программы обучения
+        type: string
+        maxLength: 200
+        minLength: 1
+      available:
+        title: Доступна
+        type: boolean
+  Activity:
+    required:
+    - activity_name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      activity_name:
+        title: Вид деятельности
+        type: string
+        maxLength: 200
+        minLength: 1
+      available:
+        title: Доступность
+        type: boolean
+  Achieve:
+    required:
+    - achieve_name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      achieve_name:
+        title: Название ачивки
+        type: string
+        maxLength: 200
+        minLength: 1
+      available:
+        title: Доступна
+        type: boolean
+  Ambassador:
+    required:
+    - telegram_bot
+    - status
+    - address_country
+    - address_settlement
+    - email
+    - blog_link
+    - place_work
+    - specialty_work
+    - educational_institution
+    - first_name
+    - last_name
+    - gender
+    - birthday
+    - programs
+    - activity
+    - achieves
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      telegram_bot:
+        $ref: '#/definitions/TelegramBot'
+      status:
+        $ref: '#/definitions/AmbassadorStatus'
+      manager:
+        title: Менеджер
+        type: integer
+        x-nullable: true
+      promocode:
+        title: Промокод
+        type: string
+        maxLength: 255
+        x-nullable: true
+      receipt_date:
+        title: Дата принятия в амбассадоры
+        type: string
+        format: date
+        x-nullable: true
+      reminder_counter:
+        title: Счетчик напоминалок
+        type: integer
+      address_country:
+        title: Страна
+        type: string
+        maxLength: 50
+        minLength: 1
+      address_index:
+        title: Индекс
+        type: string
+        maxLength: 10
+        x-nullable: true
+      address_region:
+        title: Регион
+        type: string
+        maxLength: 50
+        x-nullable: true
+      address_district:
+        title: Район
+        type: string
+        maxLength: 50
+        x-nullable: true
+      address_settlement:
+        title: Населённый пункт
+        type: string
+        maxLength: 50
+        minLength: 1
+      address_street:
+        title: Улица
+        type: string
+        maxLength: 50
+        x-nullable: true
+      address_house:
+        title: Дом
+        type: integer
+      address_building:
+        title: Корпус
+        type: string
+        maxLength: 10
+        x-nullable: true
+      address_apartment:
+        title: Квартира
+        type: string
+        maxLength: 10
+        x-nullable: true
+      size_clothing:
+        title: Размер одежды
+        type: string
+        maxLength: 2
+        x-nullable: true
+      size_choe:
+        title: Размер обуви
+        type: integer
+      email:
+        title: Электронная почта
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      note:
+        title: Заметка
+        type: string
+        maxLength: 200
+        x-nullable: true
+      blog_link:
+        title: Ссылка на блог
+        type: string
+        format: uri
+        maxLength: 200
+        minLength: 1
+      place_work:
+        title: Место работы
+        type: string
+        maxLength: 200
+        minLength: 1
+      specialty_work:
+        title: Должность
+        type: string
+        maxLength: 100
+        minLength: 1
+      educational_institution:
+        title: Учебное заведение
+        type: string
+        maxLength: 200
+        minLength: 1
+      first_name:
+        title: Имя
+        type: string
+        maxLength: 50
+        minLength: 1
+      last_name:
+        title: Фамилия
+        type: string
+        maxLength: 50
+        minLength: 1
+      middle_name:
+        title: Отчество
+        type: string
+        maxLength: 50
+        x-nullable: true
+      gender:
+        title: Пол
+        type: string
+        maxLength: 50
+        minLength: 1
+      birthday:
+        title: Дата рождения
+        type: string
+        format: date
+      programs:
+        type: array
+        items:
+          $ref: '#/definitions/Program'
+      goals:
+        title: Goals
+        type: string
+        readOnly: true
+      activity:
+        type: array
+        items:
+          $ref: '#/definitions/Activity'
+      achieves:
+        type: array
+        items:
+          $ref: '#/definitions/Achieve'
+      phone:
+        title: Телефон
+        type: string
+        maxLength: 20
+        x-nullable: true
+  AmbassadorBotCreate:
+    required:
+    - telegram_id
+    - first_name
+    - last_name
+    - gender
+    - birthday
+    - programs
+    - goal
+    - email
+    - address_country
+    - address_settlement
+    type: object
+    properties:
+      telegram_id:
+        title: Telegram id
+        type: string
+        maxLength: 100
+        minLength: 1
+      first_name:
+        title: First name
+        type: string
+        maxLength: 50
+        minLength: 1
+      last_name:
+        title: Last name
+        type: string
+        maxLength: 50
+        minLength: 1
+      middle_name:
+        title: Middle name
+        type: string
+        maxLength: 50
+        minLength: 1
+      gender:
+        title: Gender
+        type: string
+        maxLength: 50
+        minLength: 1
+      birthday:
+        title: Birthday
+        type: string
+        format: date
+      programs:
+        type: array
+        items:
           type: string
           format: uuid
-          description: ID амбассадора
-          example: '435e536e-3e2e-4e6f-a8d8-5ac36d650bb4'
-        first_name:
-          description: Имя амбасадора
-          type: string
-          example: Иван
-        last_name:
-          description: Фамилия амбасадора
-          type: string
-          example: Иванов
-        middle_name:
-          description: Отчество амбасадора
-          type: string
-          example: Иванович
-        status:
-          $ref: '#/components/schemas/AmbassadorStatus'
-        promocode:
-          description: Промокод
-          type: string
-          example: '123456'
-        telegram_bot:
-          $ref: '#/components/schemas/TelegramUser'
-        gender:
-          description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
-          type: integer
-          enum: [ 0, 1]
-          example: 0
-        address_country:
-          type: string
-          description: Страна проживания
-          example: 'Россия'
-        address_index:
-          type: string
-          description: Почтовый индекс
-          example: '123423'
-        address_region:
-          type: string
-          description: Регион/область
-          example: 'Москва'
-        address_district:
-          type: string
-          description: Район
-          example: 'Хорошёво-Мнёвники'
-        address_settlement:
-          type: string
-          description: Город
-          example: 'Москва'
-        address_street:
-          type: string
-          description: Улица
-          example: 'проспект Маршала Жукова'
-        address_house:
-          type: string
-          description: Дом
-          example: '45'
-        address_building:
-          type: string
-          description: Корпус
-          example: '1'
-        address_apartment:
-          type: string
-          description: Квартира
-          example: '12'
-        manager:
-          $ref: '#/components/schemas/Manager'
-        receipt_date:
-          type: string
-          format: date
-          description: Дата приема в амбассадоры
-        remainder_counter:
-          type: integer
-          minimum: 0
-          description: Счетчик напоминаний
-          example: 1
-        size_clothing:
-          type: string
-          description: Размер одежды
-          example: 'М'
-        size_shoe:
-          type: number
-          description: Размер обуви
-          example: 37.5
-        phone_number:
-          type: string
-          pattern: \+7[0-9]{3}[0-9]{3}[0-9]{2}[0-9]{2}
-          description: Номер телефона
-          example: '+79999999999'
-        email:
-          type: string
-          format: email
-          description: Адрес электронной почты
-          example: 'ivan@ivanov.ru'
-        note:
-          type: string
-          description: Заметка
-          example: 'Просто класный амбассадор'
-        blog_link:
-          type: string
-          format: uri
-          description: Ссылка на блог
-          example: 'http://ivanov.ru/blog'
-        place_work:
-          type: string
-          description: Место работы
-          example: 'Частная компания'
-        specialty_work:
-          type: string
-          description: Должность/специальность
-          example: 'Генеральный директор'
-        educational_institution:
-          type: string
-          description: Учебное заведение
-          example: 'МГУ'
-        goal:
-          type: object
-          properties:
-            goal:
-              $ref: '#/components/schemas/Goal'
-            own_version:
-              type: string
-              description: Свой вариант
-              example: 'Модное веяние'
-        activities:
-          type: array
-          items:
-            $ref: '#/components/schemas/Activity'
-        achivies:
-          type: array
-          items:
-            $ref: '#/components/schemas/Achive'
-        program:
-          $ref: '#/components/schemas/Program'
-    AmbassadorUpdate:
-      description: Обновление информации об амбассадоре
-      type: object
-      properties:
-        first_name:
-          description: Имя амбасадора
-          type: string
-          example: Иван
-        last_name:
-          description: Фамилия амбасадора
-          type: string
-          example: Иванов
-        middle_name:
-          description: Отчество амбасадора
-          type: string
-          example: Иванович
-        status:
-          type: string
-          format: uuid
-          description: ID статуса
-          example: '14924fa0-b3c8-4abc-9771-f5d6e05496cb'
-        promocode:
-          description: Промокод
-          type: string
-          example: '123456'
-        gender:
-          description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
-          type: integer
-          enum: [ 0, 1]
-          example: 0
-        address_country:
-          type: string
-          description: Страна проживания
-          example: 'Россия'
-        address_index:
-          type: string
-          description: Почтовый индекс
-          example: '123423'
-        address_region:
-          type: string
-          description: Регион/область
-          example: 'Москва'
-        address_district:
-          type: string
-          description: Район
-          example: 'Хорошёво-Мнёвники'
-        address_settlement:
-          type: string
-          description: Город
-          example: 'Москва'
-        address_street:
-          type: string
-          description: Улица
-          example: 'проспект Маршала Жукова'
-        address_house:
-          type: string
-          description: Дом
-          example: '45'
-        address_building:
-          type: string
-          description: Корпус
-          example: '1'
-        address_apartment:
-          type: string
-          description: Квартира
-          example: '12'
-        receipt_date:
-          type: string
-          format: date
-          description: Дата приема в амбассадоры
-        remainder_counter:
-          type: integer
-          minimum: 0
-          description: Счетчик напоминаний
-          example: 1
-        size_clothing:
-          type: string
-          description: Размер одежды
-          example: 'М'
-        size_shoe:
-          type: number
-          description: Размер обуви
-          example: 37.5
-        phone_number:
-          type: string
-          pattern: \+7[0-9]{3}[0-9]{3}[0-9]{2}[0-9]{2}
-          description: Номер телефона
-          example: '+79999999999'
-        email:
-          type: string
-          format: email
-          description: Адрес электронной почты
-          example: 'ivan@ivanov.ru'
-        note:
-          type: string
-          description: Заметка
-          example: 'Просто класный амбассадор'
-        blog_link:
-          type: string
-          format: uri
-          description: Ссылка на блог
-          example: 'http://ivanov.ru/blog'
-        place_work:
-          type: string
-          description: Место работы
-          example: 'Частная компания'
-        specialty_work:
-          type: string
-          description: Должность/специальность
-          example: 'Генеральный директор'
-        educational_institution:
-          type: string
-          description: Учебное заведение
-          example: 'МГУ'
-        goal:
-          type: object
-          properties:
-            goal:
-              type: string
-              format: uuid
-              description: ID цели
-              example: '8440ce07-e1ce-4914-a1d0-d25b5ad9f161'
-            own_version:
-              type: string
-              description: Свой вариант
-              example: 'Модное веяние'
-        activities:
-          type: array
-          items:
-            type: string
-            format: uuid
-            description: ID активности
-            example: '15bf0dee-267a-4e8b-9de8-1b5b9fb55dfe'
-        achivies:
-          type: array
-          items:
-            type: string
-            format: uuid
-            description: ID ачивки
-            example: 'da129117-69f2-404c-8ab0-728b106a8926'
-        program:
+      goal:
+        title: Goal
+        type: string
+        format: uuid
+      phone:
+        title: Phone
+        type: string
+        maxLength: 20
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1
+      size_clothing:
+        title: Size clothing
+        type: string
+        maxLength: 2
+        minLength: 1
+      size_choe:
+        title: Size choe
+        type: integer
+        default: 0
+      address_index:
+        title: Address index
+        type: string
+        maxLength: 10
+        minLength: 1
+      address_country:
+        title: Address country
+        type: string
+        maxLength: 50
+        minLength: 1
+      address_region:
+        title: Address region
+        type: string
+        maxLength: 50
+        minLength: 1
+      address_district:
+        title: Address district
+        type: string
+        maxLength: 50
+        minLength: 1
+      address_settlement:
+        title: Address settlement
+        type: string
+        maxLength: 50
+        minLength: 1
+      address_street:
+        title: Address street
+        type: string
+        maxLength: 50
+        minLength: 1
+      address_house:
+        title: Address house
+        type: integer
+        minimum: 0
+      address_building:
+        title: Address building
+        type: string
+        maxLength: 10
+        minLength: 1
+      address_apartment:
+        title: Address apartment
+        type: string
+        maxLength: 10
+        minLength: 1
+      promocode:
+        title: Promocode
+        type: string
+        maxLength: 255
+        minLength: 1
+      own_version:
+        title: Own version
+        type: string
+        maxLength: 250
+        minLength: 1
+  AmbassadorUpdate:
+    required:
+    - status
+    - address_country
+    - address_settlement
+    - email
+    - blog_link
+    - place_work
+    - specialty_work
+    - educational_institution
+    - first_name
+    - last_name
+    - gender
+    - birthday
+    - programs
+    - goals
+    type: object
+    properties:
+      status:
+        title: Статус
+        type: string
+        format: uuid
+      manager:
+        title: Менеджер
+        type: integer
+        x-nullable: true
+      promocode:
+        title: Промокод
+        type: string
+        maxLength: 255
+        x-nullable: true
+      receipt_date:
+        title: Дата принятия в амбассадоры
+        type: string
+        format: date
+        x-nullable: true
+      reminder_counter:
+        title: Счетчик напоминалок
+        type: integer
+      address_country:
+        title: Страна
+        type: string
+        maxLength: 50
+        minLength: 1
+      address_index:
+        title: Индекс
+        type: string
+        maxLength: 10
+        x-nullable: true
+      address_region:
+        title: Регион
+        type: string
+        maxLength: 50
+        x-nullable: true
+      address_district:
+        title: Район
+        type: string
+        maxLength: 50
+        x-nullable: true
+      address_settlement:
+        title: Населённый пункт
+        type: string
+        maxLength: 50
+        minLength: 1
+      address_street:
+        title: Улица
+        type: string
+        maxLength: 50
+        x-nullable: true
+      address_house:
+        title: Дом
+        type: integer
+      address_building:
+        title: Корпус
+        type: string
+        maxLength: 10
+        x-nullable: true
+      address_apartment:
+        title: Квартира
+        type: string
+        maxLength: 10
+        x-nullable: true
+      size_clothing:
+        title: Размер одежды
+        type: string
+        maxLength: 2
+        x-nullable: true
+      size_choe:
+        title: Размер обуви
+        type: integer
+      email:
+        title: Электронная почта
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      note:
+        title: Заметка
+        type: string
+        maxLength: 200
+        x-nullable: true
+      blog_link:
+        title: Ссылка на блог
+        type: string
+        format: uri
+        maxLength: 200
+        minLength: 1
+      place_work:
+        title: Место работы
+        type: string
+        maxLength: 200
+        minLength: 1
+      specialty_work:
+        title: Должность
+        type: string
+        maxLength: 100
+        minLength: 1
+      educational_institution:
+        title: Учебное заведение
+        type: string
+        maxLength: 200
+        minLength: 1
+      first_name:
+        title: Имя
+        type: string
+        maxLength: 50
+        minLength: 1
+      last_name:
+        title: Фамилия
+        type: string
+        maxLength: 50
+        minLength: 1
+      middle_name:
+        title: Отчество
+        type: string
+        maxLength: 50
+        x-nullable: true
+      gender:
+        title: Пол
+        type: string
+        maxLength: 50
+        minLength: 1
+      birthday:
+        title: Дата рождения
+        type: string
+        format: date
+      programs:
+        type: array
+        items:
           type: string
           format: uuid
-          description: ID программы обучения
-          example: 'a40bd4e6-5f6d-4f47-9261-90a7a0186171'
-    AmbassadorCreate:
-      description: Обновление информации об амбассадоре
-      type: object
-      properties:
-        telegram_id:
-          description: Telegram ID амбассадора
-          type: string
-          example: '12345678'
-        first_name:
-          description: Имя амбасадора
-          type: string
-          example: Иван
-        last_name:
-          description: Фамилия амбасадора
-          type: string
-          example: Иванов
-        middle_name:
-          description: Отчество амбасадора
-          type: string
-          example: Иванович
-        promocode:
-          description: Промокод
-          type: string
-          example: '123456'
-        gender:
-          description: Пол амбассадора (0 - Мужчины, 1 - Женщины)
-          type: integer
-          enum: [ 0, 1]
-          example: 0
-        address_country:
-          type: string
-          description: Страна проживания
-          example: 'Россия'
-        address_index:
-          type: string
-          description: Почтовый индекс
-          example: '123423'
-        address_region:
-          type: string
-          description: Регион/область
-          example: 'Москва'
-        address_district:
-          type: string
-          description: Район
-          example: 'Хорошёво-Мнёвники'
-        address_settlement:
-          type: string
-          description: Город
-          example: 'Москва'
-        address_street:
-          type: string
-          description: Улица
-          example: 'проспект Маршала Жукова'
-        address_house:
-          type: string
-          description: Дом
-          example: '45'
-        address_building:
-          type: string
-          description: Корпус
-          example: '1'
-        address_apartment:
-          type: string
-          description: Квартира
-          example: '12'
-        size_clothing:
-          type: string
-          description: Размер одежды
-          example: 'М'
-        size_shoe:
-          type: number
-          description: Размер обуви
-          example: 37.5
-        phone_number:
-          type: string
-          pattern: \+7[0-9]{3}[0-9]{3}[0-9]{2}[0-9]{2}
-          description: Номер телефона
-          example: '+79999999999'
-        email:
-          type: string
-          format: email
-          description: Адрес электронной почты
-          example: 'ivan@ivanov.ru'
-        blog_link:
-          type: string
-          format: uri
-          description: Ссылка на блог
-          example: 'http://ivanov.ru/blog'
-        place_work:
-          type: string
-          description: Место работы
-          example: 'Частная компания'
-        specialty_work:
-          type: string
-          description: Должность/специальность
-          example: 'Генеральный директор'
-        educational_institution:
-          type: string
-          description: Учебное заведение
-          example: 'МГУ'
-        goal:
-          type: object
-          properties:
-            goal:
-              type: string
-              format: uuid
-              description: ID цели
-              example: '8440ce07-e1ce-4914-a1d0-d25b5ad9f161'
-            own_version:
-              type: string
-              description: Свой вариант
-              example: 'Модное веяние'
-        activities:
-          type: array
-          items:
-            type: string
-            format: uuid
-            description: ID активности
-            example: '15bf0dee-267a-4e8b-9de8-1b5b9fb55dfe'
-        program:
+      goals:
+        title: Goals
+        type: string
+        format: uuid
+      activity:
+        type: array
+        items:
           type: string
           format: uuid
-          description: ID программы обучения
-          example: 'a40bd4e6-5f6d-4f47-9261-90a7a0186171'
-    NotFound:
-      description: Объект не найден
-      type: object
-      properties:
-        detail:
-          description: 'Описание ошибки'
-          example: "Страница не найдена."
-          type: string
-    ValidationError:
-      description: Стандартные ошибки валидации DRF
-      type: object
-      properties:
-        field_name:
-          description: 'Название поля, в котором произошли ошибки. Таких полей может быть несколько'
-          example: [ 'Обязательное поле.' ]
-          type: array
-          items:
-            type: string
-    ReportInfo:
-      description: Отчет амбассадора
-      type: object
-      properties:
-        id:
+      achieves:
+        type: array
+        items:
           type: string
           format: uuid
-          description: ID отчета
-          example: 'f2271f55-44bb-4551-a5fb-804c9d8561c8'
-        report_date:
-          type: string
-          format: date
-          description: Дата отчета
-        content_link:
-          type: string
-          format: uri
-          description: Ссылка на контент отчета
-          example: 'http://ivanov.ru/blog/first_report'
-        screen:
-          description: 'Картинка, закодированная в Base64'
-          example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=='
-          type: string
-          format: binary
-        placement:
-          $ref: '#/components/schemas/Placement'
-        report_status:
-          $ref: '#/components/schemas/ReportStatus'
-        sign_junior:
-          description: Признак начинающего амбассадора
-          type: boolean
-          example: True
-        grade:
-          description: Оценка отчета
-          type: integer
-          minimum: 1
-          maximum: 10
-          example: 8
-        report_type:
-          $ref: '#/components/schemas/ReportType'
-    ReportUpdate:
-      description: Обновление отчета амбассадора
-      type: object
-      properties:
-        report_status:
+      phone:
+        title: Телефон
+        type: string
+        maxLength: 20
+        x-nullable: true
+      own_version:
+        title: Own version
+        type: string
+        maxLength: 250
+        minLength: 1
+  TokenCreate:
+    type: object
+    properties:
+      password:
+        title: Password
+        type: string
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        minLength: 1
+  Token:
+    required:
+    - auth_token
+    type: object
+    properties:
+      auth_token:
+        title: Auth token
+        type: string
+        minLength: 1
+  MessageType:
+    required:
+    - type_name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      type_name:
+        title: Тип сообщения
+        type: string
+        maxLength: 200
+        minLength: 1
+      available:
+        title: Доступность
+        type: boolean
+  Message:
+    required:
+    - message_text
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      message_text:
+        title: Текст сообщения
+        type: string
+        maxLength: 250
+        minLength: 1
+      media_link:
+        title: Медиа файл
+        type: string
+        readOnly: true
+        x-nullable: true
+        format: uri
+      date:
+        title: Дата сообщения
+        type: string
+        format: date-time
+        x-nullable: true
+      message_type:
+        $ref: '#/definitions/MessageType'
+  AmbassadorShort:
+    required:
+    - status
+    - email
+    - first_name
+    - last_name
+    - gender
+    - birthday
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      status:
+        $ref: '#/definitions/AmbassadorStatus'
+      manager:
+        title: Менеджер
+        type: integer
+        x-nullable: true
+      promocode:
+        title: Промокод
+        type: string
+        maxLength: 255
+        x-nullable: true
+      receipt_date:
+        title: Дата принятия в амбассадоры
+        type: string
+        format: date
+        x-nullable: true
+      reminder_counter:
+        title: Счетчик напоминалок
+        type: integer
+      email:
+        title: Электронная почта
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      first_name:
+        title: Имя
+        type: string
+        maxLength: 50
+        minLength: 1
+      last_name:
+        title: Фамилия
+        type: string
+        maxLength: 50
+        minLength: 1
+      middle_name:
+        title: Отчество
+        type: string
+        maxLength: 50
+        x-nullable: true
+      gender:
+        title: Пол
+        type: string
+        maxLength: 50
+        minLength: 1
+      birthday:
+        title: Дата рождения
+        type: string
+        format: date
+      phone:
+        title: Телефон
+        type: string
+        maxLength: 20
+        x-nullable: true
+      size_clothing:
+        title: Размер одежды
+        type: string
+        maxLength: 2
+        x-nullable: true
+      size_choe:
+        title: Размер обуви
+        type: integer
+      note:
+        title: Заметка
+        type: string
+        maxLength: 200
+        x-nullable: true
+  Manager:
+    required:
+    - first_name
+    - last_name
+    - email
+    - username
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      first_name:
+        title: Имя
+        type: string
+        maxLength: 255
+        minLength: 1
+      last_name:
+        title: Фамилия
+        type: string
+        maxLength: 255
+        minLength: 1
+      middle_name:
+        title: Отчество
+        type: string
+        maxLength: 255
+        x-nullable: true
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      username:
+        title: Имя пользователя
+        type: string
+        maxLength: 150
+        minLength: 1
+  BotMessageList:
+    required:
+    - message
+    - ambassador
+    - manager
+    - sign_ai
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      message:
+        $ref: '#/definitions/Message'
+      ambassador:
+        $ref: '#/definitions/AmbassadorShort'
+      manager:
+        $ref: '#/definitions/Manager'
+      sign_ai:
+        title: Искусственный интеллект
+        type: boolean
+      message_telegram_id:
+        title: Номер сообщения в телеграм
+        type: string
+        maxLength: 50
+      reaction:
+        title: Реация на сообщение
+        type: integer
+        enum:
+        - -1
+        - 0
+        - 1
+  BotMessagesCreate:
+    required:
+    - message_text
+    type: object
+    properties:
+      message_text:
+        title: Message text
+        type: string
+        maxLength: 250
+        minLength: 1
+      ambassadors:
+        type: array
+        items:
           type: string
           format: uuid
-          description: ID статуса отчета
-          example: '5438731f-7cd6-49a9-a595-f79714942953'
-        grade:
-          description: Оценка отчета
-          type: integer
-          minimum: 1
-          maximum: 10
-          example: 8
-    ReportCreate:
-      description: Создание отчета амбассадора
-      type: object
-      properties:
-        telegram_id:
-          description: Telegram ID амбассадора
-          type: string
-          example: '12345678'
-        report_date:
-          type: string
-          format: date
-          description: Дата отчета
-        content_link:
-          type: string
-          format: uri
-          description: Ссылка на контент отчета
-          example: 'http://ivanov.ru/blog/first_report'
-        screen:
-          description: 'Картинка, закодированная в Base64'
-          example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=='
-          type: string
-          format: binary
-        placement:
-          type: string
-          format: uuid
-          description: ID площадки
-          example: '56298889-fc98-4cc3-8779-19df6d5820a3'
-        sign_junior:
-          description: Признак начинающего амбассадора
-          type: boolean
-          example: True
-        report_type:
-          type: string
-          format: uuid
-          description: ID типа отчета
-          example: '8bd8b1d0-95e2-461a-929f-956d7d5f8d20'
-      required:
-        - telegram_id
-        - report_date
-        - content_link
-        - sign_junior
-        - report_type
-        - placement
-    Program:
-      description: Программа обучения
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID программы обучения
-          example: 'a40bd4e6-5f6d-4f47-9261-90a7a0186171'
-        program_name:
-          type: string
-          description: Название программы обучения
-          example: 'Web design'
-        available:
-          type: boolean
-          description: доступность для выбора
-          example: True
-    Message:
-      description: Сообщение
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID сообщения
-          example: 'd8fda9fd-9406-4cd7-a7d7-1730ad2d55c7'
-        message_text:
-          type: string
-          description: Тест сообщения
-          example: 'Это сообщение от менеджера.'
-        media_link:
-          type: string
-          description: Ссылка на медиа в сообщении
-          example: '/media/messages/image1.jpg'
-        date:
-          type: string
-          format: datetime
-          description: Дата и время сообщения
-        message_type:
-          $ref: '#/components/schemas/MessageType'
-    BotMessage:
-      description: Сообщение бота
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID сообщения
-          example: '87dde840-3c21-4c88-b67a-509204161b0c'
-        message:
-          $ref: '#/components/schemas/Message'
-        from_bot:
-          type: boolean
-          description: Признак сообщения от бота (True) или менеджера (False)
-          example: True
-        manager:
-          $ref: '#/components/schemas/Manager'
-        sign_ai:
-          type: boolean
-          description: Признак, что сообщение сгенерировано ИИ
-          example: False
-        message_telegram_id:
-          type: string
-          description: ID сообщения в телеграмме
-          example: '456'
-        reaction:
-          type: integer
-          enum: [ -1, 0, 1 ]
-          description: Реакция (-1 - дизлайк, 0 - нет, 1 - лайк)
-          example: 1
-    PoolMessage:
-      description: Сообщение из пула сообщений
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: ID сообщения
-          example: '0f4b6aca-1bee-4c9c-ae74-e414582d20c3'
-        message:
-          $ref: '#/components/schemas/Message'
-        message_status:
-          $ref: '#/components/schemas/MessageStatus'
-        send_date:
-          type: string
-          format: datetime
-          description: Дата и время отправки отложенного сообщения
-    PoolMessageCreate:
-      description: Создание сообщения в пуле сообщений
-      type: object
-      properties:
-        message:
-          type: object
-          properties:
-            message_text:
-              type: string
-              description: Тест сообщения
-              example: 'Это сообщение от менеджера.'
-            message_type:
-              type: string
-              format: uuid
-              description: ID типа сообщения
-              example: '7987e39a-162b-4fbf-bd1d-dba01a4ad565'
-          required:
-            - message_text
-            - message_type
-        message_status:
-          type: string
-          format: uuid
-          description: ID статуса сообщения
-          example: '7424fccd-ae47-4ba1-8c0e-623a14974cc5'
-        send_date:
-          type: string
-          format: datetime
-          description: Дата и время отправки отложенного сообщения
-      required:
-        - message
-        - message_status
-    BotMessageCreate:
-      description: Создание сообщения от телеграм бота
-      type: object
-      properties:
-        ambassador_telegram_id:
-          description: ID амбассадора в телеграм
-          type: string
-          example: '12345678'
-        telegram_message_id:
-          description: ID сообщения в телеграм
-          type: string
-          example: '345'
-        message_text:
-          description: Текст сообщения из телеграм
-          type: string
-          example: 'Это сообщение из телеграм'
-        media_link:
-          description: 'Media файл, закодированный в Base64'
-          example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=='
-          type: string
-          format: binary
-        date:
-          description: Дата сообщения
-          type: string
-          format: datetime
-        sign_ai:
-          description: Признак сообщения от ИИ
-          type: boolean
-          example: False
-      required:
-        - ambassador_telegram_id
-        - telegram_message_id
-        - message_text
-        - date
-    BotMessageReaction:
-      description: Реакция на сообщение от телеграм бота
-      type: object
-      properties:
-        ambassador_telegram_id:
-          description: ID амбассадора в телеграм
-          type: string
-          example: '12345678'
-        telegram_message_id:
-          description: ID сообщения в телеграм
-          type: string
-          example: '345'
-        reaction:
-          type: integer
-          enum: [ -1, 0, 1 ]
-          description: Реакция (-1 - дизлайк, 0 - нет, 1 - лайк)
-          example: 1
-      required:
-        - ambassador_telegram_id
-        - telegram_message_id
-        - reaction
-
-  responses:
-    AuthorizationError:
-      description: Ошибка авторизации
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AuthorizationError'
-    AuthenticationError:
-      description: Ошибка аутентификации
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AuthenticationError'
-    GoalList:
-      description: Список целей обучения
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Goal'
-    ActivityList:
-      description: Список видов деятельности
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Activity'
-    AchiveList:
-      description: Список доступных ачивок
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Achive'
-    AmbassadorStatusList:
-      description: Список статусов амбассадора
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/AmbassadorStatus'
-    PlacementList:
-      description: Список площадок
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Placement'
-    ReportStatusList:
-      description: Список статусов отчета
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ReportStatus'
-    ReportTypeList:
-      description: Список типов отчета
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ReportType'
-    DeliveryStatusList:
-      description: Список статусов доставки
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/DeliveryStatus'
-    MessageTypeList:
-      description: Список типов сообщения
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/MessageType'
-    MessageStatusList:
-      description: Список статусов отчета
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/MessageStatus'
-    ManagerList:
-      description: Список менеджеров
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Manager'
-    AmbassadorList:
-      description: Список амбассадоров
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/AmbassadorShortInfo'
-    AmbassadorFullInfo:
-      description: Полная информация об амбассадоре
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AmbassadorFullInfo'
-    AmbassadorCreate:
-      description: Полная информация об амбассадоре
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AmbassadorShortInfo'
-    NotFound:
-      description: Объект не найден
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFound'
-    ValidationError:
-      description: 'Ошибки валидации в стандартном формате DRF'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ValidationError'
-    ReportList:
-      description: Список отчетов амбассадора
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ReportInfo'
-    ReportUpdate:
-      description: Список отчетов амбассадора
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ReportInfo'
-    ReportInfo:
-      description: Список отчетов амбассадора
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ReportInfo'
-    ReportCreate:
-      description: Список отчетов амбассадора
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ReportInfo'
-    ProgramList:
-      description: Список программ обучения
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Program'
-    BotMessageList:
-      description: Список сообщений амбассадора
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/BotMessage'
-    PoolMessageList:
-      description: Список сообщений из пула сообщений
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/PoolMessage'
-    PoolMessage:
-      description: Сообщение из пула сообщений
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PoolMessage'
-
-
-  securitySchemes:
-    Token:
-      description: 'Авторизация по токену.<br> Все запросы от имени пользователя должны выполняться с заголовком "Authorization: Token TOKENVALUE"'
-      type: http
-      scheme: bearer
-      bearerFormat: Token
+  Merch:
+    required:
+    - merch_name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      merch_name:
+        title: Название мерча
+        type: string
+        maxLength: 200
+        minLength: 1
+      price:
+        title: Цена
+        type: string
+        format: decimal
+      intangible:
+        title: Признак нематериального мерча
+        type: boolean
+      available:
+        title: Доступен мерч
+        type: boolean
+  DeliveryStatus:
+    required:
+    - status_name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      status_name:
+        title: Статус доставки
+        type: string
+        maxLength: 200
+        minLength: 1
+      available:
+        title: Доступность
+        type: boolean
+  DeliveryAddress:
+    required:
+    - index
+    - settlement
+    - house
+    - country
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      is_confirmed:
+        title: Адрес подтвержден?
+        type: boolean
+      index:
+        title: Почтовый индекс
+        description: Укажите шестизначный почтовый индекс.
+        type: string
+        maxLength: 255
+        minLength: 1
+      region:
+        title: Область
+        description: Введите название области или края.
+        type: string
+        maxLength: 255
+      district:
+        title: Район
+        description: Заполните название района, округа или города.
+        type: string
+        maxLength: 255
+      settlement:
+        title: Населенный пункт
+        description: Укажите название поселка, села, деревни или города
+        type: string
+        maxLength: 255
+        minLength: 1
+      street:
+        title: Улица
+        description: Введите название улицы или проспекта.
+        type: string
+        maxLength: 255
+      house:
+        title: Дом
+        description: Заполните номер дома.
+        type: string
+        maxLength: 255
+        minLength: 1
+      building:
+        title: Корпус
+        description: Укажите номер корпуса (если есть).
+        type: string
+        maxLength: 255
+      country:
+        title: Страна
+        description: Укажите страну
+        type: string
+        maxLength: 255
+        minLength: 1
+      apartment:
+        title: Квартира
+        description: Заполните номер квартиры (если есть).
+        type: string
+        maxLength: 255
+  MerchRequest:
+    required:
+    - merch
+    - manager
+    - request_status
+    - delivery_address
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      merch:
+        $ref: '#/definitions/Merch'
+      manager:
+        $ref: '#/definitions/Manager'
+      request_status:
+        $ref: '#/definitions/DeliveryStatus'
+      delivery_address:
+        $ref: '#/definitions/DeliveryAddress'
+      ambassadors:
+        title: Ambassadors
+        type: string
+        readOnly: true
+  Placement:
+    required:
+    - site
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      site:
+        title: Площадка размещения контента
+        type: string
+        maxLength: 200
+        minLength: 1
+      available:
+        title: Доступность
+        type: boolean
+  ReportStatus:
+    required:
+    - status_name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      status_name:
+        title: Статус отчета
+        type: string
+        maxLength: 200
+        minLength: 1
+      available:
+        title: Доступность
+        type: boolean
+  ReportType:
+    required:
+    - type_name
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      type_name:
+        title: Вид задания
+        type: string
+        maxLength: 200
+        minLength: 1
+      available:
+        title: Доступность
+        type: boolean
+  ReportList:
+    required:
+    - ambassador
+    - report_date
+    - content_link
+    - placement
+    - report_status
+    - report_type
+    type: object
+    properties:
+      id:
+        title: ID Отчета
+        type: string
+        format: uuid
+        readOnly: true
+      ambassador:
+        $ref: '#/definitions/AmbassadorShort'
+      report_date:
+        title: Дата отчета
+        type: string
+        format: date
+      content_link:
+        title: Ссылка на контент
+        description: Добавьте ссылку на контент
+        type: string
+        format: uri
+        maxLength: 200
+        minLength: 1
+      screen:
+        title: Скриншот
+        type: string
+        readOnly: true
+        x-nullable: true
+        format: uri
+      placement:
+        $ref: '#/definitions/Placement'
+      report_status:
+        $ref: '#/definitions/ReportStatus'
+      sign_junior:
+        title: Начинающий амбассадор?
+        type: boolean
+      grade:
+        title: Grade
+        type: integer
+      report_type:
+        $ref: '#/definitions/ReportType'
+  ReportUpdate:
+    type: object
+    properties:
+      report_status:
+        title: Report status
+        type: string
+        format: uuid
+        x-nullable: true
+      grade:
+        title: Grade
+        type: integer
+  AmbassadorProgram:
+    required:
+    - program_name
+    - count
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      program_name:
+        title: Название программы обучения
+        type: string
+        maxLength: 200
+        minLength: 1
+      available:
+        title: Доступна
+        type: boolean
+      count:
+        title: Count
+        type: integer
+  AmbassadorStat:
+    required:
+    - status_name
+    - sort_level
+    - count
+    type: object
+    properties:
+      id:
+        title: Id
+        type: string
+        format: uuid
+        readOnly: true
+      status_name:
+        title: Статус амбассадора
+        type: string
+        maxLength: 200
+        minLength: 1
+      sort_level:
+        title: Уровень сортировки
+        type: integer
+      available:
+        title: Доступность
+        type: boolean
+      count:
+        title: Count
+        type: integer
+  TelegramBotCreate:
+    required:
+    - telegram_id
+    - nickname
+    type: object
+    properties:
+      telegram_id:
+        title: Telegram id
+        type: string
+        maxLength: 100
+        minLength: 1
+      nickname:
+        title: Nickname
+        type: string
+        maxLength: 200
+        minLength: 1
+      registration_date:
+        title: Registration date
+        type: string
+        format: date-time
+        default: '2024-03-10T21:35:59.265559Z'
