@@ -1,6 +1,6 @@
 from django.db import models
 
-from ambassador.models import AmbassadorStatus
+from ambassador.models import AmbassadorStatus, Goal
 from crm_messages.models import MessageStatus, MessageType
 from merches.models import DeliveryStatus
 from reports.models import ReportStatus, ReportType
@@ -43,6 +43,11 @@ class CrmSettings(models.Model):
         ReportType,
         on_delete=models.PROTECT,
         null=True, blank=True
+    )
+    goal_own_version = models.OneToOneField(
+        Goal,
+        on_delete=models.PROTECT,
+        null=False, blank=False,
     )
     date = models.DateTimeField(
         auto_now_add=True,
