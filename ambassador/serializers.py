@@ -21,6 +21,7 @@ from .models import (
     AmbassadorProgram,
     AmbassadorStatus,
     Goal,
+    Program,
 )
 
 
@@ -349,3 +350,19 @@ class AmbassadorBotCreateSerializer(serializers.Serializer):
             context={'request': self.context.get('request')},
         )
         return serializer.data
+
+
+class AmbassadorProgramSerializer(serializers.ModelSerializer):
+    count = serializers.IntegerField(source='programs.count')
+
+    class Meta:
+        model = Program
+        fields = ('id', 'program_name', 'available', 'count')
+
+
+class AmbassadorStatSerializer(serializers.ModelSerializer):
+    count = serializers.IntegerField(source='ambassadors.count')
+
+    class Meta:
+        model = AmbassadorStatus
+        fields = ('id', 'status_name', 'sort_level', 'available', 'count')
