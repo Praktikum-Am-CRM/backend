@@ -43,7 +43,7 @@ services:
       - ../frontend/static/:/var/html/static/
       - ./cert/:/cert/
     depends_on:
-      - django
+      - backend
 
 
 volumes:

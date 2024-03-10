@@ -32,7 +32,7 @@ jobs:
       - name: Build image and push it
         uses: docker/build-push-action@v5
         with:
-          context: ./bot
+          context: ./
           push: true
           tags: ${{ secrets.DOCKER_REPO_USERNAME }}/yaambcrm_backend:latest
 
