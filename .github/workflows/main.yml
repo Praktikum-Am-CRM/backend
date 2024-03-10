@@ -3,14 +3,14 @@ name: Yandex ambassador CRM backend
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build_backend_image_and_push_to_dockerhub:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     name: Build docker backend image and push to Docker Hub
     runs-on: ubuntu-latest
 
@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: main
 
       - name: Setup docker buildx
         uses: docker/setup-buildx-action@v3
