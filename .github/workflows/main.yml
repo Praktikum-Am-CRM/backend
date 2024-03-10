@@ -97,7 +97,7 @@ jobs:
             echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
             echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} >> .env
             echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> .env
-            echo ENGINE=${{ secrets.ENGINE }} > .env
+            echo ENGINE=${{ secrets.ENGINE }} >> .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             echo DEBUG=${{ secrets.DEBUG }} >> .env
             echo USE_POSTGRES_DB=${{ secrets.USE_POSTGRES_DB }} >> .env
