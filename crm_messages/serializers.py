@@ -11,18 +11,18 @@ from .models import (
 )
 
 
-class MessageSerializer(serializers.ModelSerializer):
-    message_type = serializers.PrimaryKeyRelatedField(read_only=True)
-
-    class Meta:
-        model = Message
-        fields = ['id', 'message_text', 'media_link', 'date', 'message_type']
-
-
 class MessageTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = MessageType
         fields = ['id', 'type_name', 'available']
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    message_type = MessageTypeSerializer(read_only=True)
+
+    class Meta:
+        model = Message
+        fields = ['id', 'message_text', 'media_link', 'date', 'message_type']
 
 
 class MessageStatusSerializer(serializers.ModelSerializer):
