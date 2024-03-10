@@ -21,6 +21,7 @@ from .models import (
     AmbassadorProgram,
     AmbassadorStatus,
     Goal,
+    Program,
 )
 
 
@@ -177,6 +178,8 @@ class AmbassadorSerializer(serializers.ModelSerializer):
 
 
 class AmbassadorShortSerializer(serializers.ModelSerializer):
+    status = AmbassadorStatusSerializer()
+
     class Meta:
         model = Ambassador
         fields = [
@@ -215,6 +218,7 @@ class AmbassadorUpdateSerializer(serializers.ModelSerializer):
     )
     own_version = serializers.CharField(
         max_length=250,
+        required=False,
     )
 
     class Meta:
@@ -302,6 +306,7 @@ class AmbassadorBotCreateSerializer(serializers.Serializer):
     promocode = serializers.CharField(max_length=255, required=False)
     own_version = serializers.CharField(
         max_length=250,
+        required=False,
     )
 
     def create(self, validated_data):
@@ -345,3 +350,19 @@ class AmbassadorBotCreateSerializer(serializers.Serializer):
             context={'request': self.context.get('request')},
         )
         return serializer.data
+
+
+class AmbassadorProgramSerializer(serializers.ModelSerializer):
+    count = serializers.IntegerField(source='programs.count')
+
+    class Meta:
+        model = Program
+        fields = ('id', 'program_name', 'available', 'count')
+
+
+class AmbassadorStatSerializer(serializers.ModelSerializer):
+    count = serializers.IntegerField(source='ambassadors.count')
+
+    class Meta:
+        model = AmbassadorStatus
+        fields = ('id', 'status_name', 'sort_level', 'available', 'count')
