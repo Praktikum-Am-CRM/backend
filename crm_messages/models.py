@@ -5,6 +5,12 @@ from django.db import models
 from ambassador.models import Ambassador
 from users.models import Manager
 
+MESSAGE_REACTION = (
+    (-1, 'Дизлайк'),
+    (0, 'Нет реакции'),
+    (1, 'Лайк'),
+)
+
 
 class BotMessages(models.Model):
     id = models.UUIDField(
@@ -32,6 +38,19 @@ class BotMessages(models.Model):
         related_name='bot_messages',
     )
     sign_ai = models.BooleanField(verbose_name='Искусственный интеллект')
+    message_telegram_id = models.CharField(
+        max_length=50,
+        verbose_name='Номер сообщения в телеграм',
+        null=False,
+        blank=True,
+        default='',
+    )
+    reaction = models.IntegerField(
+        verbose_name='Реация на сообщение',
+        choices=MESSAGE_REACTION,
+        null=False,
+        default=0,
+    )
 
     class Meta:
         verbose_name = 'Сообщение телеграм бота'

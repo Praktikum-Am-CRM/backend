@@ -1,20 +1,28 @@
 from rest_framework import serializers
 
-from .models import Message, MessagePool, MessageStatus, MessageType
+from users.serializer import ManagerSerializer
 
-
-class MessageSerializer(serializers.ModelSerializer):
-    message_type = serializers.PrimaryKeyRelatedField(read_only=True)
-
-    class Meta:
-        model = Message
-        fields = ['id', 'message_text', 'media_link', 'date', 'message_type']
+from .models import (
+    BotMessages,
+    Message,
+    MessagePool,
+    MessageStatus,
+    MessageType,
+)
 
 
 class MessageTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = MessageType
         fields = ['id', 'type_name', 'available']
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    message_type = MessageTypeSerializer(read_only=True)
+
+    class Meta:
+        model = Message
+        fields = ['id', 'message_text', 'media_link', 'date', 'message_type']
 
 
 class MessageStatusSerializer(serializers.ModelSerializer):
@@ -30,3 +38,20 @@ class MessagePoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = MessagePool
         fields = ['id', 'message', 'message_status', 'send_date']
+
+
+class BotMessageSerializer(serializers.ModelSerializer):
+    message = MessageSerializer()
+    manager = ManagerSerializer()
+
+    class Meta:
+        model = BotMessages
+        fields = [
+            'id',
+            'message',
+            'from_bot',
+            'manager',
+            'sign_ai',
+            'message_telegram_id',
+            'reaction',
+        ]

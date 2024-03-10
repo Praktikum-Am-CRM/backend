@@ -5,6 +5,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
+from api.view_ambassadors import AmbassadorViewSet
 from api.view_utilities import (
     get_achievies,
     get_activities,
@@ -20,10 +21,20 @@ from api.view_utilities import (
     get_report_types,
 )
 
+from .view_telegram import TelegramUserCreateView
+from .views_merches import MerchesViewSet
+from .views_reports import ReportViewSet
+
 app_name = 'api'
 
 router = DefaultRouter()
-# router.register('my_data', GetMethod, basename='my_data')
+router.register('ambassador', AmbassadorViewSet, basename='ambassador')
+router.register(
+    'telegram_user', TelegramUserCreateView, basename='telegram_user_create'
+)
+router.register(r'report', ReportViewSet, basename='report')
+router.register('merch_request', MerchesViewSet, basename='merch_request')
+
 
 decorated_login_view = swagger_auto_schema(
     method='POST',
