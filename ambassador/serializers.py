@@ -36,14 +36,20 @@ def set_programs(ambassador, programs_id):
     AmbassadorProgram.objects.bulk_create(ambassador_programs)
 
 
-def set_goals(ambassador, goals_id):
+def set_goals(ambassador, goals_id, ambassador_own_version=''):
     ambassador.goals.clear()
     goals = Goal.objects.filter(id__in=goals_id)
     ambassador_goals = []
     for goal in goals:
+        own_version = (
+            ambassador_own_version
+            if (goal is crm_settings.goal_own_version)
+            else ''
+        )
         ambassador_goal = AmbassadorGoal(
             ambassador=ambassador,
             goal=goal,
+            own_version=own_version,
         )
         ambassador_goals.append(ambassador_goal)
     AmbassadorGoal.objects.bulk_create(ambassador_goals)
@@ -177,10 +183,7 @@ class AmbassadorUpdateSerializer(serializers.ModelSerializer):
         child=serializers.UUIDField(),
         required=True,
     )
-    goals = serializers.ListSerializer(
-        child=serializers.UUIDField(),
-        required=True,
-    )
+    goals = serializers.UUIDField()
     activity = serializers.ListSerializer(
         child=serializers.UUIDField(),
         required=False,
@@ -188,6 +191,9 @@ class AmbassadorUpdateSerializer(serializers.ModelSerializer):
     achieves = serializers.ListSerializer(
         child=serializers.UUIDField(),
         required=False,
+    )
+    own_version = serializers.CharField(
+        max_length=250,
     )
 
     class Meta:
@@ -225,6 +231,7 @@ class AmbassadorUpdateSerializer(serializers.ModelSerializer):
             'activity',
             'achieves',
             'phone',
+            'own_version',
         ]
 
     def update(self, instance, validated_data):
@@ -232,11 +239,12 @@ class AmbassadorUpdateSerializer(serializers.ModelSerializer):
         goals_id = validated_data.pop('goals', None)
         activity_id = validated_data.pop('activity', None)
         achieve_id = validated_data.pop('achieves', None)
+        own_version = validated_data.pop('own_version', '')
 
         if programs_id:
             set_programs(instance, programs_id)
         if goals_id:
-            set_goals(instance, goals_id)
+            set_goals(instance, [goals_id], own_version)
         if activity_id:
             set_activity(instance, activity_id)
         if achieve_id:
@@ -256,10 +264,7 @@ class AmbassadorBotCreateSerializer(serializers.Serializer):
         child=serializers.UUIDField(),
         required=True,
     )
-    goals = serializers.ListSerializer(
-        child=serializers.UUIDField(),
-        required=True,
-    )
+    goal = serializers.UUIDField()
     phone = serializers.CharField(max_length=20, required=False)
     email = serializers.EmailField()
     size_clothing = serializers.CharField(max_length=2, required=False)
@@ -274,19 +279,23 @@ class AmbassadorBotCreateSerializer(serializers.Serializer):
     address_building = serializers.CharField(max_length=10, required=False)
     address_apartment = serializers.CharField(max_length=10, required=False)
     promocode = serializers.CharField(max_length=255, required=False)
+    own_version = serializers.CharField(
+        max_length=250,
+    )
 
     def create(self, validated_data):
         telegram_id = validated_data.pop('telegram_id')
         programs_id = validated_data.pop('programs')
-        goals_id = validated_data.pop('goals')
+        goal_id = validated_data.pop('goal')
         activity_id = validated_data.pop('activity', None)
         achieve_id = validated_data.pop('achieves', None)
+        own_version = validated_data.pop('own_version', '')
 
         telegram_user = get_object_or_404(TelegramBot, telegram_id=telegram_id)
         if telegram_user.ambassadors.exists():
             ambassador = telegram_user.ambassadors.first()
             set_programs(ambassador, programs_id)
-            set_goals(ambassador, goals_id)
+            set_goals(ambassador, [goal_id], own_version)
             if activity_id:
                 set_activity(ambassador, activity_id)
             if achieve_id:
@@ -305,7 +314,7 @@ class AmbassadorBotCreateSerializer(serializers.Serializer):
                 **validated_data,
             )
             set_programs(ambassador, programs_id)
-            set_goals(ambassador, goals_id)
+            set_goals(ambassador, [goal_id], own_version)
 
         return ambassador
 
