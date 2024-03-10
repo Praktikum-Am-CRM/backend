@@ -24,7 +24,7 @@ from api.views_program import AmbassadorProgramViewsList
 from api.views_status import AmbassadorStatusViewSet
 
 from .view_telegram import TelegramUserCreateView
-from .views_botmessage import SendMessageToTelegramViewSet
+from .views_botmessage import BotMessagesViewSet
 from .views_merches import MerchesViewSet
 from .views_reports import ReportViewSet
 
@@ -47,10 +47,7 @@ router.register(
     AmbassadorStatusViewSet,
     basename='ambassador_status',
 )
-router.register(
-    'bot_message', SendMessageToTelegramViewSet, basename='bot_message'
-)
-
+router.register('bot_message', BotMessagesViewSet, basename='bot_message')
 
 decorated_login_view = swagger_auto_schema(
     method='POST',
