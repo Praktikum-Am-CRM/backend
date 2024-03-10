@@ -13,7 +13,6 @@ schema_view = get_schema_view(
         title='Yandex Ambassador CRM API',
         default_version='v1',
         description='Описание API endpoint for Yandex Ambassador',
-        contact=openapi.Contact(email='admin@kittygram.ru'),
         license=openapi.License(name='MIT License'),
     ),
     public=True,

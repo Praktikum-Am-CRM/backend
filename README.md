@@ -32,6 +32,12 @@
     - PostgreSQL (docker image)
     - Nginx (docker image)
 
+## Документая API
+
+- Локально - файл [api_spec_new.yaml](api_spec_new.yaml)
+- глобально - https://ambassadorsyapractice.ru/docs
+
+
 ## Установка для разработки
 
 1. Клонируем репозиторий https://github.com/Praktikum-Am-CRM/backend
