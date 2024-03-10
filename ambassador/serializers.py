@@ -43,7 +43,7 @@ def set_goals(ambassador, goals_id, ambassador_own_version=''):
     for goal in goals:
         own_version = (
             ambassador_own_version
-            if (goal is crm_settings.goal_own_version)
+            if (goal.id == crm_settings.goal_own_version.id)
             else ''
         )
         ambassador_goal = AmbassadorGoal(
@@ -96,6 +96,17 @@ class GoalSerializer(serializers.ModelSerializer):
         fields = ['id', 'goal_name', 'available']
 
 
+class AmbassadorGoalSerializer(serializers.ModelSerializer):
+    goal = GoalSerializer()
+
+    class Meta:
+        model = AmbassadorGoal
+        fields = [
+            'goal',
+            'own_version',
+        ]
+
+
 class AmbassadorStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = AmbassadorStatus
@@ -109,11 +120,12 @@ class ActivitySerializer(serializers.ModelSerializer):
 
 
 class AmbassadorSerializer(serializers.ModelSerializer):
-    goals = GoalSerializer(many=True)
+    goals = serializers.SerializerMethodField(method_name='get_goals')
     activity = ActivitySerializer(many=True)
     programs = ProgramSerializer(many=True)
     telegram_bot = TelegramBotSerializer()
     achieves = AchieveSerializer(many=True)
+    status = AmbassadorStatusSerializer()
 
     class Meta:
         model = Ambassador
@@ -153,6 +165,15 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             'achieves',
             'phone',
         ]
+
+    def get_goals(self, obj):
+        ambassador_goals = AmbassadorGoal.objects.filter(
+            ambassador=obj,
+        )
+        ambassador_goals_ser = AmbassadorGoalSerializer(
+            ambassador_goals, many=True
+        )
+        return ambassador_goals_ser.data
 
 
 class AmbassadorShortSerializer(serializers.ModelSerializer):
