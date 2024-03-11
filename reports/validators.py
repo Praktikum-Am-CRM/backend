@@ -1,10 +1,3 @@
-"""
-Валидаторы приложения reports.
-
-validate_one_to_ten -- Проверяет, входит ли переданное число
-                       в промежуток [1, 10].
-"""
-
 from django.core.exceptions import ValidationError
 
 
