@@ -114,6 +114,4 @@ class BotMessagesCreateSerializer(serializers.Serializer):
             ambassador_messages.append(bot_message)
         BotMessages.objects.bulk_create(ambassador_messages)
 
-        # TODO: добавить отправку сообщений в telegram асинхронно
-
         return message
