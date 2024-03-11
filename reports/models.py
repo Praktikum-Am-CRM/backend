@@ -5,7 +5,7 @@ from django.db import models
 from ambassador.models import Ambassador
 from backend.constants import MAX_NAME_LENGTH
 
-from .validators import validate_one_to_ten
+from .validators import validate_zero_to_ten
 
 
 class ReportStatus(models.Model):
@@ -101,7 +101,7 @@ class Report(models.Model):
         default=False, verbose_name='Начинающий амбассадор?'
     )
     grade = models.PositiveSmallIntegerField(
-        validators=[validate_one_to_ten], default=1
+        validators=[validate_zero_to_ten], default=1
     )
     report_type = models.ForeignKey(
         to=ReportType, on_delete=models.PROTECT, related_name='reports'

@@ -149,7 +149,7 @@ class Migration(migrations.Migration):
                     "grade",
                     models.PositiveSmallIntegerField(
                         default=1,
-                        validators=[reports.validators.validate_one_to_ten],
+                        validators=[reports.validators.validate_zero_to_ten],
                     ),
                 ),
                 (
