@@ -10,27 +10,27 @@
 ## Стек технологий:
 
 - **Python**
-  - python 3.10
+  - python 3.10 - высокоуровневый язык программирования общего назначения
 - **Разработка** (requirements.txt)
-    - django 4.2.7
-    - djangorestframework
-    - drf-yasg
-    - psycopg2-binary 2.9.9
-    - gunicorn 21.2.0
-    - python-dotenv 1.0.1
+    - django 4.2.7 - фреймворк для веб-приложений на языке Python
+    - djangorestframework - инструмент для разработки веб-API в приложениях на основе Django
+    - drf-yasg - автодокументирование API Django Rest Framework
+    - psycopg2-binary 2.9.9 - фреймворк взаимодействия с СУБД PostgreSQL
+    - gunicorn 21.2.0 - фреймворк взаимодействия между Django и веб-сервером 
+    - python-dotenv 1.0.1 - фреймворк установки переменных окружения из файла 
 - **Стилизация** (requirements_style.txt)
-    - black
-    - isort
-    - flake8
-    - pep8-naming
-    - flake8-broken-line
-    - flake8-return
-    - flake8-isort
+    - black - форматирование программного кода
+    - isort - сортировка импортов библиотек/модулей в алфавитном порядке и по группам (системные, фреймворки, приложение)
+    - flake8 - проверка кода на соответствие правилам оформления кода (PEP8)
+    - pep8-naming - проверка именование объектов стандартам PEP8
+    - flake8-broken-line - ищет обратную косою черту, которая используется для разрыва строки
+    - flake8-return - проверка корректности использования оператора return
+    - flake8-isort - проверяет корректность расположения импортов
 - **Дополнительно** (для развертывания/деплоя)
-    - docker
-    - docker compose
-    - PostgreSQL (docker image)
-    - Nginx (docker image)
+    - docker - «упаковка» приложения со всем его окружением и зависимостями в контейнер, который может быть развёрнут на любой Linux-системе
+    - docker compose - позволяет запускать несколько контейнеров, объединяя их между собой
+    - PostgreSQL (docker image) - система управления базами данных PostgreSQL
+    - Nginx (docker image) - Web сервер
 
 ## Документая API
 
